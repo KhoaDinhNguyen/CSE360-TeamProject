@@ -229,7 +229,7 @@ public class User {
      */
     // Gets the current value of the role1 attribute.
 	public boolean getNewRole1() { return role1; }
-
+	public boolean getRole1() { return role1; }
     
     /*****
      * <p> Method: String getRole2() </p>
@@ -241,7 +241,7 @@ public class User {
      */
     // Gets the current value of the role2 attribute.
     public boolean getNewRole2() { return role2; }
-
+    public boolean getRole2() { return role2; }
         
     /*****
      * <p> Method: int getNumRoles() </p>
@@ -258,5 +258,17 @@ public class User {
     	if (role1) numRoles++;
     	if (role2) numRoles++;
     	return numRoles;
+    }
+    
+    public String getRoles() {
+    	String roles = "";
+    	
+    	if (adminRole) roles += "Admin, ";
+    	if (role1) roles += "Role 1, ";
+    	if (role2) roles += "Role 2, ";
+    	
+    	roles = roles.substring(0, roles.length() - 2);
+    	
+    	return "<" + roles + ">";
     }
 }

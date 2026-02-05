@@ -837,7 +837,34 @@ public class Database {
 			return false;
 	    }
 	}
-	
+	// get and return the User object for a specified username
+		public User getUserDetails(String username) {
+			String query = "SELECT * FROM userDB WHERE username = ?";
+			
+			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+				pstmt.setString(1, username);
+				ResultSet rs = pstmt.executeQuery();
+				rs.next();
+				
+				User user = new User(
+						rs.getString(2), // userName
+						rs.getString(3), // password
+						rs.getString(4), // firstName
+						rs.getString(5), // middleName
+						rs.getString(6), // lastName,
+						rs.getString(7), // preferredFirstName,
+						rs.getString(8), // emailAddress,
+						rs.getBoolean(9), // admin
+						rs.getBoolean(10), // r1
+						rs.getBoolean(11) // r2
+						);
+				
+				return user;
+			}
+			catch(SQLException e) {
+				return null;
+			}
+		}
 	
 	/*******
 	 * <p> Method: boolean updateUserRole(String username, String role, String value) </p>
