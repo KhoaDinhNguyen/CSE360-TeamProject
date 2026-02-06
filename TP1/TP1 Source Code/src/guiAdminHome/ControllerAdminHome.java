@@ -144,6 +144,7 @@ public class ControllerAdminHome {
 	 */
 	protected static void listUsers() {
 		System.out.println("\n*** WARNING ***: List Users Not Yet Implemented");
+		
 		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
 		ViewAdminHome.alertNotImplemented.setHeaderText("List User Issue");
 		ViewAdminHome.alertNotImplemented.setContentText("List Users Not Yet Implemented");

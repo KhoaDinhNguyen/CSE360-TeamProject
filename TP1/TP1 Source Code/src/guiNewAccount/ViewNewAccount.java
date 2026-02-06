@@ -193,11 +193,11 @@ public class ViewNewAccount {
 
         // Set up the account creation and login
         setupButtonUI(button_UserSetup, "Dialog", 18, 200, Pos.CENTER, 475, 210);
-        button_UserSetup.setOnAction((_) -> {ControllerNewAccount.doCreateUser(); });
+        button_UserSetup.setOnAction((e) -> {ControllerNewAccount.doCreateUser(); });
 		
         // Enable the user to quit the application
         setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
-        button_Quit.setOnAction((_) -> {ControllerNewAccount.performQuit(); });
+        button_Quit.setOnAction((e) -> {ControllerNewAccount.performQuit(); });
 	}
 	
 	
