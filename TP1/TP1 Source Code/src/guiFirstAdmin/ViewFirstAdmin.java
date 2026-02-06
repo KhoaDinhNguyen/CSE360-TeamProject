@@ -64,7 +64,9 @@ public class ViewFirstAdmin {
 
 	// This alert is used should the user enter two passwords that do not match
 	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
-
+	
+	// This alert is used to notify the enter password is not a valid format 
+	protected static Alert alertInvalidPasswordFormat = new Alert(AlertType.INFORMATION);
 	// This button allow the user to abort creating the first admin account and terminate
 	private static Button button_Quit = new Button("Quit");
 
@@ -191,6 +193,11 @@ public class ViewFirstAdmin {
 				label_TitleLine2, text_AdminUsername, text_AdminPassword1, 
 				text_AdminPassword2, button_AdminSetup, label_PasswordsDoNotMatch,
 				button_Quit);
+		
+		alertInvalidPasswordFormat.setTitle("Invalid Password Format");
+		alertInvalidPasswordFormat.setHeaderText(null);
+		
+		
 	}
 	
 	

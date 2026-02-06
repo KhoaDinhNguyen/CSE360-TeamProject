@@ -103,7 +103,14 @@ public class ControllerFirstAdmin {
 	 * 
 	 */
 	protected static void doSetupAdmin(Stage ps, int r) {
-		
+		// Password Validation
+		String passwordErrorMessage = Validation.PasswordValidation.Model.evaluatePassword(adminPassword1);
+		if (passwordErrorMessage != "") {
+			// file in here
+			ViewFirstAdmin.alertInvalidPasswordFormat.setContentText(passwordErrorMessage);
+			ViewFirstAdmin.alertInvalidPasswordFormat.showAndWait();
+			return;
+		}
 		// Make sure the two passwords are the same
 		if (adminPassword1.compareTo(adminPassword2) == 0) {
         	// Create the passwords and proceed to the user home page
