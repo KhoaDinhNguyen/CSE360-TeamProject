@@ -87,7 +87,7 @@ public class Database {
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
 			statement = connection.createStatement(); 
 			// You can use this command to clear the database and restart from fresh.
-			//statement.execute("DROP ALL OBJECTS");
+			statement.execute("DROP ALL OBJECTS");
 
 			createTables();  // Create the necessary tables if they don't exist
 		} catch (ClassNotFoundException e) {
@@ -350,6 +350,29 @@ public class Database {
 	        e.printStackTrace();
 	    }
 	    return false; // If an error occurs, assume user doesn't exist
+	}
+	
+	/*******
+	 * <p> Method: boolean deleteUserByUsername
+	 * 
+	 * <p> Description: Deletes a user with specified userName.
+	 * 
+	 * @param userName specifies the specific user that we want to delete.
+	 * 
+	 * @return true if the user has been deleted successfully. Otherwise, false.
+	 */
+	public boolean deleteUserByUsername(String userName) {
+		String query = "DELETE FROM userDB WHERE userName = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, userName);
+			
+			int rowsDeleted = pstmt.executeUpdate();
+			return rowsDeleted > 0;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	

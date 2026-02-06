@@ -1,5 +1,12 @@
 package guiAdminHome;
 
+import java.util.Optional;
+import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ButtonBar;
+
 import database.Database;
 /*******
  * <p> Title: GUIAdminHomePage Class. </p>
@@ -122,15 +129,50 @@ public class ControllerAdminHome {
 	 * 
 	 * Title: deleteUser () Method. </p>
 	 * 
-	 * <p> Description: Protected method that is currently a stub informing the user that
-	 * this function has not yet been implemented. </p>
+	 * <p> Description: Protected method that prompts the user to delete a username.</p>
 	 */
-	protected static void deleteUser() {
-		System.out.println("\n*** WARNING ***: Delete User Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-		ViewAdminHome.alertNotImplemented.setHeaderText("Delete User Issue");
-		ViewAdminHome.alertNotImplemented.setContentText("Delete User Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.showAndWait();
+	protected static void deleteUser() {		
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setTitle("Delete User");
+		dialog.setHeaderText("Confirm Deletion");
+	    dialog.setContentText("Enter username to delete:");
+	    
+	    ButtonType deleteBtn = new ButtonType("Delete", ButtonBar.ButtonData.OK_DONE);
+	    dialog.getDialogPane().getButtonTypes().setAll(deleteBtn, ButtonType.CANCEL);
+	    
+	    Optional<String> result = dialog.showAndWait();
+	    if (result.isEmpty()) return;
+	    
+	    String username = result.get().trim();
+	    if (username.isEmpty()) {
+	        Alert a = new Alert(AlertType.ERROR);
+	        a.setTitle("Delete User");
+	        a.setHeaderText("Invalid username");
+	        a.setContentText("Username cannot be empty.");
+	        a.showAndWait();
+	        return;
+	    }
+	    
+	    // Prevent deleting oneself when logged in
+	    if (username.equals(ViewAdminHome.theUser.getUserName())) {
+	    	Alert err = new Alert(AlertType.ERROR);
+	    	err.setTitle("Delete User");
+	    	err.setHeaderText("Not allowed");
+	    	err.setContentText("You cannot delete the account you are currently logged into.");
+	        err.showAndWait();
+	        return;
+	    }
+
+
+    	boolean success = guiDeleteUser.DeleteUser.deleteUser(username);
+    	
+    	Alert a = new Alert(success ? AlertType.INFORMATION : AlertType.ERROR);
+        a.setTitle("Delete User");
+        a.setHeaderText(success ? "Success!" : "Failed");
+        a.setContentText(success
+            ? ("Deleted user: " + username)
+            : ("Could not delete user: " + username));
+        a.showAndWait();
 	}
 	
 	/**********
@@ -142,12 +184,6 @@ public class ControllerAdminHome {
 	 * this function has not yet been implemented. </p>
 	 */
 	protected static void listUsers() {
-//		System.out.println("\n*** WARNING ***: List Users Not Yet Implemented");
-//		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-//		ViewAdminHome.alertNotImplemented.setHeaderText("List User Issue");
-//		ViewAdminHome.alertNotImplemented.setContentText("List Users Not Yet Implemented");
-//		ViewAdminHome.alertNotImplemented.showAndWait();
-		
 		guiListAllUsers.ViewListAllUsers.displayViewListAllUser(ViewAdminHome.theStage, ViewAdminHome.theUser);
 	}
 	
