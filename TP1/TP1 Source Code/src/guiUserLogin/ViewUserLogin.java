@@ -142,7 +142,7 @@ public class ViewUserLogin {
 
 		// Set up the Log In button
 		setupButtonUI(button_Login, "Dialog", 18, 200, Pos.CENTER, 475, 180);
-		button_Login.setOnAction((_) -> {ControllerUserLogin.doLogin(theStage); });
+		button_Login.setOnAction((e) -> {ControllerUserLogin.doLogin(theStage); });
 
 		alertUsernamePasswordError.setTitle("Invalid username/password!");
 		alertUsernamePasswordError.setHeaderText(null);
@@ -158,14 +158,14 @@ public class ViewUserLogin {
 
 		// Set up the setup button
 		setupButtonUI(button_SetupAccount, "Dialog", 18, 200, Pos.CENTER, 475, 340);
-		button_SetupAccount.setOnAction((_) -> {
+		button_SetupAccount.setOnAction((e) -> {
 			System.out.println("**** Calling doSetupAccount");
 			ControllerUserLogin.doSetupAccount(theStage, text_Invitation.getText());
 		});
 
 		// Set up the Quit button  
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 520);
-		button_Quit.setOnAction((_) -> {ControllerUserLogin.performQuit(); });
+		button_Quit.setOnAction((e) -> {ControllerUserLogin.performQuit(); });
 
 		//		theRootPane.getChildren().clear();
 

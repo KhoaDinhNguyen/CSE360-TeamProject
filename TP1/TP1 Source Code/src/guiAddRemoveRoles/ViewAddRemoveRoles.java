@@ -183,7 +183,7 @@ public class ViewAddRemoveRoles {
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
 		
 		setupButtonUI(button_UpdateThisUser, "Dialog", 18, 170, Pos.CENTER, 610, 45);
-		button_UpdateThisUser.setOnAction((_) -> 
+		button_UpdateThisUser.setOnAction((e) -> 
 			{guiUserUpdate.ViewUserUpdate.displayUserUpdate(theStage, theUser); });
 		
 		// GUI Area 2a
@@ -203,23 +203,23 @@ public class ViewAddRemoveRoles {
 		setupLabelUI(label_SelectRoleToBeAdded, "Arial", 20, 300, Pos.BASELINE_LEFT, 20, 210);
 		setupComboBoxUI(combobox_SelectRoleToAdd, "Dialog", 16, 150, 280, 205);
 		setupButtonUI(button_AddRole, "Dialog", 16, 150, Pos.CENTER, 460, 205);
-		ViewAddRemoveRoles.button_AddRole.setOnAction((_) -> 
+		ViewAddRemoveRoles.button_AddRole.setOnAction((e) -> 
 			{ControllerAddRemoveRoles.performAddRole(); });
 		setupButtonUI(button_RemoveRole, "Dialog", 16, 150, Pos.CENTER, 460, 275);			
-		ViewAddRemoveRoles.button_RemoveRole.setOnAction((_) -> 
+		ViewAddRemoveRoles.button_RemoveRole.setOnAction((e) -> 
 			{ControllerAddRemoveRoles.performRemoveRole(); });
 		setupLabelUI(label_SelectRoleToBeRemoved, "Arial", 20, 300, Pos.BASELINE_LEFT, 20, 280);	
 		setupComboBoxUI(combobox_SelectRoleToRemove, "Dialog", 16, 150, 280, 275);	
 		
 		// GUI Area 3		
 		setupButtonUI(button_Return, "Dialog", 18, 210, Pos.CENTER, 20, 540);
-		button_Return.setOnAction((_) -> {ControllerAddRemoveRoles.performReturn(); });
+		button_Return.setOnAction((e) -> {ControllerAddRemoveRoles.performReturn(); });
 
 		setupButtonUI(button_Logout, "Dialog", 18, 210, Pos.CENTER, 300, 540);
-		button_Logout.setOnAction((_) -> {ControllerAddRemoveRoles.performLogout(); });
+		button_Logout.setOnAction((e) -> {ControllerAddRemoveRoles.performLogout(); });
     
 		setupButtonUI(button_Quit, "Dialog", 18, 210, Pos.CENTER, 570, 540);
-		button_Quit.setOnAction((_) -> {ControllerAddRemoveRoles.performQuit(); });
+		button_Quit.setOnAction((e) -> {ControllerAddRemoveRoles.performQuit(); });
 		
 		// This is the end of the GUI Widgets for the page
 		
