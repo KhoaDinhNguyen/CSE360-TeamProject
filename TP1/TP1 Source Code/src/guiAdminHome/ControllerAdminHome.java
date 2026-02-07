@@ -162,8 +162,31 @@ public class ControllerAdminHome {
 	        err.showAndWait();
 	        return;
 	    }
+	    
+	    // Prevent deleting other admins
+	    if (theDatabase.hasAdminRole(username)) {
+	    	Alert err = new Alert(AlertType.ERROR);
+	    	err.setTitle("Delete User");
+	    	err.setHeaderText("Not allowed");
+	    	err.setContentText("You cannot delete a user with the Admin role.");
+	    	err.showAndWait();
+	    	return;
+	    }
+	    
+	    // Let the user confirm user deletion
+	    Alert confirm = new Alert(AlertType.CONFIRMATION);
+	    confirm.setTitle("Delete User");
+	    confirm.setHeaderText("Are you sure?");
+	    confirm.setContentText("Delete user: " + username + "?");
+	    
+	    ButtonType yes = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+	    ButtonType no = new ButtonType("No", ButtonBar.ButtonData.NO);
+	    confirm.getButtonTypes().setAll(yes, no);
+	    
+	    Optional<ButtonType> choice = confirm.showAndWait();
+	    if (choice.isEmpty() || choice.get() != yes) return;
 
-
+	    // Perform user deletion
     	boolean success = guiDeleteUser.DeleteUser.deleteUser(username);
     	
     	Alert a = new Alert(success ? AlertType.INFORMATION : AlertType.ERROR);

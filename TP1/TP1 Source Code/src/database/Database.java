@@ -374,6 +374,28 @@ public class Database {
 			return false;
 		}
 	}
+	
+	/*******
+	 * <p> Method: boolean hasAdminRole
+	 * 
+	 * <p> Description: Checks if a user has the admin role
+	 * @param username
+	 * @return true if the user has the admin role. Otherwise, false.
+	 */
+	public boolean hasAdminRole(String userName) {
+		String query = "SELECT adminRole FROM userDB WHERE userName = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, userName);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (!rs.next()) return false;  // user not found
+				return rs.getBoolean("adminRole");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	
 	/*******
