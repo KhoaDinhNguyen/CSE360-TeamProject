@@ -103,6 +103,19 @@ public class ControllerFirstAdmin {
 	 * 
 	 */
 	protected static void doSetupAdmin(Stage ps, int r) {
+		String passwordErrorMessage = Validation.PasswordValidation.Model.evaluatePassword(adminPassword1);
+		String usernameErrorMessage = Validation.UsernameValidation.Model.checkForValidUserName(adminUsername);
+		
+		if (usernameErrorMessage != "") {
+			ViewFirstAdmin.alertInvalidUsernameFormat.setContentText(usernameErrorMessage);
+			ViewFirstAdmin.alertInvalidUsernameFormat.showAndWait();
+			return;
+		}
+		if (passwordErrorMessage != "") {
+			ViewFirstAdmin.alertInvalidPasswordFormat.setContentText(passwordErrorMessage);
+			ViewFirstAdmin.alertInvalidPasswordFormat.showAndWait();
+			return;
+		}
 		
 		// Make sure the two passwords are the same
 		if (adminPassword1.compareTo(adminPassword2) == 0) {

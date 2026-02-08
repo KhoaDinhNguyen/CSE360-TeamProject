@@ -60,7 +60,12 @@ public class ViewNewAccount {
 
 	// This alert is used should the user enter two passwords that do not match
 	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
-
+	
+	// This alert is used to warning about invalid username Foramt
+	protected static Alert alertInvalidUsernameError = new Alert(AlertType.INFORMATION);
+	
+	protected static Alert alertInvalidPasswordError = new Alert(AlertType.INFORMATION);
+	
     protected static Button button_Quit = new Button("Quit");
 
 	// These attributes are used to configure the page and populate it with this user's information
@@ -190,6 +195,10 @@ public class ViewNewAccount {
 		alertUsernamePasswordError.setTitle("Passwords Do Not Match");
 		alertUsernamePasswordError.setHeaderText("The two passwords must be identical.");
 		alertUsernamePasswordError.setContentText("Correct the passwords and try again.");
+		
+		alertInvalidUsernameError.setTitle("Invalid Username Format");
+		alertInvalidPasswordError.setTitle("Invalid Password Format");
+		
 
         // Set up the account creation and login
         setupButtonUI(button_UserSetup, "Dialog", 18, 200, Pos.CENTER, 475, 210);
