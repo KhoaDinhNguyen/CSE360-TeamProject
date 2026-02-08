@@ -98,6 +98,7 @@ public class FoundationsMain extends Application {
 		// If the database is empty, no users have been established, so this user must be an admin
 		// user doing initial system startup activities and we need to set that admin's username
 		// and password using a special start you page.
+
 		if (database.isDatabaseEmpty()) {
 			// This is a first use, so have the user set up the admin account
 			guiFirstAdmin.ViewFirstAdmin.displayFirstAdmin(theStage);	

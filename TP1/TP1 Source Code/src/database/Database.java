@@ -954,6 +954,17 @@ public class Database {
 	 */
 	public String getCurrentPassword() { return currentPassword;};
 
+	public void updatePassword(String password) {
+	    String query = "UPDATE userDB SET password = ? WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, password);
+	        pstmt.setString(2, currentUsername);
+	        pstmt.executeUpdate();
+	        currentPassword = password;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 	
 	/*******
 	 * <p> Method: String getCurrentFirstName() </p>

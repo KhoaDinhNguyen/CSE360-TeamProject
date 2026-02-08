@@ -124,7 +124,7 @@ public class ViewAdminHome {
 	// Reference for the in-memory database so this package has access
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
 	
-	protected static Stage theStage;			// The Stage that JavaFX has established for us
+	public static Stage theStage;			// The Stage that JavaFX has established for us
 	private static Pane theRootPane;			// The Pane that holds all the GUI widgets 
 	protected static User theUser;				// The current logged in User
 
