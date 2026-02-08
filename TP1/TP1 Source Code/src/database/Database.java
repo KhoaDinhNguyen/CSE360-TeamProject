@@ -351,6 +351,51 @@ public class Database {
 	    }
 	    return false; // If an error occurs, assume user doesn't exist
 	}
+	
+	/*******
+	 * <p> Method: boolean deleteUserByUsername
+	 * 
+	 * <p> Description: Deletes a user with specified userName.
+	 * 
+	 * @param userName specifies the specific user that we want to delete.
+	 * 
+	 * @return true if the user has been deleted successfully. Otherwise, false.
+	 */
+	public boolean deleteUserByUsername(String userName) {
+		String query = "DELETE FROM userDB WHERE userName = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, userName);
+			
+			int rowsDeleted = pstmt.executeUpdate();
+			return rowsDeleted > 0;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/*******
+	 * <p> Method: boolean hasAdminRole
+	 * 
+	 * <p> Description: Checks if a user has the admin role
+	 * @param username
+	 * @return true if the user has the admin role. Otherwise, false.
+	 */
+	public boolean hasAdminRole(String userName) {
+		String query = "SELECT adminRole FROM userDB WHERE userName = ?";
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setString(1, userName);
+
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (!rs.next()) return false;  // user not found
+				return rs.getBoolean("adminRole");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
 	
 	/*******
