@@ -64,7 +64,10 @@ public class ViewFirstAdmin {
 
 	// This alert is used should the user enter two passwords that do not match
 	protected static Alert alertUsernamePasswordError = new Alert(AlertType.INFORMATION);
-
+	
+	// This alert is used to warm that user enter an incorrect password format
+	protected static Alert alertInvalidPasswordFormat = new Alert(AlertType.INFORMATION);
+	protected static Alert alertInvalidUsernameFormat = new Alert(AlertType.INFORMATION);
 	// This button allow the user to abort creating the first admin account and terminate
 	private static Button button_Quit = new Button("Quit");
 
@@ -185,7 +188,14 @@ public class ViewFirstAdmin {
 
 		setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 520);
 		button_Quit.setOnAction((_) -> {ControllerFirstAdmin.performQuit(); });
-
+		
+		// Alert Message for Invalid Password
+		alertInvalidPasswordFormat.setTitle("Invalid Password Format");
+		
+		// Alert Message for Invalid Username
+		alertInvalidUsernameFormat.setTitle("Invalid Username Format");
+		
+		
 		// Place all of the just-initialized GUI elements into the pane
 		theRootPane.getChildren().addAll(label_ApplicationTitle, label_TitleLine1,
 				label_TitleLine2, text_AdminUsername, text_AdminPassword1, 

@@ -75,6 +75,21 @@ public class ControllerNewAccount {
 		// Initialize local variables that will be created during this process
 		int roleCode = 0;
 		User user = null;
+		
+		String usernameErrorMessage = Validation.UsernameValidation.Model.checkForValidUserName(username);
+		String passwordErrorMessage = Validation.PasswordValidation.Model.evaluatePassword(password);
+		
+		if (usernameErrorMessage != "") {
+			// Display Error Message
+			ViewNewAccount.alertInvalidUsernameError.setContentText(usernameErrorMessage);
+			ViewNewAccount.alertInvalidUsernameError.showAndWait();
+			return;
+		}
+		if (passwordErrorMessage != "") {
+			ViewNewAccount.alertInvalidPasswordError.setContentText(passwordErrorMessage);
+			ViewNewAccount.alertInvalidPasswordError.showAndWait();
+			return;
+		}
 
 		// Make sure the two passwords are the same.	
 		if (ViewNewAccount.text_Password1.getText().
