@@ -5,9 +5,11 @@ import java.util.Optional;
 import database.Database;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -102,10 +104,13 @@ public class ViewUserUpdate {
 	private static TextInputDialog dialogUpdatePreferredFirstName;
 	private static TextInputDialog dialogUpdateEmailAddresss;
 	
+	// Alert Message 
+	protected static Alert alertIncorrectEmailFormat = new Alert(AlertType.INFORMATION);
+	
 	// These attributes are used to configure the page and populate it with this user's information
 	private static ViewUserUpdate theView;	// Used to determine if instantiation of the class
 											// is needed
-
+	
 	// This enables access to the application's database
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
 
@@ -320,8 +325,20 @@ public class ViewUserUpdate {
         setupLabelUI(label_EmailAddress, "Arial", 18, 190, Pos.BASELINE_RIGHT, 5, 400);
         setupLabelUI(label_CurrentEmailAddress, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 400);
         setupButtonUI(button_UpdateEmailAddress, "Dialog", 18, 275, Pos.CENTER, 500, 393);
-        button_UpdateEmailAddress.setOnAction((_) -> {result = dialogUpdateEmailAddresss.showAndWait();
-    		result.ifPresent(_ -> theDatabase.updateEmailAddress(theUser.getUserName(), result.get()));
+        button_UpdateEmailAddress.setOnAction((_) -> {
+        	result = dialogUpdateEmailAddresss.showAndWait();
+        	
+    		result.ifPresent(email -> {
+    			String errorEmailMessage = Validation.EmailValidation.Model.checkEmailAddress(email);
+    			if (errorEmailMessage != "") {
+    				alertIncorrectEmailFormat.setContentText(errorEmailMessage);
+    				alertIncorrectEmailFormat.showAndWait();
+    				return;
+    			}
+    			theDatabase.updateEmailAddress(theUser.getUserName(), email);
+    		}
+    		
+    		);
     		theDatabase.getUserAccountDetails(theUser.getUserName());
     		String newEmail = theDatabase.getCurrentEmailAddress();
            	theUser.setEmailAddress(newEmail);
@@ -334,6 +351,9 @@ public class ViewUserUpdate {
         		Pos.CENTER, width/2-150, 450);
         button_ProceedToUserHomePage.setOnAction((_) -> 
         	{ControllerUserUpdate.goToUserHomePage(theStage, theUser);});
+        
+        // Alert Information
+        alertIncorrectEmailFormat.setTitle("Invalid Email Format");
     	
         // Populate the Pane's list of children widgets
         theRootPane.getChildren().addAll(
