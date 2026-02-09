@@ -1,4 +1,3 @@
-/entityClasses/
-/guiListAllUsers/
-/guiAdminHome/
 /database/
+/guiAdminHome/
+/guiUserLogin/
