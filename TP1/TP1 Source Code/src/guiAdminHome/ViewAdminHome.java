@@ -2,6 +2,7 @@ package guiAdminHome;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Pos;
@@ -10,7 +11,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
@@ -131,6 +134,14 @@ public class ViewAdminHome {
 	private static Scene theAdminHomeScene;		// The shared Scene each invocation populates
 	private static final int theRole = 1;		// Admin: 1; Role1: 2; Role2: 3
 
+	// Create dialog for prompting username
+	private static TextInputDialog dialog_SetUpOneTimePassword;
+	private static Optional<String> result;
+	
+	// Alert for after setting one-time password
+	protected static Alert alert_userNameEmpty = new Alert(AlertType.INFORMATION);
+	protected static Alert alert_userNameDoesNotExist = new Alert(AlertType.INFORMATION);
+	protected static Alert alert_OneTimePassword = new Alert(AlertType.INFORMATION);
 	/*-*******************************************************************************************
 
 	Constructors
@@ -166,7 +177,9 @@ public class ViewAdminHome {
 		
 		// If not yet established, populate the static aspects of the GUI
 		if (theView == null) theView = new ViewAdminHome();		// Instantiate singleton if needed
-		
+		else {
+			refreshViewAdminHome();
+		}
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
 		theDatabase.getUserAccountDetails(user.getUserName());		// Fetch this user's data
@@ -220,6 +233,11 @@ public class ViewAdminHome {
 		label_NumberOfUsers.setText("Number of users: " + 
 				theDatabase.getNumberOfUsers());
 	
+		dialog_SetUpOneTimePassword = new TextInputDialog();
+		
+		dialog_SetUpOneTimePassword.setTitle("Set one-time password");
+		dialog_SetUpOneTimePassword.setHeaderText("Enter the username");
+		
 		// GUI Area 3
 		setupLabelUI(label_Invitations, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 175);
 	
@@ -235,6 +253,7 @@ public class ViewAdminHome {
 		for (int i = 0; i < roles.length; i++) {		// roles this code currently supports
 			list.add(roles[i]);
 		}
+		
 		combobox_SelectRole.setItems(FXCollections.observableArrayList(list));
 		combobox_SelectRole.getSelectionModel().select(0);
 		alertEmailSent.setTitle("Invitation");
@@ -297,7 +316,68 @@ public class ViewAdminHome {
 	Helper methods used to minimizes the number of lines of code needed above
 	
 	*/
+	public static void refreshViewAdminHome() {
+		label_UserDetails.setText("User: " + theUser.getUserName());
+	}
+	
+	public static void showSetOneTimePasswordDialog() {		
+		boolean success = false;
+		
+		while (!success) {
+			result = dialog_SetUpOneTimePassword.showAndWait();
+			
+			if (!result.isPresent()) {
+				dialog_SetUpOneTimePassword.close();
+				break;
+			}
+			
+			String username = result.get();
 
+			if (username.compareTo("") == 0) {
+				openAlert(alert_userNameEmpty, 
+						"Error: Empty the username", 
+						"Please enter the username", 
+						"The app cannot update the one-time password unless it has valid username");
+				
+			}
+			else if (theDatabase.getUserDetails(username) == null) {
+				openAlert(alert_userNameEmpty, 
+						"Error: Non-existed username", 
+						"The username does not exist", 
+						"The app cannot update the one-time password unless it has valid username");
+							
+			}
+			else {
+				String newPassword = theDatabase.generateOneTimePassword();
+
+				theDatabase.updatePassword(newPassword, username);
+				openAlert(alert_OneTimePassword,
+						"One-time password reset",
+						"The password for " + username + " is successfully updated",
+						newPassword + " is the new one-time password for " + username);
+				success = true;
+			}
+		}
+		
+		
+		dialog_SetUpOneTimePassword.getEditor().clear();
+		dialog_SetUpOneTimePassword.close();
+		
+	}
+	
+	private static void openAlert(Alert alert, String title, String header, String msg) {
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+	
+		TextArea textArea = new TextArea(msg);
+	    textArea.setEditable(false);
+	    textArea.setWrapText(true);
+		
+	    alert.getDialogPane().setContent(textArea);
+	    
+		alert.showAndWait();
+		
+	}
 	/**********
 	 * Private local method to initialize the standard fields for a label
 	 * 
