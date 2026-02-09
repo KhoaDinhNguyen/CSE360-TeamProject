@@ -246,6 +246,10 @@ public class ViewUserUpdate {
         // Display the titles, values, and update buttons for the various admin account attributes.
         // If the attributes is null or empty, display "<none>".
         
+        button_UpdatePassword.setOnAction((_) -> {
+        	passwordPopUpWindow.PasswordEvaluationGUITestbed.displayPasswordEvaluationGUITestbed();
+        });
+        
         // USername
         setupLabelUI(label_Username, "Arial", 18, 190, Pos.BASELINE_RIGHT, 5, 100);
         setupLabelUI(label_CurrentUsername, "Arial", 18, 260, Pos.BASELINE_LEFT, 200, 100);

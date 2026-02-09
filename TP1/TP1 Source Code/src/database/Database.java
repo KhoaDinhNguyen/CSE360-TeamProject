@@ -87,7 +87,7 @@ public class Database {
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
 			statement = connection.createStatement(); 
 			// You can use this command to clear the database and restart from fresh.
-			statement.execute("DROP ALL OBJECTS");
+			//statement.execute("DROP ALL OBJECTS");
 
 			createTables();  // Create the necessary tables if they don't exist
 		} catch (ClassNotFoundException e) {
@@ -472,6 +472,35 @@ public class Database {
 		return 0;
 	}
 	
+	public String generateOneTimePassword() {
+		String code = UUID.randomUUID().toString().substring(0, 6);
+		
+		return code;
+	}
+	
+	public void updatePassword(String password) {
+	    String query = "UPDATE userDB SET password = ? WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, password);
+	        pstmt.setString(2, currentUsername);
+	        pstmt.executeUpdate();
+	        currentPassword = password;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	public void updatePassword(String password, String username) {
+	    String query = "UPDATE userDB SET password = ? WHERE username = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, password);
+	        pstmt.setString(2, username);
+	        pstmt.executeUpdate();
+	        currentPassword = password;
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
 	
 	/*******
 	 * <p> Method: boolean emailaddressHasBeenUsed(String emailAddress) </p>
