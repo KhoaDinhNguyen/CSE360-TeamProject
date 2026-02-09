@@ -239,11 +239,18 @@ public class ControllerAdminHome {
 	 * @param emailAddress	This String holds what is expected to be an email address
 	 */
 	protected static boolean invalidEmailAddress(String emailAddress) {
+		
+		String emailErrorMessage = Validation.EmailValidation.Model.checkEmailAddress(emailAddress);
 		if (emailAddress.length() == 0) {
 			ViewAdminHome.alertEmailError.setContentText(
 					"Correct the email address and try again.");
 			ViewAdminHome.alertEmailError.showAndWait();
 			return true;
+		}
+		if (emailErrorMessage != "") {
+			ViewAdminHome.alertEmailError.setContentText(emailErrorMessage);
+			ViewAdminHome.alertEmailError.showAndWait();
+			return true; 
 		}
 		return false;
 	}
