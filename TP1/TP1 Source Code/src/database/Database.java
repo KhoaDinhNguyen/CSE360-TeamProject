@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import entityClasses.InvitationCode;
 import entityClasses.User;
 
 /*******
@@ -937,6 +938,46 @@ public class Database {
 			}
 			catch(SQLException e) {
 				return null;
+			}
+		}
+		
+		public List<InvitationCode> getAllInvitationCodes() {
+			List<InvitationCode> invitationCodes = new ArrayList<>();
+			
+			String query = "SELECT * FROM InvitationCodes";
+			
+			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+				ResultSet rs = pstmt.executeQuery();
+				
+				
+				while(rs.next()) {
+					InvitationCode invitation = new InvitationCode(
+							rs.getString("code"), // code
+							rs.getString("emailAddress"), // emailAddress
+							rs.getString("role") // role
+							);
+					
+					invitationCodes.add(invitation);
+				}
+				
+			}
+			catch(SQLException e) {
+				
+			}
+			
+			return invitationCodes;
+		}
+		
+		public void deleteInvitationCode(String code) {
+			String query = "DELETE FROM InvitationCodes WHERE code = ?";
+			
+			try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+				pstmt.setString(1, code);
+				pstmt.executeUpdate();
+				
+			}
+			catch(SQLException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	
