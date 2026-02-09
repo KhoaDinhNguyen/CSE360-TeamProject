@@ -101,11 +101,13 @@ public class ControllerAdminHome {
 	 * this function has not yet been implemented. </p>
 	 */
 	protected static void manageInvitations () {
-		System.out.println("\n*** WARNING ***: Manage Invitations Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-		ViewAdminHome.alertNotImplemented.setHeaderText("Manage Invitations Issue");
-		ViewAdminHome.alertNotImplemented.setContentText("Manage Invitations Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.showAndWait();
+//		System.out.println("\n*** WARNING ***: Manage Invitations Not Yet Implemented");
+//		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
+//		ViewAdminHome.alertNotImplemented.setHeaderText("Manage Invitations Issue");
+//		ViewAdminHome.alertNotImplemented.setContentText("Manage Invitations Not Yet Implemented");
+//		ViewAdminHome.alertNotImplemented.showAndWait();
+		manageInvitation.ViewInvitationCode.displayViewInvitationCodes(ViewAdminHome.theStage, 
+				ViewAdminHome.theUser);
 	}
 	
 	/**********
