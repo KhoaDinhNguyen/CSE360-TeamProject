@@ -6,6 +6,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.Pane;
@@ -67,7 +68,7 @@ public class ViewUserLogin {
 
 	private static ViewUserLogin theView = null;	//	private static guiUserLogin.ControllerUserLogin theController;
 
-
+	private static Alert alert_OneTimePassword = new Alert(AlertType.INFORMATION);
 	/*-********************************************************************************************
 
 	Constructor
@@ -187,6 +188,21 @@ public class ViewUserLogin {
 	/**********
 	 * Private local method to initialize the standard fields for a label
 	 */
+	
+	public static void showResettingPassword() {
+		alert_OneTimePassword.setTitle("Update new password");
+		alert_OneTimePassword.setHeaderText("Resetting password is immediately required");
+	
+		TextArea textArea = new TextArea("You are using one-time password and it will be cleared at the moment you log in. Please update new password immediately");
+	    textArea.setEditable(false);
+	    textArea.setWrapText(true);
+	    textArea.setMinWidth(400);
+		
+	    alert_OneTimePassword.getDialogPane().setContent(textArea);
+	    
+	    alert_OneTimePassword.showAndWait();
+		
+	}
 
 	private void setupLabelUI(Label l, String ff, double f, double w, Pos p, double x, double y){
 		l.setFont(Font.font(ff, f));

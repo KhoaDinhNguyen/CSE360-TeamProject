@@ -90,6 +90,12 @@ public class ControllerUserLogin {
     	}
 		// System.out.println("*** Password is valid for this user");
 		
+    	if (password.length() == 6) {
+    		// If the password's length is 6, it is one-time password
+    		ViewUserLogin.showResettingPassword();
+    		password = "";
+    		theDatabase.updatePassword("", username);
+    	}
 		// Establish this user's details
     	User user = new User(username, password, theDatabase.getCurrentFirstName(), 
     			theDatabase.getCurrentMiddleName(), theDatabase.getCurrentLastName(), 

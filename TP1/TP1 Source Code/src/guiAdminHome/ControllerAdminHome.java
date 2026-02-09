@@ -110,11 +110,17 @@ public class ControllerAdminHome {
 	 * this function has not yet been implemented. </p>
 	 */
 	protected static void setOnetimePassword () {
-		System.out.println("\n*** WARNING ***: One-Time Password Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
-		ViewAdminHome.alertNotImplemented.setHeaderText("One-Time Password Issue");
-		ViewAdminHome.alertNotImplemented.setContentText("One-Time Password Not Yet Implemented");
-		ViewAdminHome.alertNotImplemented.showAndWait();
+//		System.out.println("\n*** WARNING ***: One-Time Password Not Yet Implemented");
+//		ViewAdminHome.alertNotImplemented.setTitle("*** WARNING ***");
+//		ViewAdminHome.alertNotImplemented.setHeaderText("One-Time Password Issue");
+//		ViewAdminHome.alertNotImplemented.setContentText("One-Time Password Not Yet Implemented");
+//		ViewAdminHome.alertNotImplemented.showAndWait();
+//		ViewAdminHome.button_SetOnetimePassword.setOnAction((_) -> {
+//			result = 
+//		})
+		
+		ViewAdminHome.showSetOneTimePasswordDialog();
+		
 	}
 	
 	/**********
