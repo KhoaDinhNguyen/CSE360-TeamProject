@@ -242,7 +242,11 @@ public class ModelForum {
 	    // Safe authorization check (handles null authors)
 	    if (!java.util.Objects.equals(editedPost.getAuthor(), author))
 	        return "Can't edit other's user post";
-
+	    
+	    // Safe thread check
+	    if (!threadStore.checkThreadExist(thread)) {
+	    	return "Thread does not exist in the database";
+	    }
 	    // Attempt to set title and content (setTitle/setContent return error strings or "")
 	    String setThreadErrorMessage = editedPost.setThread(thread);
 	    String setTitleErrorMessage = editedPost.setTitle(title);
