@@ -1,6 +1,9 @@
 package CRUD;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import entityClasses.ThreadStore;
 
 public class Post {
 	private final int id;
@@ -98,5 +101,27 @@ public class Post {
     @Override
     public String toString() {
     	return title;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+    	if (this == o) return true;
+    	if (o == null || getClass() != o.getClass()) return false;
+    	
+    	Post otherPost = (Post)o;
+    	
+    	ArrayList<Boolean> checkConditions = new ArrayList<>(Arrays.asList(
+    			this.thread == otherPost.thread, 
+    			this.author == otherPost.author,
+    			this.title == otherPost.title,
+    			this.content == otherPost.content
+    			));
+    	
+    	return !checkConditions.contains(false);
+    }
+    
+    @Override
+    public int hashCode() {
+    	return java.util.Objects.hash(this.id, this.author);
     }
 }

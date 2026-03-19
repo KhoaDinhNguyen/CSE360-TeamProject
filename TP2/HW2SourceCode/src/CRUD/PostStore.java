@@ -88,4 +88,9 @@ public class PostStore {
     private String safeLower(String s) {
         return (s == null) ? "" : s.toLowerCase();
     }
+    
+    public void hardReset() {
+    	PostList.clear();
+    	subsetPostList.clear();
+    }
 }

@@ -12,61 +12,64 @@ import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 
 import CRUD.Post;
-	
+import entityClasses.*;
+
+/**
+ * <p>ModalForumTest class is used to contain all test cases related to Post, Reply, and Thread on CRUD operations and test them</p>
+ */
 public class ModelForumTest {
-	private static CRUD.PostStore postStore;
-	private static CRUD.ReplyStore replyStore;
+	private CRUD.PostStore postStore;
+	private CRUD.ReplyStore replyStore;
+	private ThreadStore threadStore;
+	
 	private static final String ALPHANUMERIC = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	
-	@BeforeEach
-	void setup() {
-		postStore = new CRUD.PostStore();
-		replyStore = new CRUD.ReplyStore();
+	/**
+	 * <p>The class constructor but it will not be used in this project</p>
+	 */
+	public ModelForumTest() {
 		
-		 // Sample POSTS
-	    addPost("Welcome", "Welcome to the CSE 360 discussion forum!", "Admin");
-
-	    addPost("Java OOP Question",
-	            "Can someone explain inheritance vs composition?",
-	            "Alice");
-
-	    addPost("Binary Search Confusion",
-	            "Why is binary search O(log n)?",
-	            "Bob");
-
-	    addPost("Database Normalization",
-	            "What is 3NF and why is it important?",
-	            "Charlie");
-
-	    addPost("Git Merge Conflict",
-	            "How do you resolve a merge conflict safely?",
-	            "David");
-
-	    addPost("Recursion Depth",
-	            "Why do I get StackOverflowError in Java?",
-	            "Emma");
-
-	    // Sample REPLIES
-
-	    addReply("Inheritance models an 'is-a' relationship.", "Admin", 1);
-	    addReply("Composition is usually more flexible.", "Alice", 1);
-
-	    addReply("Each step halves the search space.", "Charlie", 2);
-	    addReply("That’s why it grows logarithmically.", "Admin", 2);
-
-	    addReply("3NF removes transitive dependency.", "Emma", 3);
-
-	    addReply("Always pull before pushing changes.", "Bob", 4);
-	    addReply("Use git status to inspect conflicts.", "Admin", 4);
-
-	    addReply("Infinite recursion without base case causes it.", "Alice", 5);
 	}
 	
+	/**
+	 * <p>Sets up store management for post, reply, and thread before each test case</p>
+	 */
+	@BeforeEach
+	public void setUp() {
+		// By default, Model Forum creates 6 threads, 6 posts, and 8 replies
+		postStore = getPostStore();
+		replyStore = getReplyStore();
+		threadStore = getThreadStore();
+	}
+	
+	/**
+	 * <p>Resets store management to the default state after each test case </p>
+	 */
+	@AfterEach
+	public void tearDown() {
+		hardReset();
+		setUpDefaultForum();
+	}
+	
+	/**
+	 * <p>CreatePost class is used to contain all test cases related to CREATE operation on Post, called by {@code addPost}
+	 */
 	@Nested
-	class CreatePost {
-		@RepeatedTest(3)
-		void shouldReturnEmptyTitleErrorMessage_whenPostTitleIsEmpty() {
+	public class CreatePost {
+		
+		/**
+		 * The class constructor but it will not be used in this project
+		 */
+		public CreatePost() {
+			
+		}
+		/**
+		 * <p>Verifies that post title could not be empty</p>
+		 */
+		@Test
+		public void shouldReturnEmptyTitleErrorMessage_whenPostTitleIsEmpty() {
 			// Given
+			String thread = "General";
 			String title = "";
 			String content = generateRandomString(30);
 			String author = generateRandomString(30);
@@ -74,15 +77,19 @@ public class ModelForumTest {
 			String expected = "Title could not be empty";
 			
 			// When
-			String actual = addPost(title, content, author);
+			String actual = addPost(thread, title, content, author);
 			
 			// Then
 			assertEquals(expected, actual);
 		}
 		
-		@RepeatedTest(3)
-		void shouldReturnEmptyContentErrorMessage_whenPostContentIsEmpty() {
+		/**
+		 * <p>Verifies that post content could not be empty </p>
+		 */
+		@Test
+		public void shouldReturnEmptyContentErrorMessage_whenPostContentIsEmpty() {
 			// Given
+			String thread = "Lectures";
 			String title = generateRandomString(30);
 			String content = "";
 			String author = generateRandomString(30);
@@ -90,15 +97,19 @@ public class ModelForumTest {
 			String expected = "Content could not be empty";
 			
 			// When
-			String actual = addPost(title, content, author);
+			String actual = addPost(thread, title, content, author);
 			
 			// Then
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * <p>Verifies that post title and content could not be empty </p>
+		 */
 		@Test
-		void shouldReturnEmptyTitleContentErrorMessage_whenPostTitleAndContentAreEmpty() {
+		public void shouldReturnEmptyTitleContentErrorMessage_whenPostTitleAndContentAreEmpty() {
 			// Given
+			String thread = "Social";
 			String title = "";
 			String content = "";
 			String author = generateRandomString(30);
@@ -106,31 +117,41 @@ public class ModelForumTest {
 			String expected = "Title Content could not be empty";
 			
 			// When
-			String actual = addPost(title, content, author);
+			String actual = addPost(thread, title, content, author);
 			
 			// Then
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * <p>Verifies that post title's max length is 300</p>
+		 * @param titleLength is an integer value greater than 300
+		 */
 		@ParameterizedTest
 		@ValueSource(ints = {301, 500, 1000})
-		void shouldReturnOverflowTitleErrorMessage_whenPostTitleIsOver300Characters(Integer titleLength) {
+		public void shouldReturnOverflowTitleErrorMessage_whenPostTitleIsOver300Characters(Integer titleLength) {
+			String thread = "General";
 			String title = generateRandomString(titleLength);
 			String content = generateRandomString(30);
 			String author = generateRandomString(30);
 			
 			String expected = "Title length can not be longer than 300";
 			
-			// When
-			String actual = addPost(title, content, author);
+			// When	
+			String actual = addPost(thread, title, content, author);
 			
 			// Then
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * <p>Verifies that post content's max length is 2000</p>
+		 * @param contentLength is an integer value greater than 2000
+		 */
 		@ParameterizedTest
 		@ValueSource(ints = {2001, 2050, 4000})
-		void shouldReturnOverflowContentErrorMessage_whenPostTitleIsOver2000Characters(Integer contentLength) {
+		public void shouldReturnOverflowContentErrorMessage_whenPostTitleIsOver2000Characters(Integer contentLength) {
+			String thread = "Problem Sets";
 			String title = generateRandomString(30);
 			String content = generateRandomString(contentLength);
 			String author = generateRandomString(30);
@@ -138,15 +159,21 @@ public class ModelForumTest {
 			String expected = "Content length can not be longer than 2000";
 			
 			// When
-			String actual = addPost(title, content, author);
+			String actual = addPost(thread, title, content, author);
 			
 			// Then
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * <p>Verifies that post title and content's max length are 300 and 2000, respectively</p>
+		 * @param titleLength is an integer value greater than 300
+		 * @param contentLength is an integer value greater than 2000
+		 */
 		@ParameterizedTest(name = "titleLength={0}, contentLength={1}")
 		@CsvSource(value= {"302, 2002", "600, 3000", "1002, 5000"})
-		void shouldReturnOverflowTitleAndContentErrorMessage_WhenPostTitleAndContentAreOverflow(Integer titleLength, Integer contentLength) {
+		public void shouldReturnOverflowTitleAndContentErrorMessage_WhenPostTitleAndContentAreOverflow(Integer titleLength, Integer contentLength) {
+			String thread = "Assignments";
 			String title = generateRandomString(titleLength);
 			String content = generateRandomString(contentLength);
 			String author = generateRandomString(30);
@@ -154,15 +181,19 @@ public class ModelForumTest {
 			String expected = "Title Content exceed character limitions (title: 300, content: 2000)";
 			
 			// When
-			String actual = addPost(title, content, author);
+			String actual = addPost(thread, title, content, author);
 			
 			// Then
 			assertEquals(expected, actual);
 			
 		}
 		
+		/**
+		 * <p>Verifies that post's author could not be null</p>
+		 */
 		@Test
-		void shouldReturnAuthorErrorMessage_whenPostAuthorIsNull() {
+		public void shouldReturnAuthorErrorMessage_whenPostAuthorIsNull() {
+			String thread = "General";
 			String title = generateRandomString(30);
 			String content = generateRandomString(30);
 			String author = null;
@@ -170,14 +201,68 @@ public class ModelForumTest {
 			String expected = "Author can’t be null";
 			
 			// When
-			String actual = addPost(title, content, author);
+			String actual = addPost(thread, title, content, author);
 			
 			// Then
 			assertEquals(expected, actual);
 		}
-		@ParameterizedTest(name = "titleLength={0}, contentLength={1}")
-		@CsvSource(value= {"10, 200", "50, 100", "200, 3000"})
-		void shouldReturnNoErrorMessage_whenPostTitleContentAuthorAreValid(Integer titleLength, Integer contentLength) {
+		
+		/**
+		 * <p>Verifies that post's thread must be existed in the database</p>
+		 * @param threadName is a String that represents thead's names do not exist in the database
+		 */
+		@ParameterizedTest
+		@ValueSource(strings = {"Ideas", "Notifications", "Clubs"})
+		public void shouldReturnNonExistedThreadErrorMessage_whenPostThreadDoesNotExist(String threadName) {
+			// Given
+			String thread = threadName;
+			String title = generateRandomString(30);
+			String content = generateRandomString(30);
+			String author = generateRandomString(30);
+			
+			String expected = "Thread does not exist in the database";
+			
+			// When 
+			String actual = addPost(thread, title, content, author);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+		
+		/**
+		 * <p>Verifies that default post's thread is <em>General</em></p>
+		 */
+		@Test
+		public void shouldReturnGeneralThread_whenPostThreadIsEmpty() {
+			// Given
+			String thread = "";
+			String title = generateRandomString(30);
+			String content = generateRandomString(30);
+			String author = generateRandomString(30);
+			
+			String expected = "";
+			Post expectedPost = new Post(-1, "General", title, content, author);
+			
+			// When 
+			String actual = addPost(thread, title, content, author);
+			Post actualPost = postStore.getPostList().getLast();
+			
+			// Then
+			assertAll(
+					() -> assertEquals(expected, actual),
+					() -> assertEquals(expectedPost, actualPost));
+		}
+		
+		/**
+		 * Verifies that {@code addPost} successfully processes requests when all parameters meet the required validation criteria.
+		 * @param threadName is a String that represents thread's names exist in the database
+		 * @param titleLength is an integer between 1 and 300
+		 * @param contentLength is an integer between 1and 2000
+		 */
+		@ParameterizedTest(name = "thread={0}, titleLength={1}, contentLength={2}")
+		@CsvSource(value= {"General, 10, 200", "Lectures, 50, 100", "Problem Sets, 200, 3000"})
+		public void shouldReturnNoErrorMessage_whenPostThreadTitleContentAuthorAreValid(String threadName, Integer titleLength, Integer contentLength) {
+			String thread = threadName;
 			String title = generateRandomString(titleLength);
 			String content = generateRandomString(contentLength);
 			String author = generateRandomString(30);
@@ -185,20 +270,11 @@ public class ModelForumTest {
 			String expected = "";
 			
 			// When
-			String actual = addPost(title, content, author);
+			String actual = addPost(thread, title, content, author);
 			
 			// Then
 			assertEquals(expected, actual);
 		}
-		
-//		void shouldReturnPostInOrder_whenPostCreateAreSuccess() {
-//			String title = generateRandomString(30);
-//			String content = generateRandomString(30);
-//			String author = generateRandomString(30);
-//			
-//			addPost(title, content, author);
-//			ArrayList<Post> expectedArray = 
-//		}
 	}
 	
 	private static String generateRandomString(int length) {

@@ -45,4 +45,7 @@ public class ReplyStore {
 	    return max;
 	}
 	
+	 public void hardReset() {
+		 ReplyList.clear();
+	 }
 }
