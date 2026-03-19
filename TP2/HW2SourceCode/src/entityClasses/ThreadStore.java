@@ -9,14 +9,14 @@ public class ThreadStore {
 	private ArrayList<String> ThreadList;
 	
 	/**
-	 * Constructor is used to initialize thread list
+	 * <p>Constructor is used to initialize thread list</p>
 	 */
 	public ThreadStore() {
 		this.ThreadList = new ArrayList<String>();
 	}
 	
 	/**
-	 * Create new thread into the database
+	 * <p>Create new thread into the database</p>
 	 * @param name is a String that represents the name of new thread
 	 */
 	public void addThread(String name) {
@@ -24,7 +24,7 @@ public class ThreadStore {
 	}
 	
 	/**
-	 * Read all threads in the database
+	 * <p>Read all threads in the database</p>
 	 * @return a String list contains all threads
 	 */
 	public ArrayList<String> getAllThreads() {
@@ -32,7 +32,7 @@ public class ThreadStore {
 	}
 	
 	/**
-	 * Check whether the thread already exists in the database
+	 * <p>Check whether the thread already exists in the database</p>
 	 * @param name is a String that represents the name of thread that wanted to check
 	 * @return a boolean true if the thread is in the database already, otherwise, return false
 	 */
@@ -42,5 +42,9 @@ public class ThreadStore {
 		}
 		
 		return false;
+	}
+	
+	public void hardReset() {
+		this.ThreadList.clear();
 	}
 }
