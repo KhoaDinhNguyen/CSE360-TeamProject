@@ -5,6 +5,7 @@ import java.util.List;
 
 import CRUD.Post;
 import CRUD.Reply;
+import entityClasses.*;
 
 public class ModelForum {
 
@@ -28,7 +29,7 @@ public class ModelForum {
 	
 	private static CRUD.PostStore postStore = new CRUD.PostStore();
 	private static CRUD.ReplyStore replyStore = new CRUD.ReplyStore();
-	
+	private static ThreadStore threadStore = new ThreadStore();
 	
 	
 	static {
@@ -70,6 +71,14 @@ public class ModelForum {
 	    addReply("Use git status to inspect conflicts.", "Admin", 4);
 
 	    addReply("Infinite recursion without base case causes it.", "Alice", 5);
+	    
+	    // Sample THREADS
+	    addThread("General");
+	    addThread("Lectures");
+	    addThread("Sections");
+	    addThread("Problem Sets");
+	    addThread("Assignments");
+	    addThread("Social");
 	}
 	
 	// Post Action
@@ -242,5 +251,38 @@ public class ModelForum {
 	/** If your GUI wants to directly read the current filtered list. */
 	public static List<Post> getFilteredPostList() {
 	    return postStore.getSubsetPostList();
+	}
+	
+	// Thread action
+	
+	/**
+	 * Create new thread in the database
+	 * @param name is a String that represents a new name of thread
+	 * @return a String that represents the error message, if there is no error, the return string is empty
+	 */
+	public static String addThread(String name) {
+		if (name == null || name.isBlank()) {
+			return "Thread name could not be empty";
+		}
+		
+		if (name.length() > 100) {
+			return "Thread name could not be longer than 100 characters";
+		}
+		
+		if (threadStore.checkThreadExist(name)) {
+			return "Thread name could not be duplicated";
+		}
+		
+		threadStore.addThread(name);
+		
+		return "";
+	}
+	
+	/**
+	 * Read all threads in the database
+	 * @return a String list that contains all thread's name in the database
+	 */
+	public static ArrayList<String> getAllThreads() {
+		return threadStore.getAllThreads();
 	}
 }
