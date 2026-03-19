@@ -48,6 +48,7 @@ public class ViewerForum {
 	
 	
 	private static VBox detailPane;
+	private static Label detailThread;
 	private static Label detailTitle;
 	private static Label detailAuthor;
 	private static Label detailContent;
@@ -189,11 +190,12 @@ public static void displayViewerForum(Stage ps, User user) {
 		detailTitle = new Label("Title: ");
 		detailTitle.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
 
+		detailThread = new Label("Thread: ");
 		detailAuthor = new Label("Author: ");
 		detailContent = new Label("Content: ");
 		detailContent.setWrapText(true);
 
-		detailPane.getChildren().addAll(detailTitle, detailAuthor, detailContent);
+		detailPane.getChildren().addAll(detailTitle, detailThread, detailAuthor, detailContent);
 		
 		// Delete and Edit Button
 		// disabled until a post is selected (and you are allowed)
@@ -349,6 +351,7 @@ public static void displayViewerForum(Stage ps, User user) {
 
 	    if (selectedPost == null) return;
 
+	    detailThread.setText("Thread: " + selectedPost.getThread());;
 	    detailTitle.setText("Title: " + selectedPost.getTitle());
 	    detailAuthor.setText("Author: " + selectedPost.getAuthor());
 	    detailContent.setText("Content: " + selectedPost.getContent());
@@ -463,12 +466,13 @@ public static void displayViewerForum(Stage ps, User user) {
 
 	    btnPost.setOnAction(e -> {
 
+	    	String thread = threadChoiceBox.getValue();
 	        String title = tfTitle.getText();
 	        String content = taContent.getText();
 	        String author = theUser.getUserName();
 
 	        // Let ModelForum handle all validation
-	        String errorMessage = ModelForum.addPost(title, content, author);
+	        String errorMessage = ModelForum.addPost(thread, title, content, author);
 
 	        // If Model returns error → show it
 	        if (errorMessage != null && !errorMessage.isBlank()) {
@@ -526,7 +530,7 @@ public static void displayViewerForum(Stage ps, User user) {
 	    
 	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
 	    threadChoiceBox.getItems().addAll(ModelForum.getAllThreads());
-	    threadChoiceBox.setValue("Default");
+	    threadChoiceBox.setValue(post.getThread());
 	    
 	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
 	    
@@ -559,11 +563,12 @@ public static void displayViewerForum(Stage ps, User user) {
 	    btnCancel.setOnAction(e -> editStage.close());
 
 	    btnSave.setOnAction(e -> {
+	    	String newThread = threadChoiceBox.getValue();
 	        String newTitle = tfTitle.getText();
 	        String newContent = taContent.getText();
 
 	        // You can rename this to match your actual ModelForum method
-	        String errorMessage = ModelForum.editPost(post.getId(), theUser.getUserName(), newTitle, newContent);
+	        String errorMessage = ModelForum.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
 
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);

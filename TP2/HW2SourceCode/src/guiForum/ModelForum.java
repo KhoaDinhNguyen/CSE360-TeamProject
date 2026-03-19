@@ -82,7 +82,7 @@ public class ModelForum {
 	}
 	
 	// Post Action
-	
+	//TODO: Remove addPost(title, content, author) if the addPost(thread, title, content, author) works
 	public static String addPost(String title, String content, String author) {
 
 	    // Validate title
@@ -113,6 +113,43 @@ public class ModelForum {
 	    return "";
 	}
 	
+	public static String addPost(String thread, String title, String content, String author) {
+		// Validate thread
+		if (thread == null || thread.isBlank()) {
+			return addPost("General", title, content, author);
+		}
+		else if (thread.length() > 100) {
+			return "Thread name could not be longer than 100 characters";
+		}
+		
+	    // Validate title
+	    if (title == null || title.isBlank()) {
+	        if (content == null || content.isBlank()) {
+	            return "Title Content could not be empty";
+	        }
+	        return "Title could not be empty";
+	    }
+
+	    // Validate content
+	    if (content == null || content.isBlank()) {
+	        return "Content could not be empty";
+	    }
+
+	    // Validate author
+	    if (author == null) {
+	        return "Author can’t be null";
+	    }
+
+	    // Generate ID
+	    int id = postStore.getMaxId() + 1;
+
+	    // Save new post
+	    Post newPost = new Post(id, thread, title, content, author);
+	    postStore.addPost(newPost);
+
+	    return "";
+	}
+	
 	public static List<Post> getPostList() {
 		return postStore.getPostList();
 	}
@@ -137,6 +174,7 @@ public class ModelForum {
 		return "";
 	}
 	
+	// TODO: remove editPost(id, author, title, content) if editPost(id, thread, author, title,content) works
 	public static String editPost (int id, String author, String title, String content) {
 	    // Check existence
 	    Post editedPost = postStore.retrieve(id);
@@ -153,6 +191,42 @@ public class ModelForum {
 	    boolean titleError = setTitleErrorMessage != null && !setTitleErrorMessage.isBlank();
 	    boolean contentError = setContentErrorMessage != null && !setContentErrorMessage.isBlank();
 
+	    if (titleError && contentError) return "Title Content could not be empty";
+	    if (titleError) return "Title could not be empty";
+	    if (contentError) return "Content could not be empty";
+
+	    return "";
+	}
+	
+	/**
+	 * Update existed post with new thread, title, and content (cannot update author)
+	 * @param id is an integer that represents post's id
+	 * @param thread is a String that represents name of new thread
+	 * @param author is a String that represents post's author (unused)
+	 * @param title is a String that represents new title
+	 * @param content is a String that represents new content
+	 * @return a String - error message, empty string if there is no error
+	 */
+	public static String editPost (int id, String thread, String author, String title, String content) {
+	    // Check existence
+	    Post editedPost = postStore.retrieve(id);
+	    if (editedPost == null) return "Post doesn't exist";
+
+	    // Safe authorization check (handles null authors)
+	    if (!java.util.Objects.equals(editedPost.getAuthor(), author))
+	        return "Can't edit other's user post";
+
+	    // Attempt to set title and content (setTitle/setContent return error strings or "")
+	    String setThreadErrorMessage = editedPost.setThread(thread);
+	    String setTitleErrorMessage = editedPost.setTitle(title);
+	    String setContentErrorMessage = editedPost.setContent(content);
+
+	    boolean threadError = setThreadErrorMessage != null && !setThreadErrorMessage.isBlank();
+	    boolean titleError = setTitleErrorMessage != null && !setTitleErrorMessage.isBlank();
+	    boolean contentError = setContentErrorMessage != null && !setContentErrorMessage.isBlank();
+
+	    //TODO: return wrong error if the title or content exceed limited characters
+	    if (threadError) return setThreadErrorMessage;
 	    if (titleError && contentError) return "Title Content could not be empty";
 	    if (titleError) return "Title could not be empty";
 	    if (contentError) return "Content could not be empty";
