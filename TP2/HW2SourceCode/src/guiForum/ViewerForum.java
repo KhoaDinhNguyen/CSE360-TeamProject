@@ -4,7 +4,9 @@ import java.util.List;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import database.Database;
+import entityClasses.ThreadStore;
 import entityClasses.User;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
@@ -45,6 +48,7 @@ public class ViewerForum {
 	
 	
 	private static VBox detailPane;
+	private static Label detailThread;
 	private static Label detailTitle;
 	private static Label detailAuthor;
 	private static Label detailContent;
@@ -186,11 +190,12 @@ public static void displayViewerForum(Stage ps, User user) {
 		detailTitle = new Label("Title: ");
 		detailTitle.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
 
+		detailThread = new Label("Thread: ");
 		detailAuthor = new Label("Author: ");
 		detailContent = new Label("Content: ");
 		detailContent.setWrapText(true);
 
-		detailPane.getChildren().addAll(detailTitle, detailAuthor, detailContent);
+		detailPane.getChildren().addAll(detailTitle, detailThread, detailAuthor, detailContent);
 		
 		// Delete and Edit Button
 		// disabled until a post is selected (and you are allowed)
@@ -346,6 +351,7 @@ public static void displayViewerForum(Stage ps, User user) {
 
 	    if (selectedPost == null) return;
 
+	    detailThread.setText("Thread: " + selectedPost.getThread());;
 	    detailTitle.setText("Title: " + selectedPost.getTitle());
 	    detailAuthor.setText("Author: " + selectedPost.getAuthor());
 	    detailContent.setText("Content: " + selectedPost.getContent());
@@ -418,23 +424,38 @@ public static void displayViewerForum(Stage ps, User user) {
 	    authorLabel.setLayoutX(20);
 	    authorLabel.setLayoutY(55);
 
+	    HBox threadContainer = new HBox();
+	    threadContainer.setLayoutX(20);
+	    threadContainer.setLayoutY(80);
+	    threadContainer.setAlignment(Pos.CENTER);
+	    threadContainer.setSpacing(10);
+	    
+	    Label threadLabel = new Label("Thread:");
+	    threadLabel.setFont(Font.font("Arial"));
+	    
+	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
+	    threadChoiceBox.getItems().addAll(ModelForum.getAllThreads());
+	    threadChoiceBox.setValue("Default");
+	    
+	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
+
 	    Label labelTitle = new Label("Title:");
 	    labelTitle.setLayoutX(20);
-	    labelTitle.setLayoutY(90);
+	    labelTitle.setLayoutY(110);
 
 	    TextField tfTitle = new TextField();
 	    tfTitle.setLayoutX(20);
-	    tfTitle.setLayoutY(115);
+	    tfTitle.setLayoutY(135);
 	    tfTitle.setPrefWidth(480);
 	    tfTitle.setPromptText("Enter a short, clear title");
 
 	    Label labelContent = new Label("Content:");
 	    labelContent.setLayoutX(20);
-	    labelContent.setLayoutY(155);
+	    labelContent.setLayoutY(175);
 
 	    TextArea taContent = new TextArea();
 	    taContent.setLayoutX(20);
-	    taContent.setLayoutY(180);
+	    taContent.setLayoutY(200);
 	    taContent.setPrefWidth(480);
 	    taContent.setPrefHeight(160);
 	    taContent.setWrapText(true);
@@ -444,19 +465,20 @@ public static void displayViewerForum(Stage ps, User user) {
 	    Button btnCancel = new Button("Cancel");
 
 	    // Use your style helper
-	    setupButtonUI(btnPost, "Dialog", 16, 160, Pos.CENTER, 340, 350);
-	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 160, 350);
+	    setupButtonUI(btnPost, "Dialog", 16, 160, Pos.CENTER, 340, 375);
+	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 160, 375);
 
 	    btnCancel.setOnAction(e -> addStage.close());
 
 	    btnPost.setOnAction(e -> {
 
+	    	String thread = threadChoiceBox.getValue();
 	        String title = tfTitle.getText();
 	        String content = taContent.getText();
 	        String author = theUser.getUserName();
 
 	        // Let ModelForum handle all validation
-	        String errorMessage = ModelForum.addPost(title, content, author);
+	        String errorMessage = ModelForum.addPost(thread, title, content, author);
 
 	        // If Model returns error → show it
 	        if (errorMessage != null && !errorMessage.isBlank()) {
@@ -477,7 +499,8 @@ public static void displayViewerForum(Stage ps, User user) {
 	        titleLabel, authorLabel,
 	        labelTitle, tfTitle,
 	        labelContent, taContent,
-	        btnCancel, btnPost
+	        btnCancel, btnPost,
+	        threadContainer
 	    );
 
 	    addStage.setScene(addScene);
@@ -502,22 +525,37 @@ public static void displayViewerForum(Stage ps, User user) {
 	    authorLabel.setLayoutX(20);
 	    authorLabel.setLayoutY(55);
 
+	    HBox threadContainer = new HBox();
+	    threadContainer.setLayoutX(20);
+	    threadContainer.setLayoutY(80);
+	    threadContainer.setAlignment(Pos.CENTER);
+	    threadContainer.setSpacing(10);
+	    
+	    Label threadLabel = new Label("Thread:");
+	    threadLabel.setFont(Font.font("Arial"));
+	    
+	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
+	    threadChoiceBox.getItems().addAll(ModelForum.getAllThreads());
+	    threadChoiceBox.setValue(post.getThread());
+	    
+	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
+	    
 	    Label labelTitle = new Label("Title:");
 	    labelTitle.setLayoutX(20);
-	    labelTitle.setLayoutY(90);
+	    labelTitle.setLayoutY(110);
 
 	    TextField tfTitle = new TextField(post.getTitle());
 	    tfTitle.setLayoutX(20);
-	    tfTitle.setLayoutY(115);
+	    tfTitle.setLayoutY(135);
 	    tfTitle.setPrefWidth(480);
 
 	    Label labelContent = new Label("Content:");
 	    labelContent.setLayoutX(20);
-	    labelContent.setLayoutY(155);
+	    labelContent.setLayoutY(175);
 
 	    TextArea taContent = new TextArea(post.getContent());
 	    taContent.setLayoutX(20);
-	    taContent.setLayoutY(180);
+	    taContent.setLayoutY(200);
 	    taContent.setPrefWidth(480);
 	    taContent.setPrefHeight(160);
 	    taContent.setWrapText(true);
@@ -525,17 +563,18 @@ public static void displayViewerForum(Stage ps, User user) {
 	    Button btnSave = new Button("Save");
 	    Button btnCancel = new Button("Cancel");
 
-	    setupButtonUI(btnSave, "Dialog", 16, 160, Pos.CENTER, 340, 350);
-	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 160, 350);
+	    setupButtonUI(btnSave, "Dialog", 16, 160, Pos.CENTER, 340, 375);
+	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 160, 375);
 
 	    btnCancel.setOnAction(e -> editStage.close());
 
 	    btnSave.setOnAction(e -> {
+	    	String newThread = threadChoiceBox.getValue();
 	        String newTitle = tfTitle.getText();
 	        String newContent = taContent.getText();
 
 	        // You can rename this to match your actual ModelForum method
-	        String errorMessage = ModelForum.editPost(post.getId(), theUser.getUserName(), newTitle, newContent);
+	        String errorMessage = ModelForum.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
 
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
@@ -568,7 +607,8 @@ public static void displayViewerForum(Stage ps, User user) {
 	            titleLabel, authorLabel,
 	            labelTitle, tfTitle,
 	            labelContent, taContent,
-	            btnCancel, btnSave
+	            btnCancel, btnSave,
+	            threadContainer
 	    );
 
 	    editStage.setScene(editScene);
