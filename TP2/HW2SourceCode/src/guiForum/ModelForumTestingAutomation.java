@@ -1,19 +1,30 @@
-// ModelForumTestingAutomation.java
 package guiForum;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
+/**
+ * Provides automated tests for the forum model.
+ *
+ * <p>This class runs a sequence of test cases that validate the behavior of
+ * post and reply creation, editing, deletion, filtering, and retrieval in
+ * {@link ModelForum}.</p>
+ */
 public class ModelForumTestingAutomation {
 
     static int numPassed = 0;
     static int numFailed = 0;
 
+    /**
+     * Runs the full automated test suite for the forum model.
+     *
+     * @param args command-line arguments passed to the program
+     */
     public static void main(String[] args) {
         System.out.println("______________________________________");
         System.out.println("\nModel Forum — Automated Test Run\n");
 
-        for (int t = 1; t <= 30; t++) { // running up to 34 as in your latest table (some numbers may be unused)
+        for (int t = 1; t <= 30; t++) {
             performTestCase(t);
         }
 
@@ -23,7 +34,13 @@ public class ModelForumTestingAutomation {
         System.out.println("Number of tests failed: " + numFailed);
     }
 
-    // Reset ModelForum's private static stores using reflection
+    /**
+     * Resets the forum model's in-memory post and reply stores using reflection.
+     *
+     * <p>This method is used so that each test case can run from a clean state.</p>
+     *
+     * @throws Exception if reflection fails or the stores cannot be reset
+     */
     private static void resetModelForumStores() throws Exception {
         Class<?> mf = Class.forName("guiForum.ModelForum");
         Field postStoreField = mf.getDeclaredField("postStore");
@@ -34,11 +51,24 @@ public class ModelForumTestingAutomation {
         replyStoreField.set(null, new CRUD.ReplyStore());
     }
 
+    /**
+     * Reports a successful test case and increments the pass counter.
+     *
+     * @param testNo the number of the test case that passed
+     */
     private static void reportSuccess(int testNo) {
         System.out.println("Test " + testNo + " — PASS\n");
         numPassed++;
     }
 
+    /**
+     * Reports a failed test case, including the expected and actual results,
+     * and increments the failure counter.
+     *
+     * @param testNo the number of the test case that failed
+     * @param expected the expected result
+     * @param actual the actual result produced by the test
+     */
     private static void reportFailure(int testNo, String expected, String actual) {
         System.out.println("Test " + testNo + " — FAIL");
         System.out.println("  Expected: " + expected);
@@ -46,6 +76,11 @@ public class ModelForumTestingAutomation {
         numFailed++;
     }
 
+    /**
+     * Executes a single automated test case for the forum model.
+     *
+     * @param testNo the number of the test case to execute
+     */
     private static void performTestCase(int testNo) {
         System.out.println("____________________________________________________________________________\n");
         System.out.println("Test " + testNo);
@@ -277,7 +312,15 @@ public class ModelForumTestingAutomation {
         }
     }
 
-    // Utility to remove a reply in replyStore by id via reflection (used to simulate corruption)
+    /**
+     * Removes a reply from the reply store by ID using reflection.
+     *
+     * <p>This helper is used by tests that need to simulate inconsistent or
+     * corrupted internal state.</p>
+     *
+     * @param id the ID of the reply to remove
+     * @throws Exception if reflection fails or the reply cannot be removed
+     */
     private static void removeReplyFromStoreById(int id) throws Exception {
         Class<?> mf = Class.forName("guiForum.ModelForum");
         Field replyStoreField = mf.getDeclaredField("replyStore");

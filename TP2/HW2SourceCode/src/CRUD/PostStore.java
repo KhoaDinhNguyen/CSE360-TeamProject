@@ -1,28 +1,53 @@
 package CRUD;
 import java.util.ArrayList;
 
-// ArrayList is used to store the data because it supports dynamic resizing, simplifies memory management, and provides fast random access to elements.
+// Note: ArrayList is used to store the data because it supports dynamic resizing, simplifies memory management, and provides fast random access to elements.
 
+/**
+ * Stores and manages forum posts in memory.
+ *
+ * <p>This class maintains the complete list of posts as well as a filtered subset
+ * used by search operations in the forum interface.</p>
+ */
 public class PostStore {
 	
 	// ArrayList
 	private ArrayList<Post> PostList;
 	private ArrayList<Post> subsetPostList;
 	
+	/**
+	 * Creates an empty post store.
+	 */
 	public PostStore() {
 	    this.PostList = new ArrayList<>();
 	    this.subsetPostList = new ArrayList<>();
 	    this.subsetPostList.addAll(this.PostList);
 	}
 	
+	/**
+	 * Adds a new post to the store.
+	 *
+	 * @param newPost the post to add
+	 */
 	public void addPost(Post newPost) {
 		PostList.add(newPost);
 	}
 	
+	/**
+	 * Returns the complete list of posts currently stored.
+	 *
+	 * @return the full post list
+	 */
 	public ArrayList<Post> getPostList() {
 		return PostList;
 	}
 	
+	/**
+	 * Retrieves a post by its unique identifier.
+	 *
+	 * @param id the ID of the post to retrieve
+	 * @return the matching post if found; otherwise {@code null}
+	 */
 	public Post retrieve(int id) {
 		for (int index = 0; index < this.PostList.size(); index++) {
 			Post currentPost = PostList.get(index);
@@ -31,15 +56,30 @@ public class PostStore {
 		return null;
 	}
 	 
+	/**
+	 * Removes a post from the store.
+	 *
+	 * @param deletedPost the post to remove
+	 */
 	public void deletePost(Post deletedPost) {
 		// Checking if post exist
 		this.PostList.remove(deletedPost);
 	}
 	
+	/**
+	 * Returns the current filtered subset of posts.
+	 *
+	 * @return the filtered post list
+	 */
 	public ArrayList<Post> getSubsetPostList() {
 	    return subsetPostList;
 	}
 	
+	/**
+	 * Returns the largest post ID currently in the store.
+	 *
+	 * @return the maximum post ID, or {@code -1} if the store is empty
+	 */
 	public int getMaxId() {
 
 	    int max = -1;
@@ -53,6 +93,13 @@ public class PostStore {
 	    return max;
 	}
 	
+	/**
+	 * Filters posts by checking whether the given keyword appears in the title,
+	 * content, or author of each post.
+	 *
+	 * @param keyword the keyword used for filtering
+	 * @return the filtered list of matching posts
+	 */
 	public ArrayList<Post> filterPosts(String keyword) {
         subsetPostList = new ArrayList<>();
 
@@ -79,12 +126,20 @@ public class PostStore {
         return subsetPostList;
     }
 
-    /** Clears filtering and makes subsetPostList equal to all posts. */
+	/**
+	 * Clears any active filtering and resets the subset to include all posts.
+	 */
     public void clearFilter() {
         subsetPostList = new ArrayList<>();
         subsetPostList.addAll(PostList);
     }
 
+    /**
+     * Safely converts a string to lowercase.
+     *
+     * @param s the string to convert
+     * @return the lowercase version of the string, or an empty string if the input is {@code null}
+     */
     private String safeLower(String s) {
         return (s == null) ? "" : s.toLowerCase();
     }

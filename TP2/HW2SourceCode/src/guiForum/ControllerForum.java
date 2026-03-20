@@ -1,23 +1,29 @@
 package guiForum;
 
-
-
+/**
+ * Provides controller actions for the forum user interface.
+ *
+ * <p>This class contains event-handling methods for actions such as logging out
+ * of the forum view and terminating the application.</p>
+ */
 public class ControllerForum {
+	/**
+	 * Creates a forum controller.
+	 */
 	public ControllerForum(){
 	}
 	
+	/**
+	 * Logs the current user out of the forum and returns to the login screen.
+	 */
 	protected static void performLogout() {
-		guiUserLogin.ViewUserLogin.displayUserLogin(ViewerForum.theStage); // fix this latere
+		// TODO: fix this later
+		guiUserLogin.ViewUserLogin.displayUserLogin(ViewerForum.theStage);
 	}
 	
-	/**********
-	 * <p> Method: performQuit() </p>
-	 * 
-	 * <p> Description: This method terminates the execution of the program.  It leaves the
-	 * database in a state where the normal login page will be displayed when the application is
-	 * restarted.</p>
-	 * 
-	 */	
+	/**
+	 * Terminates execution of the application.
+	 */
 	protected static void performQuit() {
 		System.exit(0);
 	}
