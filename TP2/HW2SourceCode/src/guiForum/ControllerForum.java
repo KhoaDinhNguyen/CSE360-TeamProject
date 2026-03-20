@@ -1,8 +1,14 @@
 package guiForum;
 
 
-
+/**
+ * <p> Title: Controller Forum class</p>
+ * <p> This is a controller class for forum GUI to display the forum </p>
+ */
 public class ControllerForum {
+	/**
+	 * Unused default constructor
+	 */
 	public ControllerForum(){
 	}
 	

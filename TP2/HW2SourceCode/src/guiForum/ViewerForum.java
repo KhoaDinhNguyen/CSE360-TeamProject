@@ -24,6 +24,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * <p> This is the the class for managing the GUI of forum. </p>
+ */
 public class ViewerForum {
 	
 	
@@ -93,6 +96,11 @@ public class ViewerForum {
 	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets
 	protected static User theUser;				// The current logged in User
 	
+	/**
+	 * <p>This method is used to display the GUI forum view with the current User and current Stage as reference </p>
+	 * @param ps The current stage GUI 
+	 * @param user The current user 
+	 */
 public static void displayViewerForum(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user
@@ -122,6 +130,9 @@ public static void displayViewerForum(Stage ps, User user) {
 		theStage.show();
 	}
 	
+/**
+ *	This is the private constructor to set the init value for different GUI elements 
+ */
 	private ViewerForum() {
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
@@ -337,11 +348,19 @@ public static void displayViewerForum(Stage ps, User user) {
 		b.setLayoutY(y);		
 	}
 	
+	/**
+	 * <p> Update the post list given the new post list. </p>
+	 * @param newPosts The new post list.
+	 */
 	private static void updatingList(List<Post> newPosts) {
 		postListView.getItems().setAll(newPosts);
 		
 	}
 	
+	/** 
+	 * <p> This method is used to display a selected post </p>
+	 * @param selectedPost The post that will be selected
+	 */
 	private void displayPostDetails(Post selectedPost) {
 
 	    if (selectedPost == null) return;
