@@ -13,6 +13,7 @@ public class Post {
     private final String author;
     private final LocalDateTime createdAt;
     private ArrayList<Integer> replyPostId;
+    private boolean deleted;
 	
     // TODO: Remove Post(id, title, content, author) if Post(id, thread, title, content, author) works
     public Post(int id, String title, String content, String author) {
@@ -33,6 +34,7 @@ public class Post {
     	this.author = author;
     	this.createdAt = LocalDateTime.now();
     	this.replyPostId = new ArrayList<>();
+    	this.deleted = false;
     }
     
     // Getter Function
@@ -60,8 +62,19 @@ public class Post {
         return createdAt;
     }
     
-    public ArrayList<Integer> getReplyPostId(){
+    public ArrayList<Integer> getReplyPostId() {
     	return this.replyPostId;
+    }
+    
+    public boolean isDeleted() {
+    	return this.deleted;
+    }
+    
+    public void softDelete() {
+    	this.author = "[DELETED]";
+    	this.title = "[DELETED]";
+    	this.content = "[DELETED]";
+    	this.deleted = true;
     }
     
     // Setter Function

@@ -165,18 +165,14 @@ public class ModelForum {
 		Post deletedPost = postStore.retrieve(id);
 		if (deletedPost == null) return "Post doesn't exist";
 		
+		if (deletedPost.isDeleted()) return "Post already deleted";
+
 		// Check authorization to delete
-		if (!deletedPost.getAuthor().equals(author)) return "Can't delete other's user post";
-		
-		// Remove child Reply Post
-		ArrayList<Integer> replyList = deletedPost.getReplyPostId();
-		for (int replyId: replyList) {
-			Reply reply = replyStore.retrieve(replyId);
-			replyStore.remove(reply);
+		if (!java.util.Objects.equals(deletedPost.getAuthor(), author)) {
+			return "Can't delete another user's post";
 		}
 		
-		// Delete the post
-		postStore.deletePost(deletedPost);
+		deletedPost.softDelete();
 		return "";
 	}
 	
@@ -185,11 +181,14 @@ public class ModelForum {
 	    // Check existence
 	    Post editedPost = postStore.retrieve(id);
 	    if (editedPost == null) return "Post doesn't exist";
-
+	    
+	    if (editedPost.isDeleted())
+	    	return "Can't edit a deleted post";
+	    
 	    // Safe authorization check (handles null authors)
 	    if (!java.util.Objects.equals(editedPost.getAuthor(), author))
 	        return "Can't edit other's user post";
-
+	    
 	    // Attempt to set title and content (setTitle/setContent return error strings or "")
 	    String setTitleErrorMessage = editedPost.setTitle(title);
 	    String setContentErrorMessage = editedPost.setContent(content);
@@ -249,9 +248,15 @@ public class ModelForum {
 	    }
 
 	    Post parentPost = postStore.retrieve(parentId);
+
 	    if (parentPost == null) {
 	        return "Parent post not found";
 	    }
+
+	    if (parentPost.isDeleted()) {
+	        return "Cannot reply to a deleted post";
+	    }
+
 	    int id = replyStore.getMaxId()+1;
 	    
 //	    System.out.println(id);

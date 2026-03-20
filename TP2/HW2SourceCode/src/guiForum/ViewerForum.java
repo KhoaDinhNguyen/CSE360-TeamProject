@@ -361,8 +361,13 @@ public static void displayViewerForum(Stage ps, User user) {
 	            && (selectedPost.getAuthor() != null)
 	            && selectedPost.getAuthor().equals(theUser.getUserName());
 
-	    editPostButton.setDisable(!isOwner);
-	    deletePostButton.setDisable(!isOwner);
+	    boolean isDeleted = selectedPost.isDeleted();
+
+	    editPostButton.setDisable(!isOwner || isDeleted);
+	    deletePostButton.setDisable(!isOwner || isDeleted);
+	    
+	    replyButton.setDisable(isDeleted);
+	    replyTextArea.setDisable(isDeleted);
 
 	    // Clear old replies
 	    repliesBox.getChildren().clear();
@@ -398,7 +403,8 @@ public static void displayViewerForum(Stage ps, User user) {
 	    // Enable reply UI
 	    replyPane.setVisible(true);
 	    replyPane.setManaged(true);
-	    replyButton.setDisable(false);
+	    replyButton.setDisable(isDeleted);
+	    replyTextArea.setDisable(isDeleted);
 	}	
 	
 	private static void showAddPostWindow() {
@@ -636,12 +642,44 @@ public static void displayViewerForum(Stage ps, User user) {
 	            updatingList(ModelForum.getPostList());
 
 	            // Clear selection + detail UI
+	            /*
 	            postListView.getSelectionModel().clearSelection();
 	            selectedPost = null;
 
 	            detailTitle.setText("Title: ");
 	            detailAuthor.setText("Author: ");
 	            detailContent.setText("Content: ");
+	            */
+	            //updatingList(ModelForum.getPostList());
+
+	            Post refreshed = postListView.getItems().stream()
+	                    .filter(p -> p.getId() == post.getId())
+	                    .findFirst()
+	                    .orElse(null);
+
+	            selectedPost = refreshed;
+
+	            if (refreshed != null) {
+	                postListView.getSelectionModel().select(refreshed);
+	                if (theView != null) theView.displayPostDetails(refreshed);
+	            } else {
+	                postListView.getSelectionModel().clearSelection();
+	                selectedPost = null;
+
+	                detailTitle.setText("Title: ");
+	                detailAuthor.setText("Author: ");
+	                detailContent.setText("Content: ");
+	                repliesBox.getChildren().clear();
+
+	                replyPane.setVisible(false);
+	                replyPane.setManaged(false);
+	                replyButton.setDisable(true);
+
+	                editPostButton.setDisable(true);
+	                deletePostButton.setDisable(true);
+	            }
+	            
+	            /*
 	            repliesBox.getChildren().clear();
 
 	            // Hide reply UI again
@@ -651,6 +689,7 @@ public static void displayViewerForum(Stage ps, User user) {
 
 	            editPostButton.setDisable(true);
 	            deletePostButton.setDisable(true);
+	            */
 	        }
 	    });
 	}
