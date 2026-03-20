@@ -27,6 +27,13 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
+/**
+ * Provides the JavaFX view for the discussion forum.
+ *
+ * <p>This class builds and manages the forum user interface, including the post list,
+ * post details, reply area, search controls, and actions for creating, editing,
+ * deleting, and viewing posts and replies.</p>
+ */
 public class ViewerForum {
 	
 	
@@ -84,9 +91,6 @@ public class ViewerForum {
 	
 	private static ViewerForum theView;
 	
-	
-	
-	
 	// Reference for the in-memory database so this package has access
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
 	
@@ -97,7 +101,13 @@ public class ViewerForum {
 	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets
 	protected static User theUser;				// The current logged in User
 	
-public static void displayViewerForum(Stage ps, User user) {
+	/**
+	 * Displays the forum view for the specified user on the provided stage.
+	 *
+	 * @param ps the stage used to display the forum scene
+	 * @param user the user currently viewing the forum
+	 */
+	public static void displayViewerForum(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user
 		theStage = ps;
@@ -126,6 +136,12 @@ public static void displayViewerForum(Stage ps, User user) {
 		theStage.show();
 	}
 	
+	/**
+	 * Creates the forum view object.
+	 *
+	 * <p>This constructor is private because the class uses shared static UI state
+	 * and is not intended to be instantiated freely from outside the class.</p>
+	 */
 	private ViewerForum() {
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
@@ -342,11 +358,24 @@ public static void displayViewerForum(Stage ps, User user) {
 		b.setLayoutY(y);		
 	}
 	
+	/**
+	 * Replaces the contents of the forum post list view with the provided posts.
+	 *
+	 * @param newPosts the posts to display in the list view
+	 */
 	private static void updatingList(List<Post> newPosts) {
 		postListView.getItems().setAll(newPosts);
 		
 	}
 	
+	/**
+	 * Displays the details of the selected post and loads its associated replies.
+	 *
+	 * <p>This method also updates the enabled or disabled state of edit, delete,
+	 * and reply controls based on ownership and deletion status.</p>
+	 *
+	 * @param selectedPost the post whose details should be shown
+	 */
 	private void displayPostDetails(Post selectedPost) {
 
 	    if (selectedPost == null) return;
@@ -407,6 +436,9 @@ public static void displayViewerForum(Stage ps, User user) {
 	    replyTextArea.setDisable(isDeleted);
 	}	
 	
+	/**
+	 * Opens a window that allows the current user to create a new post.
+	 */
 	private static void showAddPostWindow() {
 	    Stage addStage = new Stage();
 	    addStage.setTitle("Create New Post");
@@ -508,6 +540,11 @@ public static void displayViewerForum(Stage ps, User user) {
 	    addStage.show();
 	}
 	
+	/**
+	 * Opens a window that allows the current user to edit an existing post.
+	 *
+	 * @param post the post to edit
+	 */
 	private static void showEditPostWindow(Post post) {
 	    Stage editStage = new Stage();
 	    editStage.setTitle("Edit Post");
@@ -616,6 +653,14 @@ public static void displayViewerForum(Stage ps, User user) {
 	    editStage.show();
 	}
 	
+	/**
+	 * Shows a confirmation dialog and, if confirmed, deletes the specified post.
+	 *
+	 * <p>After deletion, the forum list and detail pane are refreshed to reflect
+	 * the updated post state.</p>
+	 *
+	 * @param post the post to delete
+	 */
 	private static void confirmAndDeletePost(Post post) {
 
 	    Alert confirm = new Alert(AlertType.CONFIRMATION);
@@ -694,6 +739,11 @@ public static void displayViewerForum(Stage ps, User user) {
 	    });
 	}
 	
+	/**
+	 * Opens a window that allows the current user to edit an existing reply.
+	 *
+	 * @param reply the reply to edit
+	 */
 	private void showEditReplyWindow(Reply reply) {
 	    Stage editStage = new Stage();
 	    editStage.setTitle("Edit Reply");
@@ -758,6 +808,11 @@ public static void displayViewerForum(Stage ps, User user) {
 	    editStage.show();
 	}
 	
+	/**
+	 * Shows a confirmation dialog and, if confirmed, deletes the specified reply.
+	 *
+	 * @param reply the reply to delete
+	 */
 	private void confirmAndDeleteReply(Reply reply) {
 	    Alert confirm = new Alert(AlertType.CONFIRMATION);
 	    confirm.setTitle("Delete Reply");

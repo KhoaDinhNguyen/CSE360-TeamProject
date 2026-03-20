@@ -9,26 +9,14 @@ import CRUD.Reply;
 import CRUD.ReplyStore;
 import entityClasses.*;
 
-public class ModelForum {
-
-/*******
- * <p> Title: ModelRole1Home Class. </p>
- * 
- * <p> Description: The Role1Home Page Model.  This class is a stub for future expansion.
- * 
- * This class is not used as there is no unique data manipulation for this GUI page.</p>
- * 
- * <p> Copyright: Lynn Robert Carter © 2025 </p>
- * 
- * @author Lynn Robert Carter
- * 
- * @version 1.00		2025-08-15 Initial version
- * @version 1.01		2025-09-13 Updated JavaDoc description
- *  
+/**
+ * Provides the in-memory model logic for the forum feature.
+ *
+ * <p>This class manages forum posts and replies, validates user actions,
+ * supports soft deletion of posts, and provides filtering and retrieval
+ * operations for the forum user interface.</p>
  */
-	
-	
-	
+public class ModelForum {
 	private static CRUD.PostStore postStore = new CRUD.PostStore();
 	private static CRUD.ReplyStore replyStore = new CRUD.ReplyStore();
 	private static ThreadStore threadStore = new ThreadStore();
@@ -84,6 +72,14 @@ public class ModelForum {
 	    
 	}
 	
+	/**
+	 * Adds a new post to the forum after validating its title, content, and author.
+	 *
+	 * @param title the title of the post
+	 * @param content the body content of the post
+	 * @param author the username of the author creating the post
+	 * @return an empty string if the post is added successfully; otherwise, an error message
+	 */
 	// Post Action
 	//TODO: Remove addPost(title, content, author) if the addPost(thread, title, content, author) works
 	public static String addPost(String title, String content, String author) {
@@ -156,10 +152,25 @@ public class ModelForum {
 	    return "";
 	}
 	
+  	/**
+	 * Returns the complete list of forum posts.
+	 *
+	 * @return the list of posts currently stored in the forum
+	 */
 	public static List<Post> getPostList() {
 		return postStore.getPostList();
 	}
 	
+	/**
+	 * Soft deletes a post if it exists and the requesting user is its author.
+	 *
+	 * <p>Soft deletion preserves the post in the store but replaces its visible
+	 * fields with {@code "[DELETED]"} and marks it as deleted.</p>
+	 *
+	 * @param id the ID of the post to delete
+	 * @param author the username of the user attempting to delete the post
+	 * @return an empty string if the post is deleted successfully; otherwise, an error message
+	 */
 	public static String deletePost(int id, String author) {
 		// Checking if post exist
 		Post deletedPost = postStore.retrieve(id);
@@ -176,6 +187,16 @@ public class ModelForum {
 		return "";
 	}
 	
+	/**
+	 * Edits an existing post if it exists, has not been deleted, and the requesting
+	 * user is its author.
+	 *
+	 * @param id the ID of the post to edit
+	 * @param author the username of the user attempting to edit the post
+	 * @param title the new title for the post
+	 * @param content the new content for the post
+	 * @return an empty string if the edit succeeds; otherwise, an error message
+	 */
 	// TODO: remove editPost(id, author, title, content) if editPost(id, thread, author, title,content) works
 	public static String editPost (int id, String author, String title, String content) {
 	    // Check existence
@@ -203,7 +224,8 @@ public class ModelForum {
 	    return "";
 	}
 	
-	/**
+
+  /**
 	 * <p>Update existed post with new thread, title, and content (cannot update author)</p>
 	 * @param id is an integer that represents post's id
 	 * @param thread is a String that represents name of new thread
@@ -240,6 +262,16 @@ public class ModelForum {
 	}
 	
 	// Reply Action
+  /**
+	 * Adds a reply to an existing post after validating the reply content.
+	 *
+	 * <p>Replies cannot be added to deleted posts.</p>
+	 *
+	 * @param content the content of the reply
+	 * @param author the username of the reply author
+	 * @param parentId the ID of the parent post receiving the reply
+	 * @return an empty string if the reply is added successfully; otherwise, an error message
+	 */
 	public static String addReply(String content, String author, int parentId) {
 
 	    // Validate
@@ -269,9 +301,16 @@ public class ModelForum {
 	    parentPost.addReplyId(id);
 
 
-	    return ""; // 
+	    return "";
 	}
 	
+	/**
+	 * Deletes an existing reply if it exists and the requesting user is its author.
+	 *
+	 * @param id the ID of the reply to delete
+	 * @param author the username of the user attempting to delete the reply
+	 * @return an empty string if the reply is deleted successfully; otherwise, an error message
+	 */
 	public static String deleteReply(int id, String author) {
 		// Checking if post exist
 		Reply deletedReply = replyStore.retrieve(id);
@@ -285,6 +324,14 @@ public class ModelForum {
 		return "";
 	}
 	
+	/**
+	 * Edits an existing reply if it exists and the requesting user is its author.
+	 *
+	 * @param id the ID of the reply to edit
+	 * @param author the username of the user attempting to edit the reply
+	 * @param content the new content of the reply
+	 * @return an empty string if the reply is edited successfully; otherwise, an error message
+	 */
 	public static String editReply (int id, String author,String content) {
 		String errorMessage = "";
 		
@@ -300,6 +347,12 @@ public class ModelForum {
 		return errorMessage + setContentErrorMessage;
 	}
 	
+	/**
+	 * Returns all replies associated with a given post.
+	 *
+	 * @param id the ID of the post whose replies should be retrieved
+	 * @return a list of replies associated with the specified post
+	 */
 	public static List<Reply> getRepliesByPostId(int id) {
 
 	    Post currentPost = postStore.retrieve(id);
@@ -322,18 +375,28 @@ public class ModelForum {
 	    return replies;
 	}
 	
-	// Filter
-	
+	/**
+	 * Filters the list of posts using the provided keyword.
+	 *
+	 * @param keyword the keyword used to filter posts
+	 * @return the filtered list of matching posts
+	 */
 	public static List<Post> filterPosts(String keyword) {
 	    return postStore.filterPosts(keyword); // uses your PostStore filter
 	}
 
-	/** Clears the filter so the "subset" becomes the full list again. */
+	/**
+	 * Clears the current post filter so that all posts are included again.
+	 */
 	public static void clearPostFilter() {
 	    postStore.clearFilter();
 	}
 
-	/** If your GUI wants to directly read the current filtered list. */
+	/**
+	 * Returns the current filtered post list.
+	 *
+	 * @return the filtered subset of posts
+	 */
 	public static List<Post> getFilteredPostList() {
 	    return postStore.getSubsetPostList();
 	}
