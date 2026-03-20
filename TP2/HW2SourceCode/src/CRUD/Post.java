@@ -1,6 +1,9 @@
 package CRUD;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import entityClasses.ThreadStore;
 
 /**
  * Represents a forum post.
@@ -12,7 +15,8 @@ public class Post {
 	private final int id;
     private String title;
     private String content;
-    private String author;
+    private String thread;
+    private final String author;
     private final LocalDateTime createdAt;
     private ArrayList<Integer> replyPostId;
     private boolean deleted;
@@ -25,8 +29,20 @@ public class Post {
      * @param content the body content of the post
      * @param author the username of the author who created the post
      */
+    // TODO: Remove Post(id, title, content, author) if Post(id, thread, title, content, author) works
     public Post(int id, String title, String content, String author) {
     	this.id = id;
+    	this.thread = "General";
+    	this.title = title;
+    	this.content = content;
+    	this.author = author;
+    	this.createdAt = LocalDateTime.now();
+    	this.replyPostId = new ArrayList<>();
+    }
+    
+    public Post(int id, String thread, String title, String content, String author) {
+    	this.id = id;
+    	this.thread = thread == null? "General": thread;
     	this.title = title;
     	this.content = content;
     	this.author = author;
@@ -44,11 +60,15 @@ public class Post {
         return id;
     }
 
+    public String getThread() {
+    	return thread;
+    }
+    
     /**
-     * Returns the title of the post.
-     *
-     * @return the post title
-     */
+    * Returns the title of the post.
+    *
+    * @return the post title
+    */
     public String getTitle() {
         return title;
     }
@@ -109,13 +129,29 @@ public class Post {
     	this.deleted = true;
     }
     
+
+    // Setter Function
+ // In CRUD.Post class
+    public String setThread(String thread) {
+    	if (thread == null || thread.isBlank()) {
+    		return "Thread could not be empty";
+    	}
+    	else if (thread.length() > 100) {
+    		return "Thread name could not be longer than 100 characters";
+    	}
+    	
+    	this.thread = thread;
+    	
+    	return "";
+    }
+  
     /**
-     * Updates the title of the post if the provided title is valid.
-     *
-     * @param title the new title to assign to the post
-     * @return an empty string if the title was updated successfully; otherwise,
-     *         an error message describing why the update failed
-     */
+    * Updates the title of the post if the provided title is valid.
+    *
+    * @param title the new title to assign to the post
+    * @return an empty string if the title was updated successfully; otherwise,
+    *         an error message describing why the update failed
+    */
     public String setTitle(String title) {
         if (title == null || title.isBlank()) {
             return "Title could not be empty";
@@ -159,5 +195,27 @@ public class Post {
     @Override
     public String toString() {
     	return title;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+    	if (this == o) return true;
+    	if (o == null || getClass() != o.getClass()) return false;
+    	
+    	Post otherPost = (Post)o;
+    	
+    	ArrayList<Boolean> checkConditions = new ArrayList<>(Arrays.asList(
+    			this.thread == otherPost.thread, 
+    			this.author == otherPost.author,
+    			this.title == otherPost.title,
+    			this.content == otherPost.content
+    			));
+    	
+    	return !checkConditions.contains(false);
+    }
+    
+    @Override
+    public int hashCode() {
+    	return java.util.Objects.hash(this.id, this.author);
     }
 }
