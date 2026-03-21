@@ -16,7 +16,7 @@ public class Post {
     private String title;
     private String content;
     private String thread;
-    private final String author;
+    private String author;
     private final LocalDateTime createdAt;
     private ArrayList<Integer> replyPostId;
     private boolean deleted;
