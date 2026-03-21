@@ -259,7 +259,7 @@ public class ModelForumTest {
 		 * Verifies that {@code addPost} successfully processes requests when all parameters meet the required validation criteria.
 		 * @param threadName is a String that represents thread's names exist in the database
 		 * @param titleLength is an integer between 1 and 300
-		 * @param contentLength is an integer between 1and 2000
+		 * @param contentLength is an integer between 1 and 2000
 		 */
 		@ParameterizedTest(name = "thread={0}, titleLength={1}, contentLength={2}")
 		@CsvSource(value= {"General, 10, 200", "Lectures, 50, 100", "Problem Sets, 200, 3000"})
@@ -280,7 +280,7 @@ public class ModelForumTest {
 	}
 	
 	/**
-	 * <p>PostUpdateTest class is used to contain all test cases related to Update operation on Post, called by {@code editPost}
+	 * <p>PostUpdateTest class is used to contain all test cases related to UPDATE operation on Post, called by {@code editPost}
 	 */
 	@Nested
 	@DisplayName("Post UPDATE test cases")
@@ -502,7 +502,7 @@ public class ModelForumTest {
 		 * @param postId is an integer that represents post id exists in the database
 		 * @param threadName is a String that represents thread's names exist in the database
 		 * @param titleLength is an integer between 1 and 300
-		 * @param contentLength is an integer between 1and 2000
+		 * @param contentLength is an integer between 1 and 2000
 		 */
 		@ParameterizedTest(name = "id={0}, thread={1}, titleLength={2}, contentLength={3}")
 		@CsvSource(value= {"2, General, 10, 200", "1, Lectures, 50, 100", "3, Problem Sets, 200, 3000"})
