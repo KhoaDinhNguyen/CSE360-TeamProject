@@ -12,6 +12,7 @@ import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 
 import CRUD.Post;
+import CRUD.Reply;
 import entityClasses.*;
 
 /**
@@ -52,7 +53,7 @@ public class ModelForumTest {
 	}
 	
 	/**
-	 * <p>PostCreateTest class is used to contain all test cases related to CREATE operation on Post, called by {@code addPost}
+	 * <p>PostCreateTest class is used to contain all test cases related to CREATE operation on Post class, called by {@code addPost}
 	 */
 	@Nested
 	@DisplayName("Post CREATE test cases")
@@ -116,7 +117,7 @@ public class ModelForumTest {
 			String content = "";
 			String author = generateRandomString(30);
 			
-			String expected = "Title Content could not be empty";
+			String expected = "Title could not be empty\nContent could not be empty";
 			
 			// When
 			String actual = addPost(thread, title, content, author);
@@ -152,7 +153,7 @@ public class ModelForumTest {
 		 */
 		@ParameterizedTest
 		@ValueSource(ints = {2001, 2050, 4000})
-		public void shouldReturnOverflowContentErrorMessage_whenPostTitleIsOver2000Characters(Integer contentLength) {
+		public void shouldReturnOverflowContentErrorMessage_whenPostContentIsOver2000Characters(Integer contentLength) {
 			String thread = "Problem Sets";
 			String title = generateRandomString(30);
 			String content = generateRandomString(contentLength);
@@ -180,7 +181,7 @@ public class ModelForumTest {
 			String content = generateRandomString(contentLength);
 			String author = generateRandomString(30);
 			
-			String expected = "Title Content exceed character limitions (title: 300, content: 2000)";
+			String expected = "Title length can not be longer than 300\nContent length can not be longer than 2000";
 			
 			// When
 			String actual = addPost(thread, title, content, author);
@@ -262,7 +263,7 @@ public class ModelForumTest {
 		 * @param contentLength is an integer between 1 and 2000
 		 */
 		@ParameterizedTest(name = "thread={0}, titleLength={1}, contentLength={2}")
-		@CsvSource(value= {"General, 10, 200", "Lectures, 50, 100", "Problem Sets, 200, 3000"})
+		@CsvSource(value= {"General, 10, 200", "Lectures, 50, 100", "Problem Sets, 300, 2000"})
 		public void shouldReturnNoErrorMessage_whenPostThreadTitleContentAuthorAreValid(String threadName, Integer titleLength, Integer contentLength) {
 			String thread = threadName;
 			String title = generateRandomString(titleLength);
@@ -280,7 +281,7 @@ public class ModelForumTest {
 	}
 	
 	/**
-	 * <p>PostUpdateTest class is used to contain all test cases related to UPDATE operation on Post, called by {@code editPost}
+	 * <p>PostUpdateTest class is used to contain all test cases related to UPDATE operation on Post class, called by {@code editPost}
 	 */
 	@Nested
 	@DisplayName("Post UPDATE test cases")
@@ -373,7 +374,7 @@ public class ModelForumTest {
 			String newContent = "";
 			String author = post.getAuthor();
 			
-			String expected = "Title Content could not be empty";
+			String expected = "Title could not be empty\nContent could not be empty";
 			
 			// When
 			String actual = editPost(id, newThread, author, newTitle, newContent);
@@ -411,7 +412,7 @@ public class ModelForumTest {
 		 */
 		@ParameterizedTest
 		@ValueSource(ints = {2003, 2500, 3000})
-		public void shouldReturnOverflowContentErrorMessage_whenPostTitleIsOver2000Characters(Integer contentLength) {
+		public void shouldReturnOverflowContentErrorMessage_whenPostContentIsOver2000Characters(Integer contentLength) {
 			int id = 4;
 			Post post = postStore.retrieve(id);
 			String newThread = "Lectures";
@@ -438,12 +439,12 @@ public class ModelForumTest {
 		public void shouldReturnOverflowTitleAndContentErrorMessage_WhenPostTitleAndContentAreOverflow(Integer titleLength, Integer contentLength) {		
 			int id = 5;
 			Post post = postStore.retrieve(id);
-			String newThread = "Generals";
+			String newThread = "General";
 			String newTitle = generateRandomString(titleLength);
 			String newContent = generateRandomString(contentLength);
 			String author = post.getAuthor();
 			
-			String expected = "Title Content exceed character limitions (title: 300, content: 2000)";
+			String expected = "Title length can not be longer than 300\nContent length can not be longer than 2000";
 			
 			// When
 			String actual = editPost(id, newThread, author, newTitle, newContent);
@@ -505,7 +506,7 @@ public class ModelForumTest {
 		 * @param contentLength is an integer between 1 and 2000
 		 */
 		@ParameterizedTest(name = "id={0}, thread={1}, titleLength={2}, contentLength={3}")
-		@CsvSource(value= {"2, General, 10, 200", "1, Lectures, 50, 100", "3, Problem Sets, 200, 3000"})
+		@CsvSource(value= {"2, General, 10, 200", "1, Lectures, 50, 100", "3, Problem Sets, 300, 2000"})
 		public void shouldReturnNoErrorMessage_whenPostIdThreadTitleContentAuthorAreValid(int postId, String threadName, Integer titleLength, Integer contentLength) {
 			int id = postId;
 			Post post = postStore.retrieve(id);
@@ -523,6 +524,246 @@ public class ModelForumTest {
 			assertEquals(expected, actual);
 		}
 	}
+	
+	/**
+	 * <p>ReplyCreateTest class is used to contain all test cases related to CREATE operation on Reply class, called by {@code addReply}
+	 */
+	@Nested
+	@DisplayName("Reply CREATE test cases")
+	public class ReplyCreateTest {
+		
+		/**
+		 * The class constructor but it will not be used in this project
+		 */
+		public ReplyCreateTest() {
+			
+		}
+		
+		/**
+		 * <p>Verifies that reply content could not be empty </p>
+		 */
+		@Test
+		public void shouldReturnEmptyContentErrorMessage_whenReplyContentIsEmpty() {
+			// Given
+			int id = 0;
+			String content = "";
+			String author = generateRandomString(30);
+			
+			String expected = "Content could not be empty";
+			
+			// When
+			String actual = addReply(content, author, id);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+	
+		
+		/**
+		 * <p>Verifies that reply content's max length is 2000</p>
+		 * @param contentLength is an integer value greater than 2000
+		 */
+		@ParameterizedTest
+		@ValueSource(ints = {2001, 2050, 4000})
+		public void shouldReturnOverflowContentErrorMessage_whenReplyContentIsOver2000Characters(Integer contentLength) {
+			int id = 1;
+			String content = generateRandomString(contentLength);
+			String author = generateRandomString(30);
+			
+			String expected = "Content length can not be longer than 2000";
+			
+			// When
+			String actual = addReply(content, author, id);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+		
+		/**
+		 * <p>Verifies that post must be existed before being replied</p>
+		 * @param postId is an integer represents post id does not exist in the database 
+		 */
+		@ParameterizedTest
+		@ValueSource(ints= {-2, 7, 1001})
+		public void shouldReturnNonExistPostErrorMessage_whenReplyToPostDoesNotExist(int postId) {
+			// Given
+			int id = postId;
+			String content = generateRandomString(30);
+			String author = generateRandomString(30);
+			
+			String expected = "Parent post not found";
+			
+			// When
+			String actual = addReply(content, author, id);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+		
+		/**
+		 * <p>Verifies that deleted post cannot be replied</p>
+		 */
+		@Test
+		public void shouldReturnDeletedPostErrorMessage_whenReplyToDeletedPost() {
+			// Given
+			int id = 0;
+			Post post = postStore.retrieve(id);
+			String content = generateRandomString(30);
+			String author = post.getAuthor();			
+			deletePost(id, author);
+
+			String expected = "Cannot reply to a deleted post";
+			
+			// When
+			String actual = addReply(content, author, id);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+		
+		/**
+		 * Verifies that {@code addReply} successfully processes requests when all parameters meet the required validation criteria.
+		 * @param postId is an integer that represents post id exists in the database
+		 * @param contentLength is an integer between 1 and 2000
+		 */
+		@ParameterizedTest(name = "postId={0}, contentLength={1}")
+		@CsvSource(value= {"0, 200", "3, 100", "5, 2000"})
+		public void shouldReturnNoErrorMessage_whenReplyPostParentAndContentAreValid(Integer postId, Integer contentLength) {
+			int id = postId;
+			String content = generateRandomString(contentLength);
+			String author = generateRandomString(30);
+			
+			String expected = "";
+			
+			// When
+			String actual = addReply(content, author, id);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+	}
+	
+	/**
+	 * <p>ReplyUpdateTest class is used to contain all test cases related to UPDATE operation on Reply class, called by {@code editReply}
+	 */
+	@Nested
+	@DisplayName("Reply UPDATE test cases")
+	public class ReplyUpdateTest {
+		
+		/**
+		 * The class constructor but it will not be used in this project
+		 */
+		public ReplyUpdateTest() {
+			
+		}
+		
+		/**
+		 * <p>Verifies that reply content could not be empty </p>
+		 */
+		@Test
+		public void shouldReturnEmptyContentErrorMessage_whenReplyContentIsEmpty() {
+			// Given
+			int id = 0;
+			Reply reply = replyStore.retrieve(id);
+			
+			String newContent = "";
+			String author = reply.getAuthor();
+			
+			String expected = "Content could not be empty";
+			
+			// When
+			String actual = editReply(id, author, newContent);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+	
+		
+		/**
+		 * <p>Verifies that reply content's max length is 2000</p>
+		 * @param contentLength is an integer value greater than 2000
+		 */
+		@ParameterizedTest
+		@ValueSource(ints = {2001, 2050, 4000})
+		public void shouldReturnOverflowContentErrorMessage_whenReplyContentIsOver2000Characters(Integer contentLength) {
+			int id = 1;
+			Reply reply = replyStore.retrieve(id);
+			
+			String newContent = generateRandomString(contentLength);
+			String author = reply.getAuthor();
+			
+			String expected = "Content length can not be longer than 2000";
+			
+			// When
+			String actual = editReply(id, author, newContent);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+		
+		/**
+		 * <p>Verifies that post must be existed before being replied</p>
+		 * @param postId is an integer represents post id does not exist in the database 
+		 */
+		@ParameterizedTest
+		@ValueSource(ints= {-3, 10, 2000})
+		public void shouldReturnNonExistPostErrorMessage_whenReplyToPostDoesNotExist(int postId) {
+			// Given
+			int id = postId;
+			String newContent = generateRandomString(30);
+			String author = generateRandomString(30);
+			
+			String expected = "Post doesn't exist";
+			
+			// When
+			String actual = editReply(id, author, newContent);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+		
+		/**
+		 * <p>Verifies that only reply's author can edit their reply</p>
+		 */
+		@Test
+		public void shouldReturnAuthorErrorMessage_whenNotReplyAuthorEditTheirReply() {
+			int id = 2;
+			String newContent = generateRandomString(30);
+			String author = generateRandomString(3);
+
+			String expected = "Can't edit other's user reply";
+			
+			// When
+			String actual = editReply(id, author, newContent);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+		
+		/**
+		 * Verifies that {@code editReply} successfully processes requests when all parameters meet the required validation criteria.
+		 * @param postId is an integer that represents post id exists in the database
+		 * @param contentLength is an integer between 1 and 2000
+		 */
+		@ParameterizedTest(name = "postId={0}, contentLength={1}")
+		@CsvSource(value= {"0, 200", "3, 100", "5, 2000"})
+		public void shouldReturnNoErrorMessage_whenReplyPostParentAndContentAndAuthorAreValid(Integer postId, Integer contentLength) {
+			int id = postId;
+			Reply reply = replyStore.retrieve(id);
+			
+			String newContent = generateRandomString(contentLength);
+			String author = reply.getAuthor();
+			
+			String expected = "";
+			
+			// When
+			String actual = editReply(id, author, newContent);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+	}
+	
 	private static String generateRandomString(int length) {
 		if (length <= 0) {
 			return "";

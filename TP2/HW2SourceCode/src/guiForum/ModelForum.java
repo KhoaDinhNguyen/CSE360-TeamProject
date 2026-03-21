@@ -117,24 +117,28 @@ public class ModelForum {
 		if (thread == null || thread.isBlank()) {
 			return addPost("General", title, content, author);
 		}
-		else if (thread.length() > 100) {
-			return "Thread name could not be longer than 100 characters";
-		}
-		else if (!threadStore.checkThreadExist(thread)) {
-			return "Thread does not exist in the database";
+		String threadErrorMessage = threadValidation(thread);
+		
+		if (threadErrorMessage.compareTo("") != 0) {
+			return threadErrorMessage;
 		}
 		
-	    // Validate title
-	    if (title == null || title.isBlank()) {
-	        if (content == null || content.isBlank()) {
-	            return "Title Content could not be empty";
-	        }
-	        return "Title could not be empty";
+	    // Validate title and content
+		String titleErrorMessage = titleValidation(title);
+		boolean isTitleInvalid = !titleErrorMessage.isEmpty();
+		
+	    String contentErrorMessage = contentValidation(content);
+	    boolean isContentInvalid = !contentErrorMessage.isEmpty();
+	    
+	    
+	    if (isTitleInvalid && isContentInvalid) {
+	    	return titleErrorMessage + "\n" + contentErrorMessage;
 	    }
-
-	    // Validate content
-	    if (content == null || content.isBlank()) {
-	        return "Content could not be empty";
+	    else if (isTitleInvalid) {
+	    	return titleErrorMessage;
+	    }
+	    else if (isContentInvalid) {
+	    	return contentErrorMessage;
 	    }
 
 	    // Validate author
@@ -247,22 +251,27 @@ public class ModelForum {
 	    if (!threadStore.checkThreadExist(thread)) {
 	    	return "Thread does not exist in the database";
 	    }
-	    // Attempt to set title and content (setTitle/setContent return error strings or "")
-	    String setThreadErrorMessage = editedPost.setThread(thread);
-	    String setTitleErrorMessage = editedPost.setTitle(title);
-	    String setContentErrorMessage = editedPost.setContent(content);
-
-	    boolean threadError = setThreadErrorMessage != null && !setThreadErrorMessage.isBlank();
-	    boolean titleError = setTitleErrorMessage != null && !setTitleErrorMessage.isBlank();
-	    boolean contentError = setContentErrorMessage != null && !setContentErrorMessage.isBlank();
-
-	    //TODO: return wrong error if the title or content exceed limited characters
-	    if (threadError) return setThreadErrorMessage;
-	    if (titleError && contentError) return "Title Content could not be empty";
-	    if (titleError) return "Title could not be empty";
-	    if (contentError) return "Content could not be empty";
-
-	    return "";
+	    // Attempt to set thread and title and content (setTitle/setContent return error strings or "")
+	    
+	    String errorMessage = "";
+	    
+	    // Validate thread
+	    String threadErrorMessage = threadValidation(thread);
+	    if (threadErrorMessage.isEmpty()) editedPost.setThread(thread); 
+	    else errorMessage += threadErrorMessage;
+	    
+	    // Validate title
+	    
+		String titleErrorMessage = titleValidation(title);
+		if (titleErrorMessage.isEmpty()) editedPost.setTitle(title);
+		else errorMessage += (errorMessage.isEmpty() ? "" : "\n") + titleErrorMessage;
+		
+		// Validate content
+	    String contentErrorMessage = contentValidation(content);
+		if (contentErrorMessage.isEmpty()) editedPost.setTitle(title);
+		else errorMessage += (errorMessage.isEmpty() ? "" : "\n") + contentErrorMessage;
+	    
+	    return errorMessage;
 	}
 	
 	// Reply Action
@@ -278,10 +287,9 @@ public class ModelForum {
 	 */
 	public static String addReply(String content, String author, int parentId) {
 
-	    // Validate
-	    if (content == null || content.isBlank()) {
-	        return "Content could not be empty";
-	    }
+	    // Validate content
+		String contentErrorMessage = contentValidation(content);
+	    if (!contentErrorMessage.isEmpty()) return contentErrorMessage;
 
 	    Post parentPost = postStore.retrieve(parentId);
 
@@ -336,19 +344,19 @@ public class ModelForum {
 	 * @param content the new content of the reply
 	 * @return an empty string if the reply is edited successfully; otherwise, an error message
 	 */
-	public static String editReply (int id, String author,String content) {
-		String errorMessage = "";
-		
+	public static String editReply (int id, String author,String content) {		
 		// Checking if post exist
 		Reply editedReply = replyStore.retrieve(id);
 		if (editedReply == null) return "Post doesn't exist";
 		
 		// Check authorization to delete
-		if (!editedReply.getAuthor().equals(author)) return "Can't edit other's user post";
+		if (!editedReply.getAuthor().equals(author)) return "Can't edit other's user reply";
 		
-		String setContentErrorMessage = editedReply.setContent(content);
+	    String contentErrorMessage = contentValidation(content);
+		if (contentErrorMessage.isEmpty()) editedReply.setContent(content);
+		else return contentErrorMessage;
 		
-		return errorMessage + setContentErrorMessage;
+		return "";
 	}
 	
 	/**
@@ -503,4 +511,38 @@ public class ModelForum {
 
 	    addReply("Infinite recursion without base case causes it.", "Alice", 5);
 	}
+	
+	private static String titleValidation(String title) {
+		if (title == null || title.isBlank()) {
+			return "Title could not be empty";
+		}
+		else if (title.length() > 300) {
+			return "Title length can not be longer than 300";
+		}
+		
+		return "";
+	}
+	
+	private static String contentValidation(String content) {
+		if (content == null || content.isBlank()) {
+			return "Content could not be empty";
+		}
+		else if (content.length() > 2000) {
+			return "Content length can not be longer than 2000";
+		}
+		
+		return "";
+	}
+	
+	private static String threadValidation(String thread) {
+		if (thread.length() > 100) {
+			return "Thread name could not be longer than 100 characters";
+		}
+		else if (!threadStore.checkThreadExist(thread)) {
+			return "Thread does not exist in the database";
+		}
+		
+		return "";
+	}
+	
 }
