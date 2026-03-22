@@ -76,7 +76,7 @@ public class ViewerForum {
 	
 	private static TextField tfSearch;
 	private static Button button_Search;
-	Button button_Clear = new Button("Clear");
+	private static Button button_Clear;
 	
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -179,6 +179,7 @@ public class ViewerForum {
 		});
 		
 		// Clear Button		
+		button_Clear = new Button("Clear");
 		setupButtonUI(button_Clear, "Dialog", 13, 75, Pos.CENTER, 570, 55);
 
 		button_Clear.setOnAction(e -> {
