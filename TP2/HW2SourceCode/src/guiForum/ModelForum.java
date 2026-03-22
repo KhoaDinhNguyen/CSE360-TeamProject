@@ -86,30 +86,39 @@ public class ModelForum {
 	    return addPost("General", title, content, author);
 	}
 	
-	public static String addPost(String thread, String title, String content, String author) {
-	    if (author == null || author.isBlank()) {
-	        return "Author can’t be null";
-	    }
-
-	    String threadError = Post.validateThread(thread, threadStore);
-	    String titleError = Post.validateTitle(title);
-	    String contentError = Post.validateContent(content);
-
-	    if ("Title could not be empty".equals(titleError)
-	            && "Content could not be empty".equals(contentError)) {
-	        return "Title Content could not be empty";
-	    }
-
-	    if (!threadError.isEmpty()) {
-	        return threadError;
-	    }
-
-	    if (!titleError.isEmpty()) {
-	        return titleError;
-	    return "";
-	}
+//	public static String addPost(String thread, String title, String content, String author) {
+//	    if (author == null || author.isBlank()) {
+//	        return "Author can’t be null";
+//	    }
+//
+//	    String threadError = Post.validateThread(thread, threadStore);
+//	    String titleError = Post.validateTitle(title);
+//	    String contentError = Post.validateContent(content);
+//
+//	    if ("Title could not be empty".equals(titleError)
+//	            && "Content could not be empty".equals(contentError)) {
+//	        return "Title Content could not be empty";
+//	    }
+//
+//	    if (!threadError.isEmpty()) {
+//	        return threadError;
+//	    }
+//
+//	    if (!titleError.isEmpty()) {
+//	        return titleError;
+//	        
+//		if (!contentError.isEmpty()) {
+//	        return contentError;
+//	    }
+//
+//	    return "";
+//	}
 	
-	public static String addPost(String thread, String title, String content, String author) {
+	public static String addPost(String thread, String title, String content, String author) {		
+		// Validate author
+	    if (author == null || author.isBlank()) {
+	    	return "Author can’t be null";
+	    }
 		// Validate thread
 		if (thread == null || thread.isBlank()) {
 			return addPost("General", title, content, author);
@@ -136,10 +145,6 @@ public class ModelForum {
 	    }
 	    else if (isContentInvalid) {
 	    	return contentErrorMessage;
-	    }
-
-	    if (!contentError.isEmpty()) {
-	        return contentError;
 	    }
 
 	    int id = postStore.getMaxId() + 1;
