@@ -127,6 +127,7 @@ public class Post {
     	this.author = "[DELETED]";
     	this.title = "[DELETED]";
     	this.content = "[DELETED]";
+    	this.thread = "[DELETED]";
     	this.deleted = true;
     }
     
