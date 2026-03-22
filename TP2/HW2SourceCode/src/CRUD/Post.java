@@ -20,6 +20,12 @@ public class Post {
     private final LocalDateTime createdAt;
     private ArrayList<Integer> replyPostId;
     private boolean deleted;
+    
+    // Constants for input validation
+    private static final int MAX_TITLE_LENGTH = 300;
+    private static final int MAX_CONTENT_LENGTH = 2000;
+    private static final int MAX_THREAD_LENGTH = 100;
+    private static final String DEFAULT_THREAD = "General";
 	
     /**
      * Creates a new post with the given identifier, title, content, and author.
@@ -31,24 +37,19 @@ public class Post {
      */
     // TODO: Remove Post(id, title, content, author) if Post(id, thread, title, content, author) works
     public Post(int id, String title, String content, String author) {
-    	this.id = id;
-    	this.thread = "General";
-    	this.title = title;
-    	this.content = content;
-    	this.author = author;
-    	this.createdAt = LocalDateTime.now();
-    	this.replyPostId = new ArrayList<>();
+        this(id, DEFAULT_THREAD, title, content, author);
     }
-    
+
     public Post(int id, String thread, String title, String content, String author) {
-    	this.id = id;
-    	this.thread = thread == null? "General": thread;
-    	this.title = title;
-    	this.content = content;
-    	this.author = author;
-    	this.createdAt = LocalDateTime.now();
-    	this.replyPostId = new ArrayList<>();
-    	this.deleted = false;
+        this.id = id;
+        this.author = author;
+        this.createdAt = LocalDateTime.now();
+        this.replyPostId = new ArrayList<>();
+        this.deleted = false;
+
+        this.thread = normalizeThread(thread);
+        this.title = title == null ? null : title.trim();
+        this.content = content == null ? null : content.trim();
     }
     
     /**
@@ -130,20 +131,78 @@ public class Post {
     	this.deleted = true;
     }
     
+    private static String normalizeThread(String thread) {
+        if (thread == null || thread.isBlank()) {
+            return DEFAULT_THREAD;
+        }
+        return thread.trim();
+    }
+    
+    public static String validateTitle(String title) {
+        if (title == null || title.isBlank()) {
+            return "Title could not be empty";
+        }
 
-    // Setter Function
- // In CRUD.Post class
+        title = title.trim();
+
+        if (title.length() > MAX_TITLE_LENGTH) {
+            return "Title could not be longer than 300 characters";
+        }
+
+        return "";
+    }
+    
+    public static String validateContent(String content) {
+        if (content == null || content.isBlank()) {
+            return "Content could not be empty";
+        }
+
+        content = content.trim();
+
+        if (content.length() > MAX_CONTENT_LENGTH) {
+            return "Content could not be longer than 2000 characters";
+        }
+
+        return "";
+    }
+    
+    public static String validateThread(String thread, ThreadStore threadStore) {
+        String normalizedThread = normalizeThread(thread);
+
+        if (normalizedThread.length() > MAX_THREAD_LENGTH) {
+            return "Thread name could not be longer than 100 characters";
+        }
+
+        if (threadStore == null) {
+            return "Thread store could not be null";
+        }
+
+        if (!threadStore.checkThreadExist(normalizedThread)) {
+            return "Thread must be an existing thread";
+        }
+
+        return "";
+    }
+
     public String setThread(String thread) {
-    	if (thread == null || thread.isBlank()) {
-    		return "Thread could not be empty";
-    	}
-    	else if (thread.length() > 100) {
-    		return "Thread name could not be longer than 100 characters";
-    	}
-    	
-    	this.thread = thread;
-    	
-    	return "";
+        String normalizedThread = normalizeThread(thread);
+
+        if (normalizedThread.length() > MAX_THREAD_LENGTH) {
+            return "Thread name could not be longer than 100 characters";
+        }
+
+        this.thread = normalizedThread;
+        return "";
+    }
+    
+    public String setThread(String thread, ThreadStore threadStore) {
+        String errorMessage = validateThread(thread, threadStore);
+        if (!errorMessage.isEmpty()) {
+            return errorMessage;
+        }
+
+        this.thread = normalizeThread(thread);
+        return "";
     }
   
     /**
@@ -153,11 +212,14 @@ public class Post {
     * @return an empty string if the title was updated successfully; otherwise,
     *         an error message describing why the update failed
     */
+    
     public String setTitle(String title) {
-        if (title == null || title.isBlank()) {
-            return "Title could not be empty";
+        String errorMessage = validateTitle(title);
+        if (!errorMessage.isEmpty()) {
+            return errorMessage;
         }
-        this.title = title;
+
+        this.title = title.trim();
         return "";
     }
 
@@ -169,10 +231,12 @@ public class Post {
      *         an error message describing why the update failed
      */
     public String setContent(String content) {
-        if (content == null || content.isBlank()) {
-            return "Content could not be empty";
+        String errorMessage = validateContent(content);
+        if (!errorMessage.isEmpty()) {
+            return errorMessage;
         }
-        this.content = content;
+
+        this.content = content.trim();
         return "";
     }
     
@@ -205,14 +269,10 @@ public class Post {
     	
     	Post otherPost = (Post)o;
     	
-    	ArrayList<Boolean> checkConditions = new ArrayList<>(Arrays.asList(
-    			this.thread == otherPost.thread, 
-    			this.author == otherPost.author,
-    			this.title == otherPost.title,
-    			this.content == otherPost.content
-    			));
-    	
-    	return !checkConditions.contains(false);
+    	return java.util.Objects.equals(this.thread, otherPost.thread)
+                && java.util.Objects.equals(this.author, otherPost.author)
+                && java.util.Objects.equals(this.title, otherPost.title)
+                && java.util.Objects.equals(this.content, otherPost.content);
     }
     
     @Override

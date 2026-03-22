@@ -467,7 +467,7 @@ public class ViewerForum {
 	    
 	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
 	    threadChoiceBox.getItems().addAll(ModelForum.getAllThreads());
-	    threadChoiceBox.setValue("Default");
+	    threadChoiceBox.setValue("General");
 	    
 	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
 
