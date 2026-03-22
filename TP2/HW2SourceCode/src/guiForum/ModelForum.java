@@ -326,10 +326,10 @@ public class ModelForum {
 	public static String deleteReply(int id, String author) {
 		// Checking if post exist
 		Reply deletedReply = replyStore.retrieve(id);
-		if (deletedReply == null) return "Post doesn't exist";
+		if (deletedReply == null) return "Reply doesn't exist";
 		
 		// Check authorization to delete
-		if (!deletedReply.getAuthor().equals(author)) return "Can't delete other's user post";
+		if (!deletedReply.getAuthor().equals(author)) return "Can't delete other's user reply";
 		
 		// Delete the post
 		replyStore.remove(deletedReply);
@@ -347,7 +347,7 @@ public class ModelForum {
 	public static String editReply (int id, String author,String content) {		
 		// Checking if post exist
 		Reply editedReply = replyStore.retrieve(id);
-		if (editedReply == null) return "Post doesn't exist";
+		if (editedReply == null) return "Reply doesn't exist";
 		
 		// Check authorization to delete
 		if (!editedReply.getAuthor().equals(author)) return "Can't edit other's user reply";
