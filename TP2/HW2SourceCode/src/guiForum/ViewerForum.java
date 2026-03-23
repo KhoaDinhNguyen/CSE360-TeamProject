@@ -313,7 +313,7 @@ public class ViewerForum {
 		    // post selected, mark the user as read
 		    selectedPost.markAsRead(theUser.getUserName());
 		    ModelForum.markAsReadAllRepies(selectedPost.getId());
-		    updatingList(ModelForum.getPostList());
+//		    updatingList(ModelForum.getPostList());
 
 		    displayPostDetails(selectedPost);
 		});
