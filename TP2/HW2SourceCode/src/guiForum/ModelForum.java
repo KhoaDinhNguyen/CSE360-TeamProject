@@ -502,6 +502,17 @@ public class ModelForum {
 	}
 	
 	/**
+	 * Return a list of unread replies given the user and postId
+	 * 
+	 * @param user the username
+	 * @param postId the unique id of the post
+	 * @return a list of Reply class
+	 */
+	public static List<Reply> getUnreadReplies(String user, int postId) {
+		return replyStore.getUnreadReplies(user, postId);
+	}
+	
+	/**
 	 * Mark all the reply belong to a post as read
 	 * @param postId the post id
 	 */
