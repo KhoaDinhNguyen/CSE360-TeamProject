@@ -209,11 +209,11 @@ public class ViewerForum {
 		
 		// Thread Label
 		threadLabelMain.setFont(Font.font("Arial", 14));
-		threadLabelMain.setLayoutX(660);
+		threadLabelMain.setLayoutX(750);
 		threadLabelMain.setLayoutY(60);
 
 		// Thread ChoiceBox
-		threadChoiceBoxMain.setLayoutX(735);
+		threadChoiceBoxMain.setLayoutX(835);
 		threadChoiceBoxMain.setLayoutY(55);
 		threadChoiceBoxMain.setPrefWidth(130);
 		threadChoiceBoxMain.setPrefHeight(28);
