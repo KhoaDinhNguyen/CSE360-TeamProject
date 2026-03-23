@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import database.Database;
@@ -66,6 +67,7 @@ public class ViewerForum {
 	private static Label detailTitle;
 	private static Label detailAuthor;
 	private static Label detailContent;
+	private static ScrollPane detailScrollPane;
 	protected static Button button_NewPost = new Button("New Post");
 	
 	Label threadLabelMain = new Label("Thread:");
@@ -88,7 +90,7 @@ public class ViewerForum {
 	
 	private static TextField tfSearch;
 	private static Button button_Search;
-	Button button_Clear = new Button("Clear");
+	private static Button button_Clear;
 	
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -194,6 +196,7 @@ public class ViewerForum {
 		});
 		
 		// Clear Button		
+		button_Clear = new Button("Clear");
 		setupButtonUI(button_Clear, "Dialog", 13, 75, Pos.CENTER, 570, 55);
 
 		button_Clear.setOnAction(e -> {
@@ -225,14 +228,25 @@ public class ViewerForum {
 		postListView.setPrefHeight(410); // from y=105 to around y=525
 		List<Post> PostItemList = ModelForum.getPostList();
 		updatingList(PostItemList);
+				
 		
 		detailPane = new VBox(10);
-		detailPane.setLayoutX(340);     // to the right of the list
-		detailPane.setLayoutY(105);
-		detailPane.setPrefWidth(width - 360);
-		detailPane.setPrefHeight(410);
-		detailPane.setStyle("-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 1;");
+//		detailPane.setLayoutX(340);     // to the right of the list
+//		detailPane.setLayoutY(105);
+//		detailPane.setPrefWidth(width - 360);
+//		detailPane.setPrefHeight(410);
+//		detailPane.setStyle("-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 1;");
 
+		detailScrollPane = new ScrollPane(detailPane);
+		detailScrollPane.setPrefWidth(width - 360);
+		detailScrollPane.setPrefHeight(410);
+		detailScrollPane.setLayoutX(340);               
+		detailScrollPane.setLayoutY(105);
+		detailScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Hide horizontal scroll
+		detailScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Show vertical scroll only when text is long
+		detailScrollPane.setStyle("-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 1;");
+		detailScrollPane.setFitToWidth(true);
+		
 		detailTitle = new Label("Title: ");
 		detailTitle.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
 
@@ -344,6 +358,7 @@ public class ViewerForum {
         	    label_PageTitle, label_UserDetails, line_Separator1,
         	    line_Separator4, button_Logout, button_Quit,
         	    button_NewPost, postListView, detailPane, threadLabelMain, threadChoiceBoxMain,
+        	    detailScrollPane, 
         	    tfSearch, button_Search, button_Clear
         	);
 		
@@ -490,11 +505,14 @@ public class ViewerForum {
 
 	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<>();
 	    threadChoiceBox.getItems().addAll(ModelForum.getAllThreads());
-	    threadChoiceBox.setValue("Default");
 	    threadChoiceBox.setPrefWidth(220);
-
+			threadChoiceBox.setValue("General");
+			
 	    HBox threadContainer = new HBox(10, threadLabel, threadChoiceBox);
 	    threadContainer.setAlignment(Pos.CENTER_LEFT);
+	    
+	    
+	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
 
 	    Label labelTitle = new Label("Title:");
 	    labelTitle.setFont(Font.font("Arial", 14));

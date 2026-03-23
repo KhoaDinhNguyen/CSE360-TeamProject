@@ -83,69 +83,71 @@ public class ModelForum {
 	// Post Action
 	//TODO: Remove addPost(title, content, author) if the addPost(thread, title, content, author) works
 	public static String addPost(String title, String content, String author) {
-
-	    // Validate title
-	    if (title == null || title.isBlank()) {
-	        if (content == null || content.isBlank()) {
-	            return "Title Content could not be empty";
-	        }
-	        return "Title could not be empty";
-	    }
-
-	    // Validate content
-	    if (content == null || content.isBlank()) {
-	        return "Content could not be empty";
-	    }
-
-	    // Validate author
-	    if (author == null) {
-	        return "Author can’t be null";
-	    }
-
-	    // Generate ID
-	    int id = postStore.getMaxId() + 1;
-
-	    // Save new post
-	    Post newPost = new Post(id, title, content, author);
-	    postStore.addPost(newPost);
-
-	    return "";
+	    return addPost("General", title, content, author);
 	}
 	
-	public static String addPost(String thread, String title, String content, String author) {
+//	public static String addPost(String thread, String title, String content, String author) {
+//	    if (author == null || author.isBlank()) {
+//	        return "Author can’t be null";
+//	    }
+//
+//	    String threadError = Post.validateThread(thread, threadStore);
+//	    String titleError = Post.validateTitle(title);
+//	    String contentError = Post.validateContent(content);
+//
+//	    if ("Title could not be empty".equals(titleError)
+//	            && "Content could not be empty".equals(contentError)) {
+//	        return "Title Content could not be empty";
+//	    }
+//
+//	    if (!threadError.isEmpty()) {
+//	        return threadError;
+//	    }
+//
+//	    if (!titleError.isEmpty()) {
+//	        return titleError;
+//	        
+//		if (!contentError.isEmpty()) {
+//	        return contentError;
+//	    }
+//
+//	    return "";
+//	}
+	
+	public static String addPost(String thread, String title, String content, String author) {		
+		// Validate author
+	    if (author == null || author.isBlank()) {
+	    	return "Author can’t be null";
+	    }
 		// Validate thread
 		if (thread == null || thread.isBlank()) {
 			return addPost("General", title, content, author);
 		}
-		else if (thread.length() > 100) {
-			return "Thread name could not be longer than 100 characters";
-		}
-		else if (!threadStore.checkThreadExist(thread)) {
-			return "Thread does not exist in the database";
+		String threadErrorMessage = threadValidation(thread);
+		
+		if (threadErrorMessage.compareTo("") != 0) {
+			return threadErrorMessage;
 		}
 		
-	    // Validate title
-	    if (title == null || title.isBlank()) {
-	        if (content == null || content.isBlank()) {
-	            return "Title Content could not be empty";
-	        }
-	        return "Title could not be empty";
+	    // Validate title and content
+		String titleErrorMessage = titleValidation(title);
+		boolean isTitleInvalid = !titleErrorMessage.isEmpty();
+		
+	    String contentErrorMessage = contentValidation(content);
+	    boolean isContentInvalid = !contentErrorMessage.isEmpty();
+	    
+	    
+	    if (isTitleInvalid && isContentInvalid) {
+	    	return titleErrorMessage + "\n" + contentErrorMessage;
+	    }
+	    else if (isTitleInvalid) {
+	    	return titleErrorMessage;
+	    }
+	    else if (isContentInvalid) {
+	    	return contentErrorMessage;
 	    }
 
-	    // Validate content
-	    if (content == null || content.isBlank()) {
-	        return "Content could not be empty";
-	    }
-
-	    // Validate author
-	    if (author == null) {
-	        return "Author can’t be null";
-	    }
-
-	    // Generate ID
 	    int id = postStore.getMaxId() + 1;
-
-	    // Save new post
 	    Post newPost = new Post(id, thread, title, content, author);
 	    postStore.addPost(newPost);
 
@@ -197,31 +199,12 @@ public class ModelForum {
 	 * @param content the new content for the post
 	 * @return an empty string if the edit succeeds; otherwise, an error message
 	 */
-	// TODO: remove editPost(id, author, title, content) if editPost(id, thread, author, title,content) works
-	public static String editPost (int id, String author, String title, String content) {
-	    // Check existence
+	// TODO: remove editPost(id, author, title, content) if editPost(id, thread, author, title,content) works	
+	public static String editPost(int id, String author, String title, String content) {
 	    Post editedPost = postStore.retrieve(id);
 	    if (editedPost == null) return "Post doesn't exist";
-	    
-	    if (editedPost.isDeleted())
-	    	return "Can't edit a deleted post";
-	    
-	    // Safe authorization check (handles null authors)
-	    if (!java.util.Objects.equals(editedPost.getAuthor(), author))
-	        return "Can't edit other's user post";
-	    
-	    // Attempt to set title and content (setTitle/setContent return error strings or "")
-	    String setTitleErrorMessage = editedPost.setTitle(title);
-	    String setContentErrorMessage = editedPost.setContent(content);
 
-	    boolean titleError = setTitleErrorMessage != null && !setTitleErrorMessage.isBlank();
-	    boolean contentError = setContentErrorMessage != null && !setContentErrorMessage.isBlank();
-
-	    if (titleError && contentError) return "Title Content could not be empty";
-	    if (titleError) return "Title could not be empty";
-	    if (contentError) return "Content could not be empty";
-
-	    return "";
+	    return editPost(id, editedPost.getThread(), author, title, content);
 	}
 	
 
@@ -233,32 +216,71 @@ public class ModelForum {
 	 * @param title is a String that represents new title
 	 * @param content is a String that represents new content
 	 * @return a String - error message, empty string if there is no error
-	 */
-	public static String editPost (int id, String thread, String author, String title, String content) {
-	    // Check existence
+	 */	
+	public static String editPost(int id, String thread, String author, String title, String content) {
 	    Post editedPost = postStore.retrieve(id);
 	    if (editedPost == null) return "Post doesn't exist";
 
-	    // Safe authorization check (handles null authors)
-	    if (!java.util.Objects.equals(editedPost.getAuthor(), author))
+	    if (editedPost.isDeleted()) {
+	        return "Can't edit a deleted post";
+	    }
+
+	    if (!java.util.Objects.equals(editedPost.getAuthor(), author)) {
 	        return "Can't edit other's user post";
+	    }
 
-	    // Attempt to set title and content (setTitle/setContent return error strings or "")
-	    String setThreadErrorMessage = editedPost.setThread(thread);
-	    String setTitleErrorMessage = editedPost.setTitle(title);
-	    String setContentErrorMessage = editedPost.setContent(content);
+// 	    String threadError = Post.validateThread(thread, threadStore);
+// 	    String titleError = Post.validateTitle(title);
+// 	    String contentError = Post.validateContent(content);
 
-	    boolean threadError = setThreadErrorMessage != null && !setThreadErrorMessage.isBlank();
-	    boolean titleError = setTitleErrorMessage != null && !setTitleErrorMessage.isBlank();
-	    boolean contentError = setContentErrorMessage != null && !setContentErrorMessage.isBlank();
+// 	    if ("Title could not be empty".equals(titleError)
+// 	            && "Content could not be empty".equals(contentError)) {
+// 	        return "Title Content could not be empty";
+// 	    }
 
-	    //TODO: return wrong error if the title or content exceed limited characters
-	    if (threadError) return setThreadErrorMessage;
-	    if (titleError && contentError) return "Title Content could not be empty";
-	    if (titleError) return "Title could not be empty";
-	    if (contentError) return "Content could not be empty";
+// 	    if (!threadError.isEmpty()) {
+// 	        return threadError;
+// 	    }
 
-	    return "";
+// 	    if (!titleError.isEmpty()) {
+// 	        return titleError;
+// 	    }
+
+// 	    if (!contentError.isEmpty()) {
+// 	        return contentError;
+// 	    }
+
+// 	    editedPost.setThread(thread, threadStore);
+// 	    editedPost.setTitle(title);
+// 	    editedPost.setContent(content);
+
+// 	    return "";
+	    
+	    // Safe thread check
+// 	    if (!threadStore.checkThreadExist(thread)) {
+// 	    	return "Thread does not exist in the database";
+// 	    }
+	    // Attempt to set thread and title and content (setTitle/setContent return error strings or "")
+	    
+	    String errorMessage = "";
+	    
+	    // Validate thread
+	    String threadErrorMessage = threadValidation(thread);
+	    if (threadErrorMessage.isEmpty()) editedPost.setThread(thread); 
+	    else errorMessage += threadErrorMessage;
+	    
+	    // Validate title
+	    
+		String titleErrorMessage = titleValidation(title);
+		if (titleErrorMessage.isEmpty()) editedPost.setTitle(title);
+		else errorMessage += (errorMessage.isEmpty() ? "" : "\n") + titleErrorMessage;
+		
+		// Validate content
+	    String contentErrorMessage = contentValidation(content);
+		if (contentErrorMessage.isEmpty()) editedPost.setTitle(title);
+		else errorMessage += (errorMessage.isEmpty() ? "" : "\n") + contentErrorMessage;
+	    
+	    return errorMessage;
 	}
 	
 	// Reply Action
@@ -274,10 +296,9 @@ public class ModelForum {
 	 */
 	public static String addReply(String content, String author, int parentId) {
 
-	    // Validate
-	    if (content == null || content.isBlank()) {
-	        return "Content could not be empty";
-	    }
+	    // Validate content
+		String contentErrorMessage = contentValidation(content);
+	    if (!contentErrorMessage.isEmpty()) return contentErrorMessage;
 
 	    Post parentPost = postStore.retrieve(parentId);
 
@@ -314,10 +335,10 @@ public class ModelForum {
 	public static String deleteReply(int id, String author) {
 		// Checking if post exist
 		Reply deletedReply = replyStore.retrieve(id);
-		if (deletedReply == null) return "Post doesn't exist";
+		if (deletedReply == null) return "Reply doesn't exist";
 		
 		// Check authorization to delete
-		if (!deletedReply.getAuthor().equals(author)) return "Can't delete other's user post";
+		if (!deletedReply.getAuthor().equals(author)) return "Can't delete other's user reply";
 		
 		// Delete the post
 		replyStore.remove(deletedReply);
@@ -332,19 +353,19 @@ public class ModelForum {
 	 * @param content the new content of the reply
 	 * @return an empty string if the reply is edited successfully; otherwise, an error message
 	 */
-	public static String editReply (int id, String author,String content) {
-		String errorMessage = "";
-		
+	public static String editReply (int id, String author,String content) {		
 		// Checking if post exist
 		Reply editedReply = replyStore.retrieve(id);
-		if (editedReply == null) return "Post doesn't exist";
+		if (editedReply == null) return "Reply doesn't exist";
 		
 		// Check authorization to delete
-		if (!editedReply.getAuthor().equals(author)) return "Can't edit other's user post";
+		if (!editedReply.getAuthor().equals(author)) return "Can't edit other's user reply";
 		
-		String setContentErrorMessage = editedReply.setContent(content);
+	    String contentErrorMessage = contentValidation(content);
+		if (contentErrorMessage.isEmpty()) editedReply.setContent(content);
+		else return contentErrorMessage;
 		
-		return errorMessage + setContentErrorMessage;
+		return "";
 	}
 	
 	/**
@@ -499,4 +520,38 @@ public class ModelForum {
 
 	    addReply("Infinite recursion without base case causes it.", "Alice", 5);
 	}
+	
+	private static String titleValidation(String title) {
+		if (title == null || title.isBlank()) {
+			return "Title could not be empty";
+		}
+		else if (title.length() > 300) {
+			return "Title length can not be longer than 300";
+		}
+		
+		return "";
+	}
+	
+	private static String contentValidation(String content) {
+		if (content == null || content.isBlank()) {
+			return "Content could not be empty";
+		}
+		else if (content.length() > 2000) {
+			return "Content length can not be longer than 2000";
+		}
+		
+		return "";
+	}
+	
+	private static String threadValidation(String thread) {
+		if (thread.length() > 100) {
+			return "Thread name could not be longer than 100 characters";
+		}
+		else if (!threadStore.checkThreadExist(thread)) {
+			return "Thread does not exist in the database";
+		}
+		
+		return "";
+	}
+	
 }
