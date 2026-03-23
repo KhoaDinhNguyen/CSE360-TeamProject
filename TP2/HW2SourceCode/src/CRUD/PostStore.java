@@ -100,25 +100,34 @@ public class PostStore {
 	 * @param keyword the keyword used for filtering
 	 * @return the filtered list of matching posts
 	 */
-	public ArrayList<Post> filterPosts(String keyword) {
+	public ArrayList<Post> filterPosts(String keyword, String threadTag) {
         subsetPostList = new ArrayList<>();
 
         if (keyword == null) return subsetPostList;
 
         String key = keyword.trim().toLowerCase();
-
+        
         // If empty keyword => show all posts
-        if (key.isEmpty()) {
+        if (key.isEmpty() && threadTag == "Default") {
             subsetPostList.addAll(PostList);
             return subsetPostList;
         }
+        
+        
+        
 
         for (Post p : PostList) {
             String title = safeLower(p.getTitle());
             String content = safeLower(p.getContent());
             String author = safeLower(p.getAuthor());
-
-            if (title.contains(key) || content.contains(key) || author.contains(key)) {
+            String thread = p.getThread();
+            boolean matchesCriteria = true;
+            
+            // Filtering base on Thread and Keyword
+            if (!(key.isEmpty())) {matchesCriteria = title.contains(key) || content.contains(key) || author.contains(key);}
+            if (threadTag != "Default") {matchesCriteria = matchesCriteria && thread.equals(threadTag);}
+            
+            if (matchesCriteria) {
                 subsetPostList.add(p);
             }
         }

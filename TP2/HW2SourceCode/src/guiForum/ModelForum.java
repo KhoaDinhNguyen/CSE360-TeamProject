@@ -402,8 +402,8 @@ public class ModelForum {
 	 * @param keyword the keyword used to filter posts
 	 * @return the filtered list of matching posts
 	 */
-	public static List<Post> filterPosts(String keyword) {
-	    return postStore.filterPosts(keyword); // uses your PostStore filter
+	public static List<Post> filterPosts(String keyword, String thread) {
+	    return postStore.filterPosts(keyword, thread); // uses your PostStore filter
 	}
 
 	/**
