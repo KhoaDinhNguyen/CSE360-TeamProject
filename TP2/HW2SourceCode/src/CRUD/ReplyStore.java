@@ -20,6 +20,7 @@ public class ReplyStore {
 	 */
 	public ReplyStore() {
 	    this.ReplyList = new ArrayList<>();
+	    this.subsetReplyList = new ArrayList<>();
 	}
 	
 	/**
@@ -92,6 +93,24 @@ public class ReplyStore {
 		for (int i = 0; i < ReplyList.size(); i++) {
 			Reply reply = ReplyList.get(i);
 			if (!reply.hadRead(user))
+				subsetReplyList.add(reply);
+		}
+		
+		return subsetReplyList;
+	}
+	/**
+	 * Return an subset contains the replies which the user have not read in a post
+	 * 
+	 * @param user a string contains the username
+	 * @param postId the id of the parent post
+	 * @return an array list of reply class
+	 */
+	public ArrayList<Reply> getUnreadReplies(String user, int postId) {
+		subsetReplyList.clear();
+		
+		for (int i = 0; i < ReplyList.size(); i++) {
+			Reply reply = ReplyList.get(i);
+			if (reply.getParentPostId() == postId && !reply.hadRead(user))
 				subsetReplyList.add(reply);
 		}
 		

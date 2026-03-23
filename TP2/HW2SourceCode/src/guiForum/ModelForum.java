@@ -312,7 +312,7 @@ public class ModelForum {
 
 	    int id = replyStore.getMaxId()+1;
 	    
-//	    System.out.println(id);
+	    System.out.println("replyID:" + parentId);
 
 	    // Create + save reply
 	    Reply newReply = new Reply(id, content, author, parentId);

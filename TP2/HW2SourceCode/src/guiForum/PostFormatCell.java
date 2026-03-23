@@ -1,6 +1,9 @@
 package guiForum;
 
+import java.util.ArrayList;
+
 import CRUD.Post;
+import CRUD.Reply;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
@@ -39,7 +42,22 @@ public class PostFormatCell extends ListCell<Post>{
 
 		if (item != null) {
 			row1Label.setText((item.hasRead(ViewerForum.theUser.getUserName())?"":"[UNREAD] ") + item.toString());
-			row2Label.setText(Integer.toString(item.getReplyPostId().size()) + " replies");
+			
+			int repliesCount = item.getReplyPostId().size();
+			int unreadRepliesCount = ModelForum.getReplyStore()
+					.getUnreadReplies(ViewerForum.theUser.getUserName(), item.getId()).size();
+			
+//			ArrayList<Reply> test = ModelForum.getReplyStore().getReplyList();
+//					//.getUnreadReplies(ViewerForum.theUser.getUserName(), item.getId());
+//			
+//			System.out.println("-> " + item.getId());
+//			for (int i = 0; i < test.size(); i++) {
+//				System.out.println(test.get(i).getContent() + ", " + test.get(i).getParentPostId());
+//			}
+			
+			row2Label.setText(repliesCount + (repliesCount <= 1? " reply" : " replies")
+								+ ", " + unreadRepliesCount + " unread"
+					);
 		
 			setGraphic(vbox);
 		} else {
