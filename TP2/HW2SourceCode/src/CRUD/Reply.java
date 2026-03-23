@@ -14,7 +14,7 @@ public class Reply {
     private String content;
     private final String author;
     private final LocalDateTime createdAt;
-    private static int parentPostId;
+    private final int parentPostId;
     
     // an array of user who have read the reply
     private ArrayList<String> readUsers;
