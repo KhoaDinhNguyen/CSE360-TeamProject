@@ -554,4 +554,13 @@ public class ModelForum {
 		return "";
 	}
 	
+	/**
+	 * Return a list of unread posts given the username
+	 * @param user a string contain the username
+	 * @return an ArrayList class of Post class
+	 */
+	public static List<Post> getUnreads(String user) {
+		return postStore.getUnreadPosts(user);
+	}
+	
 }

@@ -77,6 +77,7 @@ public class ViewerForum {
 	private static TextField tfSearch;
 	private static Button button_Search;
 	private static Button button_Clear;
+	private static Button button_Unread;
 	
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -188,6 +189,13 @@ public class ViewerForum {
 		});
 
 		
+		// Unread Button		
+		button_Unread = new Button("Unread");
+		setupButtonUI(button_Unread, "Dialog", 13, 75, Pos.CENTER, 650, 55);
+
+		button_Unread.setOnAction(e -> {
+			updatingList(ModelForum.getUnreads(theUser.getUserName()));
+		});
 		// GUI Area 2
 		
 		postListView.setLayoutX(20);
@@ -247,6 +255,10 @@ public class ViewerForum {
 		
 		postListView.setOnMouseClicked(event -> {
 		    selectedPost = postListView.getSelectionModel().getSelectedItem();
+		    
+		    // post selected, mark the user as read
+		    selectedPost.markAsRead(theUser.getUserName());
+
 		    displayPostDetails(selectedPost);
 		});
 		
@@ -314,7 +326,7 @@ public class ViewerForum {
         	    label_PageTitle, label_UserDetails, line_Separator1,
         	    line_Separator4, button_Logout, button_Quit,
         	    button_NewPost, postListView, detailPane, 
-        	    tfSearch, button_Search, button_Clear
+        	    tfSearch, button_Search, button_Clear, button_Unread
         	);
 		
 	}
