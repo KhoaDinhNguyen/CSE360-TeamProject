@@ -222,6 +222,15 @@ public class ModelForum {
 	    return errorMessage;
 	}
 	
+	/**
+	 * Get post belongs to the given user with the username
+	 * 
+	 * @param user the username of the user
+	 * @return an ArrayList of Post class
+	 */
+	public static ArrayList<Post> getPostsByUser(String user) {
+		return postStore.getPostsByUser(user);
+	}
 	// Reply Action
   /**
 	 * Adds a reply to an existing post after validating the reply content.

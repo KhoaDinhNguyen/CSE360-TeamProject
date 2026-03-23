@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.scene.control.ListView;
 import CRUD.Post;
+import CRUD.PostStore;
 import CRUD.Reply;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -69,7 +70,8 @@ public class ViewerForum {
 	private static Label detailAuthor;
 	private static Label detailContent;
 	private static ScrollPane detailScrollPane;
-	protected static Button button_NewPost = new Button("New Post");
+	protected static Button button_NewPost;
+	protected static Button button_MyPost;
 	
 	Label threadLabelMain = new Label("Thread:");
    
@@ -177,9 +179,19 @@ public class ViewerForum {
 		
 		label_UserDetails.setText("User: " + theUser.getUserName());
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
-		setupButtonUI(button_NewPost, "Dialog", 16, 100, Pos.CENTER, 200, 55);
+		
+		// New Post button
+		button_NewPost = new Button("New Post");
+		setupButtonUI(button_NewPost, "Dialog", 13, 75, Pos.CENTER, 235, 55);
 		button_NewPost.setOnAction((_) -> { showAddPostWindow(); });
 		
+		// My Post button
+		button_MyPost = new Button("My Post");
+		setupButtonUI(button_MyPost, "Dialog", 13, 75, Pos.CENTER, 150, 55);
+		button_MyPost.setOnAction((_) -> {
+			updatingList(ModelForum.getPostsByUser(theUser.getUserName()));
+		});
+
 		// Filter Search
 		
 		// Search TextField
@@ -385,12 +397,15 @@ public class ViewerForum {
 		replyPane.getChildren().addAll(replyLabel, replyTextArea, replyButton);
 		detailPane.getChildren().add(replyPane);
 		// GUI Area 3
-        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+		
+		setupButtonUI(button_Return, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+        button_Return.setOnAction((_) -> {ControllerForum.performReturn(); });
+        
+        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 300, 540);
         button_Logout.setOnAction((_) -> {ControllerForum.performLogout(); });
         
-        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
+        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 580, 540);
         button_Quit.setOnAction((_) -> {ControllerForum.performQuit(); });
-        
         
         
         // Add in Functionality
@@ -400,8 +415,10 @@ public class ViewerForum {
 		// Place all of the widget items into the Root Pane's list of children
         theRootPane.getChildren().addAll(
         	    label_PageTitle, label_UserDetails, line_Separator1,
-        	    line_Separator4, button_Logout, button_Quit,
-        	    button_NewPost, postListView, detailPane, threadLabelMain, threadChoiceBoxMain,
+
+        	    line_Separator4, button_Logout, button_Quit, button_Return,
+        	    button_NewPost, button_MyPost, postListView, detailPane, threadLabelMain, threadChoiceBoxMain,
+
         	    detailScrollPane, 
         	    tfSearch, button_Search, button_Clear, button_Unread
         	);
@@ -565,7 +582,6 @@ public class ViewerForum {
 	    threadContainer.setAlignment(Pos.CENTER_LEFT);
 	    
 	    
-	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
 
 	    Label labelTitle = new Label("Title:");
 	    labelTitle.setFont(Font.font("Arial", 14));
