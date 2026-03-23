@@ -207,6 +207,8 @@ public class ViewerForum {
 			}
 		});
 		
+		postListView.setFixedCellSize(50);
+		
 		postListView.setLayoutX(20);
 		postListView.setLayoutY(105);
 		postListView.setPrefWidth(300);
