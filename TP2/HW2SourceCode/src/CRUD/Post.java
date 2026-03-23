@@ -39,20 +39,20 @@ public class Post {
      * @param author the username of the author who created the post
      */
     // TODO: Remove Post(id, title, content, author) if Post(id, thread, title, content, author) works
-    public Post(int id, String title, String content, String author) {
-    	this.id = id;
-    	this.thread = "General";
-    	this.title = title;
-    	this.content = content;
-    	this.author = author;
-    	this.createdAt = LocalDateTime.now();
-    	this.replyPostId = new ArrayList<>();
-    	
-    	this.readUsers = new ArrayList<String>();
-    	readUsers.add(this.author); // the author who created the class is consider already read it
-
-        this(id, DEFAULT_THREAD, title, content, author);
-    }
+//    public Post(int id, String title, String content, String author) {
+//    	this.id = id;
+//    	this.thread = "General";
+//    	this.title = title;
+//    	this.content = content;
+//    	this.author = author;
+//    	this.createdAt = LocalDateTime.now();
+//    	this.replyPostId = new ArrayList<>();
+//    	
+//    	this.readUsers = new ArrayList<String>();
+//    	readUsers.add(this.author); // the author who created the class is consider already read it
+//
+//        this(id, DEFAULT_THREAD, title, content, author);
+//    }
 
     public Post(int id, String thread, String title, String content, String author) {
         this.id = id;
@@ -64,6 +64,9 @@ public class Post {
         this.thread = normalizeThread(thread);
         this.title = title == null ? null : title.trim();
         this.content = content == null ? null : content.trim();
+
+    	this.readUsers = new ArrayList<String>();
+    	readUsers.add(this.author); // the author who created the class is consider already read it
     }
     
     /**
