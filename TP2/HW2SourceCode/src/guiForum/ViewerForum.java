@@ -548,7 +548,7 @@ public class ViewerForum {
 	    threadContainer.setAlignment(Pos.CENTER_LEFT);
 	    
 	    
-	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
+	    //threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
 
 	    Label labelTitle = new Label("Title:");
 	    labelTitle.setFont(Font.font("Arial", 14));
