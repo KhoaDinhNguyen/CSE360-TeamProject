@@ -1,6 +1,11 @@
 package guiForum;
 
 import java.util.List;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.animation.PauseTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ButtonType;
@@ -26,6 +31,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.util.Duration;
+
 
 /**
  * Provides the JavaFX view for the discussion forum.
@@ -60,6 +67,11 @@ public class ViewerForum {
 	private static Label detailAuthor;
 	private static Label detailContent;
 	protected static Button button_NewPost = new Button("New Post");
+	
+	Label threadLabelMain = new Label("Thread:");
+   
+    
+    ChoiceBox<String> threadChoiceBoxMain = new ChoiceBox<String>();
 	
 	// Reply UI (shown only when a post is selected)
 	private static VBox replyPane;
@@ -174,7 +186,10 @@ public class ViewerForum {
 
 		button_Search.setOnAction(e -> {
 		    String keyword = tfSearch.getText();
-		    List<Post> results = ModelForum.filterPosts(keyword);
+		    String thread = threadChoiceBoxMain.getValue();
+		    System.out.println(thread);
+
+		    List<Post> results = ModelForum.filterPosts(keyword, thread);
 		    updatingList(results);
 		});
 		
@@ -185,6 +200,21 @@ public class ViewerForum {
 		    tfSearch.clear();
 		    updatingList(ModelForum.getPostList());
 		});
+		
+		
+		// Thread Label
+		threadLabelMain.setFont(Font.font("Arial", 14));
+		threadLabelMain.setLayoutX(660);
+		threadLabelMain.setLayoutY(60);
+
+		// Thread ChoiceBox
+		threadChoiceBoxMain.setLayoutX(735);
+		threadChoiceBoxMain.setLayoutY(55);
+		threadChoiceBoxMain.setPrefWidth(130);
+		threadChoiceBoxMain.setPrefHeight(28);
+		threadChoiceBoxMain.getItems().add("Default");
+		threadChoiceBoxMain.getItems().addAll(ModelForum.getAllThreads());
+		threadChoiceBoxMain.setValue("Default");
 
 		
 		// GUI Area 2
@@ -304,6 +334,7 @@ public class ViewerForum {
         button_Quit.setOnAction((_) -> {ControllerForum.performQuit(); });
         
         
+        
         // Add in Functionality
 
 		// This is the end of the GUI initialization code
@@ -312,7 +343,7 @@ public class ViewerForum {
         theRootPane.getChildren().addAll(
         	    label_PageTitle, label_UserDetails, line_Separator1,
         	    line_Separator4, button_Logout, button_Quit,
-        	    button_NewPost, postListView, detailPane, 
+        	    button_NewPost, postListView, detailPane, threadLabelMain, threadChoiceBoxMain,
         	    tfSearch, button_Search, button_Clear
         	);
 		
@@ -443,76 +474,72 @@ public class ViewerForum {
 	    Stage addStage = new Stage();
 	    addStage.setTitle("Create New Post");
 
-	    Pane addRoot = new Pane();
-	    Scene addScene = new Scene(addRoot, 520, 420);
+	    VBox addRoot = new VBox(12);
+	    addRoot.setPrefSize(560, 640);
+
+	    Scene addScene = new Scene(addRoot, 560, 640);
 
 	    Label titleLabel = new Label("Create a New Post");
 	    titleLabel.setFont(Font.font("Arial", 20));
-	    titleLabel.setLayoutX(20);
-	    titleLabel.setLayoutY(15);
 
 	    Label authorLabel = new Label("Posting as: " + (theUser == null ? "" : theUser.getUserName()));
 	    authorLabel.setFont(Font.font("Arial", 14));
-	    authorLabel.setLayoutX(20);
-	    authorLabel.setLayoutY(55);
 
-	    HBox threadContainer = new HBox();
-	    threadContainer.setLayoutX(20);
-	    threadContainer.setLayoutY(80);
-	    threadContainer.setAlignment(Pos.CENTER);
-	    threadContainer.setSpacing(10);
-	    
 	    Label threadLabel = new Label("Thread:");
-	    threadLabel.setFont(Font.font("Arial"));
-	    
-	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
+	    threadLabel.setFont(Font.font("Arial", 14));
+
+	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<>();
 	    threadChoiceBox.getItems().addAll(ModelForum.getAllThreads());
 	    threadChoiceBox.setValue("Default");
-	    
-	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
+	    threadChoiceBox.setPrefWidth(220);
+
+	    HBox threadContainer = new HBox(10, threadLabel, threadChoiceBox);
+	    threadContainer.setAlignment(Pos.CENTER_LEFT);
 
 	    Label labelTitle = new Label("Title:");
-	    labelTitle.setLayoutX(20);
-	    labelTitle.setLayoutY(110);
+	    labelTitle.setFont(Font.font("Arial", 14));
 
 	    TextField tfTitle = new TextField();
-	    tfTitle.setLayoutX(20);
-	    tfTitle.setLayoutY(135);
-	    tfTitle.setPrefWidth(480);
+	    tfTitle.setPrefWidth(520);
 	    tfTitle.setPromptText("Enter a short, clear title");
-
+	    
+	    // Making changes while typing
+	    
 	    Label labelContent = new Label("Content:");
-	    labelContent.setLayoutX(20);
-	    labelContent.setLayoutY(175);
+	    labelContent.setFont(Font.font("Arial", 14));
 
 	    TextArea taContent = new TextArea();
-	    taContent.setLayoutX(20);
-	    taContent.setLayoutY(200);
-	    taContent.setPrefWidth(480);
-	    taContent.setPrefHeight(160);
+	    taContent.setPrefWidth(520);
+	    taContent.setPrefHeight(180);
 	    taContent.setWrapText(true);
 	    taContent.setPromptText("Write your post here...");
+
+	    Label relatedLabel = new Label("Related Posts:");
+	    relatedLabel.setFont(Font.font("Arial", 14));
+
+	    ListView<Post> relatedPostView = new ListView<>();
+	    relatedPostView.setPrefHeight(170);
+	    relatedPostView.setPlaceholder(new Label("No related posts found"));
 
 	    Button btnPost = new Button("Post");
 	    Button btnCancel = new Button("Cancel");
 
-	    // Use your style helper
-	    setupButtonUI(btnPost, "Dialog", 16, 160, Pos.CENTER, 340, 375);
-	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 160, 375);
+	    setupButtonUI(btnPost, "Dialog", 16, 160, Pos.CENTER, 0, 0);
+	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 0, 0);
+
+	    HBox buttonBar = new HBox(10, btnCancel, btnPost);
+	    buttonBar.setAlignment(Pos.CENTER_RIGHT);
 
 	    btnCancel.setOnAction(e -> addStage.close());
 
 	    btnPost.setOnAction(e -> {
-
-	    	String thread = threadChoiceBox.getValue();
+	        String thread = threadChoiceBox.getValue();
 	        String title = tfTitle.getText();
 	        String content = taContent.getText();
 	        String author = theUser.getUserName();
 
-	        // Let ModelForum handle all validation
 	        String errorMessage = ModelForum.addPost(thread, title, content, author);
 
-	        // If Model returns error → show it
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
 	            alert.setTitle("Cannot Create Post");
@@ -522,21 +549,41 @@ public class ViewerForum {
 	            return;
 	        }
 
-	        // Success
 	        updatingList(ModelForum.getPostList());
 	        addStage.close();
 	    });
+	    
+	    
+	    tfTitle.textProperty().addListener(new ChangeListener<String>() {
+	    	@Override
+	    	public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+	    		if (!newValue.isBlank()) {
+	    			List<Post> filtered = ModelForum.filterPosts(newValue, "Default"); // your logic
+		            relatedPostView.getItems().setAll(filtered);
+	    		} else {
+	    			relatedPostView.getItems().clear();
+	    			relatedPostView.setPlaceholder(new Label("No related posts found"));
+	    		}
+	        }
+	    
+	    });
+
 
 	    addRoot.getChildren().addAll(
-	        titleLabel, authorLabel,
-	        labelTitle, tfTitle,
-	        labelContent, taContent,
-	        btnCancel, btnPost,
-	        threadContainer
+	        titleLabel,
+	        authorLabel,
+	        threadContainer,
+	        labelTitle,
+	        tfTitle,
+	        labelContent,
+	        taContent,
+	        relatedLabel,
+	        relatedPostView,
+	        buttonBar
 	    );
 
 	    addStage.setScene(addScene);
-	    addStage.initOwner(theStage); // makes it feel attached to main window
+	    addStage.initOwner(theStage);
 	    addStage.show();
 	}
 	
@@ -839,5 +886,6 @@ public class ViewerForum {
 	        }
 	    });
 	}
+
 	
 }
