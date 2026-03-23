@@ -18,6 +18,9 @@ public class Post {
     private String author;
     private final LocalDateTime createdAt;
     private ArrayList<Integer> replyPostId;
+
+    // A list of user who had read the post
+    private ArrayList<String> readUsers;
     private boolean deleted;
     
     // Constants for input validation
@@ -45,6 +48,9 @@ public class Post {
         this.thread = normalizeThread(thread);
         this.title = title == null ? null : title.trim();
         this.content = content == null ? null : content.trim();
+
+    	this.readUsers = new ArrayList<String>();
+    	readUsers.add(this.author); // the author who created the class is consider already read it
     }
     
     /**
@@ -108,6 +114,23 @@ public class Post {
      */
     public ArrayList<Integer> getReplyPostId() {
     	return this.replyPostId;
+    }
+    
+    /**
+     * This function return a list of usernames who had read the post
+     * @return A list of string contain the usernames
+     */
+    public ArrayList<String> getReadUsers() {
+    	return this.readUsers;
+    }
+    
+    /**
+     * This function report whether or not the given user have read the post
+     * @param user The username of the user 
+     * @return true if the user have read the post, otherwise return false
+     */
+    public boolean hasRead(String user) {
+    	return readUsers.contains(user);
     }
     
     /**
@@ -202,6 +225,27 @@ public class Post {
      */
     public void addReplyId(int replyId) {
     	this.replyPostId.add(replyId);
+    }
+    
+    /**
+     * This function mark the given user as read, return true or false if successful or not
+     * Its also mark all the reply on the post as read
+     * 
+     * @param user a string which is the user name of the user
+     * @return true if successfully mark as read, otherwise return false
+     */
+    public boolean markAsRead(String user) {
+    	// if the user have read the post, no need to mark as read
+    	if (hasRead(user)) {
+    		return false;
+    	}
+    	
+    	for (int id: this.replyPostId) {
+    		
+    	}
+    	
+    	readUsers.add(user);
+    	return true;
     }
     
     /**
