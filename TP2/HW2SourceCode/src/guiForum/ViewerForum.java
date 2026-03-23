@@ -3,6 +3,7 @@ package guiForum;
 import java.util.List;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceBox;
 import database.Database;
@@ -59,6 +60,7 @@ public class ViewerForum {
 	private static Label detailTitle;
 	private static Label detailAuthor;
 	private static Label detailContent;
+	private static ScrollPane detailScrollPane;
 	protected static Button button_NewPost = new Button("New Post");
 	
 	// Reply UI (shown only when a post is selected)
@@ -196,14 +198,25 @@ public class ViewerForum {
 		postListView.setPrefHeight(410); // from y=105 to around y=525
 		List<Post> PostItemList = ModelForum.getPostList();
 		updatingList(PostItemList);
+				
 		
 		detailPane = new VBox(10);
-		detailPane.setLayoutX(340);     // to the right of the list
-		detailPane.setLayoutY(105);
-		detailPane.setPrefWidth(width - 360);
-		detailPane.setPrefHeight(410);
-		detailPane.setStyle("-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 1;");
+//		detailPane.setLayoutX(340);     // to the right of the list
+//		detailPane.setLayoutY(105);
+//		detailPane.setPrefWidth(width - 360);
+//		detailPane.setPrefHeight(410);
+//		detailPane.setStyle("-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 1;");
 
+		detailScrollPane = new ScrollPane(detailPane);
+		detailScrollPane.setPrefWidth(width - 360);
+		detailScrollPane.setPrefHeight(410);
+		detailScrollPane.setLayoutX(340);               
+		detailScrollPane.setLayoutY(105);
+		detailScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER); // Hide horizontal scroll
+		detailScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED); // Show vertical scroll only when text is long
+		detailScrollPane.setStyle("-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 1;");
+		detailScrollPane.setFitToWidth(true);
+		
 		detailTitle = new Label("Title: ");
 		detailTitle.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
 
@@ -313,7 +326,7 @@ public class ViewerForum {
         theRootPane.getChildren().addAll(
         	    label_PageTitle, label_UserDetails, line_Separator1,
         	    line_Separator4, button_Logout, button_Quit,
-        	    button_NewPost, postListView, detailPane, 
+        	    button_NewPost, postListView, detailPane, detailScrollPane, 
         	    tfSearch, button_Search, button_Clear
         	);
 		
