@@ -8,6 +8,7 @@ import CRUD.PostStore;
 import CRUD.Reply;
 import CRUD.ReplyStore;
 import entityClasses.*;
+import CRUD.*;
 
 /**
  * Provides the in-memory model logic for the forum feature.
@@ -81,38 +82,9 @@ public class ModelForum {
 	 * @return an empty string if the post is added successfully; otherwise, an error message
 	 */
 	// Post Action
-	//TODO: Remove addPost(title, content, author) if the addPost(thread, title, content, author) works
 	public static String addPost(String title, String content, String author) {
 	    return addPost("General", title, content, author);
 	}
-	
-//	public static String addPost(String thread, String title, String content, String author) {
-//	    if (author == null || author.isBlank()) {
-//	        return "Author can’t be null";
-//	    }
-//
-//	    String threadError = Post.validateThread(thread, threadStore);
-//	    String titleError = Post.validateTitle(title);
-//	    String contentError = Post.validateContent(content);
-//
-//	    if ("Title could not be empty".equals(titleError)
-//	            && "Content could not be empty".equals(contentError)) {
-//	        return "Title Content could not be empty";
-//	    }
-//
-//	    if (!threadError.isEmpty()) {
-//	        return threadError;
-//	    }
-//
-//	    if (!titleError.isEmpty()) {
-//	        return titleError;
-//	        
-//		if (!contentError.isEmpty()) {
-//	        return contentError;
-//	    }
-//
-//	    return "";
-//	}
 	
 	public static String addPost(String thread, String title, String content, String author) {		
 		// Validate author
@@ -123,17 +95,17 @@ public class ModelForum {
 		if (thread == null || thread.isBlank()) {
 			return addPost("General", title, content, author);
 		}
-		String threadErrorMessage = threadValidation(thread);
+		String threadErrorMessage = Post.validateThread(thread, threadStore);
 		
 		if (threadErrorMessage.compareTo("") != 0) {
 			return threadErrorMessage;
 		}
 		
 	    // Validate title and content
-		String titleErrorMessage = titleValidation(title);
+		String titleErrorMessage = Post.validateTitle(title);
 		boolean isTitleInvalid = !titleErrorMessage.isEmpty();
 		
-	    String contentErrorMessage = contentValidation(content);
+	    String contentErrorMessage = Post.validateContent(content);
 	    boolean isContentInvalid = !contentErrorMessage.isEmpty();
 	    
 	    
@@ -199,7 +171,6 @@ public class ModelForum {
 	 * @param content the new content for the post
 	 * @return an empty string if the edit succeeds; otherwise, an error message
 	 */
-	// TODO: remove editPost(id, author, title, content) if editPost(id, thread, author, title,content) works	
 	public static String editPost(int id, String author, String title, String content) {
 	    Post editedPost = postStore.retrieve(id);
 	    if (editedPost == null) return "Post doesn't exist";
@@ -229,54 +200,22 @@ public class ModelForum {
 	        return "Can't edit other's user post";
 	    }
 
-// 	    String threadError = Post.validateThread(thread, threadStore);
-// 	    String titleError = Post.validateTitle(title);
-// 	    String contentError = Post.validateContent(content);
-
-// 	    if ("Title could not be empty".equals(titleError)
-// 	            && "Content could not be empty".equals(contentError)) {
-// 	        return "Title Content could not be empty";
-// 	    }
-
-// 	    if (!threadError.isEmpty()) {
-// 	        return threadError;
-// 	    }
-
-// 	    if (!titleError.isEmpty()) {
-// 	        return titleError;
-// 	    }
-
-// 	    if (!contentError.isEmpty()) {
-// 	        return contentError;
-// 	    }
-
-// 	    editedPost.setThread(thread, threadStore);
-// 	    editedPost.setTitle(title);
-// 	    editedPost.setContent(content);
-
-// 	    return "";
-	    
-	    // Safe thread check
-// 	    if (!threadStore.checkThreadExist(thread)) {
-// 	    	return "Thread does not exist in the database";
-// 	    }
 	    // Attempt to set thread and title and content (setTitle/setContent return error strings or "")
 	    
 	    String errorMessage = "";
 	    
 	    // Validate thread
-	    String threadErrorMessage = threadValidation(thread);
+	    String threadErrorMessage = Post.validateThread(thread, threadStore);
 	    if (threadErrorMessage.isEmpty()) editedPost.setThread(thread); 
 	    else errorMessage += threadErrorMessage;
 	    
 	    // Validate title
-	    
-		String titleErrorMessage = titleValidation(title);
+		String titleErrorMessage = Post.validateTitle(title);
 		if (titleErrorMessage.isEmpty()) editedPost.setTitle(title);
 		else errorMessage += (errorMessage.isEmpty() ? "" : "\n") + titleErrorMessage;
 		
 		// Validate content
-	    String contentErrorMessage = contentValidation(content);
+	    String contentErrorMessage = Post.validateContent(content);
 		if (contentErrorMessage.isEmpty()) editedPost.setTitle(title);
 		else errorMessage += (errorMessage.isEmpty() ? "" : "\n") + contentErrorMessage;
 	    
@@ -297,7 +236,7 @@ public class ModelForum {
 	public static String addReply(String content, String author, int parentId) {
 
 	    // Validate content
-		String contentErrorMessage = contentValidation(content);
+		String contentErrorMessage = Post.validateContent(content);
 	    if (!contentErrorMessage.isEmpty()) return contentErrorMessage;
 
 	    Post parentPost = postStore.retrieve(parentId);
@@ -361,7 +300,7 @@ public class ModelForum {
 		// Check authorization to delete
 		if (!editedReply.getAuthor().equals(author)) return "Can't edit other's user reply";
 		
-	    String contentErrorMessage = contentValidation(content);
+	    String contentErrorMessage = Post.validateContent(content);
 		if (contentErrorMessage.isEmpty()) editedReply.setContent(content);
 		else return contentErrorMessage;
 		

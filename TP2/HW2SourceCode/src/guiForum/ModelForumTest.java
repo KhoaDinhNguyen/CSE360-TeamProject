@@ -260,7 +260,7 @@ public class ModelForumTest {
 			String content = generateRandomString(30);
 			String author = generateRandomString(30);
 			
-			String expected = "Title length can not be longer than 300";
+			String expected = "Title could not be longer than 300 characters";
 			
 			// When	
 			String actual = addPost(thread, title, content, author);
@@ -281,7 +281,7 @@ public class ModelForumTest {
 			String content = generateRandomString(contentLength);
 			String author = generateRandomString(30);
 			
-			String expected = "Content length can not be longer than 2000";
+			String expected = "Content could not be longer than 2000 characters";
 			
 			// When
 			String actual = addPost(thread, title, content, author);
@@ -303,7 +303,7 @@ public class ModelForumTest {
 			String content = generateRandomString(contentLength);
 			String author = generateRandomString(30);
 			
-			String expected = "Title length can not be longer than 300\nContent length can not be longer than 2000";
+			String expected = "Title could not be longer than 300 characters\nContent could not be longer than 2000 characters";
 			
 			// When
 			String actual = addPost(thread, title, content, author);
@@ -345,7 +345,7 @@ public class ModelForumTest {
 			String content = generateRandomString(30);
 			String author = generateRandomString(30);
 			
-			String expected = "Thread does not exist in the database";
+			String expected = "Thread must be an existing thread";
 			
 			// When 
 			String actual = addPost(thread, title, content, author);
@@ -399,6 +399,76 @@ public class ModelForumTest {
 			
 			// Then
 			assertEquals(expected, actual);
+		}
+	}
+	
+	/**
+	 * <p>PostReadTest class is used to contain all test cases related to READ operation on Post class, called by many getter functions</p>
+	 */
+	@Nested
+	@DisplayName("Post READ test cases")
+	public class PostReadTest {
+		/**
+		 * The class constructor but it will not be used in this project
+		 */
+		public PostReadTest() {
+			
+		}
+		
+		/**
+		 * Verifies that all post are listed when call by {@code getPostList}
+		 */
+		@Test
+		public void shouldReturnAllPosts_whenGetPostListIsCalled() {
+			// Given    
+			ArrayList<Post> expected = new ArrayList<Post>(List.of(
+					new Post(0, "General", "Welcome", "Welcome to the CSE 360 discussion forum!", "Admin"),
+					new Post(1, "General", "Java OOP Question", "Can someone explain inheritance vs composition?", "Alice"),
+					new Post(2, "General", "Binary Search Confusion", "Why is binary search O(log n)?", "Bob"),
+					new Post(3, "General", "Database Normalization", "What is 3NF and why is it important?", "Charlie"),
+					new Post(4, "General", "Git Merge Conflict", "How do you resolve a merge conflict safely?", "David"),
+					new Post(5, "General", "Recursion Depth", "Why do I get StackOverflowError in Java?", "Emma")
+					));
+			
+			// When
+			ArrayList<Post> actual = postStore.getPostList();
+			
+			// Then
+			assertArrayEquals(expected.toArray(), actual.toArray());
+		}
+		
+		/**
+		 * Verifies that a specific post is listed call by {@code retrieve}
+		 */
+		@Test
+		public void shouldReturnSpecificPost_whenRetrieveIsCalled() {
+			// Given    
+			Post expected = new Post(2, "General", "Binary Search Confusion", "Why is binary search O(log n)?", "Bob");
+			
+			// When
+			Post actual = postStore.retrieve(2);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+		
+		/**
+		 * Verifies that a subset of  posts is listed call by {@code filterPosts}
+		 */
+		@Test
+		public void shouldReturnSubsetOfPosts_whenFilterPostsIsCalled() {
+			// Given      
+			ArrayList<Post> expected = new ArrayList<Post>(List.of(
+					new Post(2, "General", "Binary Search Confusion", "Why is binary search O(log n)?", "Bob"),
+					new Post(3, "General", "Database Normalization", "What is 3NF and why is it important?", "Charlie"),
+					new Post(5, "General", "Recursion Depth", "Why do I get StackOverflowError in Java?", "Emma")
+					));
+			
+			// When
+			ArrayList<Post> actual = postStore.filterPosts("why", "General");
+			
+			// Then
+			assertArrayEquals(expected.toArray(), actual.toArray());
 		}
 	}
 	
@@ -519,7 +589,7 @@ public class ModelForumTest {
 			String newContent = generateRandomString(30);
 			String author = post.getAuthor();
 			
-			String expected = "Title length can not be longer than 300";
+			String expected = "Title could not be longer than 300 characters";
 			
 			// When	
 			String actual = editPost(id, newThread, author, newTitle, newContent);
@@ -542,7 +612,7 @@ public class ModelForumTest {
 			String newContent = generateRandomString(contentLength);
 			String author = post.getAuthor();
 			
-			String expected = "Content length can not be longer than 2000";
+			String expected = "Content could not be longer than 2000 characters";
 			
 			// When
 			String actual = editPost(id, newThread, author, newTitle, newContent);
@@ -566,7 +636,7 @@ public class ModelForumTest {
 			String newContent = generateRandomString(contentLength);
 			String author = post.getAuthor();
 			
-			String expected = "Title length can not be longer than 300\nContent length can not be longer than 2000";
+			String expected = "Title could not be longer than 300 characters\nContent could not be longer than 2000 characters";
 			
 			// When
 			String actual = editPost(id, newThread, author, newTitle, newContent);
@@ -611,7 +681,7 @@ public class ModelForumTest {
 			String newContent = generateRandomString(30);
 			String author = post.getAuthor();
 			
-			String expected = "Thread does not exist in the database";
+			String expected = "Thread must be an existing thread";
 			
 			// When 
 			String actual = editPost(id, newThread, author, newTitle, newContent);
@@ -808,7 +878,7 @@ public class ModelForumTest {
 			String content = generateRandomString(contentLength);
 			String author = generateRandomString(30);
 			
-			String expected = "Content length can not be longer than 2000";
+			String expected = "Content could not be longer than 2000 characters";
 			
 			// When
 			String actual = addReply(content, author, id);
@@ -882,6 +952,58 @@ public class ModelForumTest {
 	}
 	
 	/**
+	 * <p>ReplyReadTest class is used to contain all test cases related to READ operation on Reply class, called by many getter functions</p>
+	 */
+	@Nested
+	@DisplayName("Reply READ test cases")
+	public class ReplyReadTest {
+		/**
+		 * The class constructor but it will not be used in this project
+		 */
+		public ReplyReadTest() {
+			
+		}
+		/**
+		 * <p>Verifies that all replies are listed when call by {@code getReplyList}</p>
+		 */
+		@Test
+		public void shouldReturnAllReplies_whenGetReplyListIsCalled() {
+			// Given
+			ArrayList<Reply> expected = new ArrayList<>(List.of(
+					new Reply(0, "Inheritance models an 'is-a' relationship.", "Admin", 1),
+					new Reply(1, "Composition is usually more flexible.", "Alice", 1),
+					new Reply(2, "Each step halves the search space.", "Charlie", 2),
+					new Reply(3, "That’s why it grows logarithmically.", "Admin", 2),
+					new Reply(4, "3NF removes transitive dependency.", "Emma", 3),
+					new Reply(5, "Always pull before pushing changes.", "Bob", 4),
+					new Reply(6, "Use git status to inspect conflicts.", "Admin", 4),
+					new Reply(7, "Infinite recursion without base case causes it.", "Alice", 5)
+					));
+			
+			// When
+			ArrayList<Reply> actual = replyStore.getReplyList();
+			
+			// Then
+			assertArrayEquals(expected.toArray(), actual.toArray());
+		}
+		
+		/**
+		 * <p>Verifies that the specific reply is listed when called by {@code retrieve}</p>
+		 */
+		@Test
+		public void shouldReturnSpecificReply_whenRetrieveIsCalled() {
+			// Given
+			Reply expected = new Reply(4, "3NF removes transitive dependency.", "Emma", 3);
+			
+			// When
+			Reply actual = replyStore.retrieve(4);
+			
+			// Then
+			assertEquals(expected, actual);
+		}
+	}
+	
+	/**
 	 * <p>ReplyUpdateTest class is used to contain all test cases related to UPDATE operation on Reply class, called by {@code editReply}
 	 */
 	@Nested
@@ -930,7 +1052,7 @@ public class ModelForumTest {
 			String newContent = generateRandomString(contentLength);
 			String author = reply.getAuthor();
 			
-			String expected = "Content length can not be longer than 2000";
+			String expected = "Content could not be longer than 2000 characters";
 			
 			// When
 			String actual = editReply(id, author, newContent);

@@ -1,7 +1,6 @@
 package CRUD;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import entityClasses.ThreadStore;
 
@@ -31,29 +30,14 @@ public class Post {
     private static final String DEFAULT_THREAD = "General";
 	
     /**
-     * Creates a new post with the given identifier, title, content, and author.
+     * <p>Creates a new post with the given identifier, title, content, and author.</p>
      *
      * @param id the unique identifier for the post
+     * @param thread is the thread of the post
      * @param title the title of the post
      * @param content the body content of the post
      * @param author the username of the author who created the post
      */
-    // TODO: Remove Post(id, title, content, author) if Post(id, thread, title, content, author) works
-//    public Post(int id, String title, String content, String author) {
-//    	this.id = id;
-//    	this.thread = "General";
-//    	this.title = title;
-//    	this.content = content;
-//    	this.author = author;
-//    	this.createdAt = LocalDateTime.now();
-//    	this.replyPostId = new ArrayList<>();
-//    	
-//    	this.readUsers = new ArrayList<String>();
-//    	readUsers.add(this.author); // the author who created the class is consider already read it
-//
-//        this(id, DEFAULT_THREAD, title, content, author);
-//    }
-
     public Post(int id, String thread, String title, String content, String author) {
         this.id = id;
         this.author = author;
@@ -70,38 +54,43 @@ public class Post {
     }
     
     /**
-     * Returns the unique identifier of the post.
+     * <p>Returns the unique identifier of the post.</p>
      *
-     * @return the post ID
+     * @return an integer value that represents the post ID
      */
     public int getId() {
         return id;
     }
 
+    /**
+     * <p>Returns the thread name of the post</p>
+     * 
+     * @return a String represents thread name
+     */
     public String getThread() {
     	return thread;
     }
     
     /**
-    * Returns the title of the post.
+    * <p>Returns the title of the post.</p>
     *
-    * @return the post title
+    * @return a String represents the post title
     */
     public String getTitle() {
         return title;
     }
 
     /**
-     * Returns the content of the post.
+     * <p>Returns the content of the post.</p>
      *
-     * @return the post content
+     * @return a String represents the post content
      */
     public String getContent() {
         return content;
     }
 
     /**
-     * Returns the author of the post.
+     * <p>Returns the author of the post.</p>
      *
      * @return the author username
      */
@@ -165,59 +154,12 @@ public class Post {
     	this.deleted = true;
     }
     
-    private static String normalizeThread(String thread) {
-        if (thread == null || thread.isBlank()) {
-            return DEFAULT_THREAD;
-        }
-        return thread.trim();
-    }
-    
-    public static String validateTitle(String title) {
-        if (title == null || title.isBlank()) {
-            return "Title could not be empty";
-        }
-
-        title = title.trim();
-
-        if (title.length() > MAX_TITLE_LENGTH) {
-            return "Title could not be longer than 300 characters";
-        }
-
-        return "";
-    }
-    
-    public static String validateContent(String content) {
-        if (content == null || content.isBlank()) {
-            return "Content could not be empty";
-        }
-
-        content = content.trim();
-
-        if (content.length() > MAX_CONTENT_LENGTH) {
-            return "Content could not be longer than 2000 characters";
-        }
-
-        return "";
-    }
-    
-    public static String validateThread(String thread, ThreadStore threadStore) {
-        String normalizedThread = normalizeThread(thread);
-
-        if (normalizedThread.length() > MAX_THREAD_LENGTH) {
-            return "Thread name could not be longer than 100 characters";
-        }
-
-        if (threadStore == null) {
-            return "Thread store could not be null";
-        }
-
-        if (!threadStore.checkThreadExist(normalizedThread)) {
-            return "Thread must be an existing thread";
-        }
-
-        return "";
-    }
-
+    /**
+     * <p>Updates the thread of the post if the thread is already in the database</p>
+     * 
+     * @param thread is the name of the updated thread
+     * @return a String represents error, empty if there is not error
+     */
     public String setThread(String thread) {
         String normalizedThread = normalizeThread(thread);
 
@@ -229,11 +171,17 @@ public class Post {
         return "";
     }
     
+    /**
+     * <p>Updates the thread of the post if the thread is not sure in the database</p>
+     * 
+     * @param thread is the name of the updated thread
+     * @param threadStore is the database stored thread
+     * @return a String represents error, empty if there is not error
+     */
+    
     public String setThread(String thread, ThreadStore threadStore) {
         String errorMessage = validateThread(thread, threadStore);
-        if (!errorMessage.isEmpty()) {
-            return errorMessage;
-        }
+        if (!errorMessage.isEmpty()) return errorMessage;
 
         this.thread = normalizeThread(thread);
         return "";
@@ -249,9 +197,7 @@ public class Post {
     
     public String setTitle(String title) {
         String errorMessage = validateTitle(title);
-        if (!errorMessage.isEmpty()) {
-            return errorMessage;
-        }
+        if (!errorMessage.isEmpty()) return errorMessage;
 
         this.title = title.trim();
         return "";
@@ -266,9 +212,7 @@ public class Post {
      */
     public String setContent(String content) {
         String errorMessage = validateContent(content);
-        if (!errorMessage.isEmpty()) {
-            return errorMessage;
-        }
+        if (!errorMessage.isEmpty()) return errorMessage; 
 
         this.content = content.trim();
         return "";
@@ -317,6 +261,11 @@ public class Post {
     	return title;
     }
     
+    /**
+     * <p>Defines the comparison of two posts</p>
+     * 
+     * @return a boolean value is true if two posts are the same, otherwise, return false.
+     */
     @Override
     public boolean equals(Object o) {
     	if (this == o) return true;
@@ -330,8 +279,90 @@ public class Post {
                 && java.util.Objects.equals(this.content, otherPost.content);
     }
     
+    /**
+     * <p>Defines the hash value of the post</p>
+     * 
+     * @return a integer represents the hash code of the post 
+     */
     @Override
     public int hashCode() {
     	return java.util.Objects.hash(this.id, this.author);
+    }
+    
+    /**
+     * Returns thread name. If the thread is empty, returns default thread
+     * @param thread is the name of thread
+     * @return a String that represents normalized thread name
+     */
+    private static String normalizeThread(String thread) {
+        if (thread == null || thread.isBlank()) {
+            return DEFAULT_THREAD;
+        }
+        return thread.trim();
+    }
+    
+    /**
+     * <p>Verifies whether the title is valid</p>
+     * 
+     * @param title is post title
+     * @return a String represents error message, empty when there is no error
+     */
+    public static String validateTitle(String title) {
+        if (title == null || title.isBlank()) {
+            return "Title could not be empty";
+        }
+
+        title = title.trim();
+
+        if (title.length() > MAX_TITLE_LENGTH) {
+            return "Title could not be longer than 300 characters";
+        }
+
+        return "";
+    }
+    
+    /**
+     * <p>Verifies whether the content is valid</p>
+     * 
+     * @param content is post content
+     * @return a String represents error message, empty when there is no error
+     */
+    public static String validateContent(String content) {
+        if (content == null || content.isBlank()) {
+            return "Content could not be empty";
+        }
+
+        content = content.trim();
+
+        if (content.length() > MAX_CONTENT_LENGTH) {
+            return "Content could not be longer than 2000 characters";
+        }
+
+        return "";
+    }
+    
+    /**
+     * <p>Verifies whether the thread is valid</p>
+     * 
+     * @param thread is post thread
+     * @param threadStore is database storing thread
+     * @return a String represents error message, empty when there is no error
+     */
+    public static String validateThread(String thread, ThreadStore threadStore) {
+        String normalizedThread = normalizeThread(thread);
+
+        if (normalizedThread.length() > MAX_THREAD_LENGTH) {
+            return "Thread name could not be longer than 100 characters";
+        }
+
+        if (threadStore == null) {
+            return "Thread store could not be null";
+        }
+
+        if (!threadStore.checkThreadExist(normalizedThread)) {
+            return "Thread must be an existing thread";
+        }
+
+        return "";
     }
 }
