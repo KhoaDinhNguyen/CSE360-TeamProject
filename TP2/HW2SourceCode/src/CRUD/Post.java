@@ -285,6 +285,8 @@ public class Post {
     
     /**
      * This function mark the given user as read, return true or false if successful or not
+     * Its also mark all the reply on the post as read
+     * 
      * @param user a string which is the user name of the user
      * @return true if successfully mark as read, otherwise return false
      */
@@ -292,6 +294,10 @@ public class Post {
     	// if the user have read the post, no need to mark as read
     	if (hasRead(user)) {
     		return false;
+    	}
+    	
+    	for (int id: this.replyPostId) {
+    		
     	}
     	
     	readUsers.add(user);

@@ -409,8 +409,7 @@ public class ModelForum {
 	/**
 	 * Clears the current post filter so that all posts are included again.
 	 */
-	public static void clearPostFilter() {
-	    postStore.clearFilter();
+	public static void clearPostFilter() { postStore.clearFilter();
 	}
 
 	/**
@@ -563,4 +562,13 @@ public class ModelForum {
 		return postStore.getUnreadPosts(user);
 	}
 	
+	/**
+	 * Mark all the reply belong to a post as read
+	 * @param postId the post id
+	 */
+	public static void markAsReadAllRepies(int postId) {
+		for (Reply reply: getRepliesByPostId(postId)) {
+			reply.markAsRead(ViewerForum.theUser.getUserName());
+		}
+	}
 }

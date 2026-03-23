@@ -36,6 +36,7 @@ public class Reply {
     	
     	// init the array of read users
     	this.readUsers = new ArrayList<String>();
+    	this.readUsers.add(author); // the author is consider read when created 
     }
     
     /**
