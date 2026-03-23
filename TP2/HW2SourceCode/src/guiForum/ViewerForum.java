@@ -25,6 +25,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.scene.control.ListView;
 import CRUD.Post;
 import CRUD.PostStore;
@@ -93,6 +94,7 @@ public class ViewerForum {
 	private static TextField tfSearch;
 	private static Button button_Search;
 	private static Button button_Clear;
+	private static Button button_Unread;
 	
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -219,11 +221,11 @@ public class ViewerForum {
 		
 		// Thread Label
 		threadLabelMain.setFont(Font.font("Arial", 14));
-		threadLabelMain.setLayoutX(660);
+		threadLabelMain.setLayoutX(750);
 		threadLabelMain.setLayoutY(60);
 
 		// Thread ChoiceBox
-		threadChoiceBoxMain.setLayoutX(735);
+		threadChoiceBoxMain.setLayoutX(835);
 		threadChoiceBoxMain.setLayoutY(55);
 		threadChoiceBoxMain.setPrefWidth(130);
 		threadChoiceBoxMain.setPrefHeight(28);
@@ -232,7 +234,24 @@ public class ViewerForum {
 		threadChoiceBoxMain.setValue("Default");
 
 		
+		// Unread Button		
+		button_Unread = new Button("Unread");
+		setupButtonUI(button_Unread, "Dialog", 13, 75, Pos.CENTER, 650, 55);
+
+		button_Unread.setOnAction(e -> {
+			updatingList(ModelForum.getUnreads(theUser.getUserName()));
+		});
 		// GUI Area 2
+		
+		// override PostView cell format factory 
+		postListView.setCellFactory(new Callback<ListView<Post>, ListCell<Post>>(){
+			@Override 
+			public ListCell<Post> call(ListView<Post> list) {
+				return new PostFormatCell();
+			}
+		});
+		
+		postListView.setFixedCellSize(50);
 		
 		postListView.setLayoutX(20);
 		postListView.setLayoutY(105);
@@ -302,6 +321,12 @@ public class ViewerForum {
 		
 		postListView.setOnMouseClicked(event -> {
 		    selectedPost = postListView.getSelectionModel().getSelectedItem();
+		    
+		    // post selected, mark the user as read
+		    selectedPost.markAsRead(theUser.getUserName());
+		    ModelForum.markAsReadAllRepies(selectedPost.getId());
+		    updatingList(ModelForum.getPostList());
+
 		    displayPostDetails(selectedPost);
 		});
 		
@@ -371,7 +396,7 @@ public class ViewerForum {
         	    line_Separator4, button_Logout, button_Quit,
         	    button_NewPost, button_MyPost, postListView, detailPane, threadLabelMain, threadChoiceBoxMain,
         	    detailScrollPane, 
-        	    tfSearch, button_Search, button_Clear
+        	    tfSearch, button_Search, button_Clear, button_Unread
         	);
 		
 	}
@@ -423,7 +448,6 @@ public class ViewerForum {
 	 */
 	private static void updatingList(List<Post> newPosts) {
 		postListView.getItems().setAll(newPosts);
-		
 	}
 	
 	/**
@@ -689,7 +713,6 @@ public class ViewerForum {
 
 	        // You can rename this to match your actual ModelForum method
 	        String errorMessage = ModelForum.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
-
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
 	            alert.setTitle("Cannot Update Post");

@@ -13,12 +13,14 @@ public class ReplyStore {
 	
 	// ArrayList
 	private ArrayList<Reply> ReplyList;
+	private ArrayList<Reply> subsetReplyList;
 	
 	/**
 	 * Creates an empty reply store.
 	 */
 	public ReplyStore() {
 	    this.ReplyList = new ArrayList<>();
+	    this.subsetReplyList = new ArrayList<>();
 	}
 	
 	/**
@@ -80,7 +82,46 @@ public class ReplyStore {
 	    return max;
 	}
 	
-	 public void hardReset() {
+	/**
+	 * Return an subset contains the replies which the user have not read
+	 * @param user a string contains the username
+	 * @return an array list of reply class
+	 */
+	public ArrayList<Reply> getUnreadReplies(String user) {
+		subsetReplyList.clear();
+		
+		for (int i = 0; i < ReplyList.size(); i++) {
+			Reply reply = ReplyList.get(i);
+			if (!reply.hadRead(user))
+				subsetReplyList.add(reply);
+		}
+		
+		return subsetReplyList;
+	}
+	/**
+	 * Return an subset contains the replies which the user have not read in a post
+	 * 
+	 * @param user a string contains the username
+	 * @param postId the id of the parent post
+	 * @return an array list of reply class
+	 */
+	public ArrayList<Reply> getUnreadReplies(String user, int postId) {
+		subsetReplyList.clear();
+		
+		for (int i = 0; i < ReplyList.size(); i++) {
+			Reply reply = ReplyList.get(i);
+			if (reply.getParentPostId() == postId && !reply.hadRead(user))
+				subsetReplyList.add(reply);
+		}
+		
+		return subsetReplyList;
+	}
+	
+	/** 
+	 * Reset the array lists
+	 */
+	 public void hardReset() { 
 		 ReplyList.clear();
+		 subsetReplyList.clear();
 	 }
 }

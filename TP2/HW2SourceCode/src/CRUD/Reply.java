@@ -1,5 +1,6 @@
 package CRUD;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 /**
  * Represents a reply to a forum post.
@@ -13,6 +14,9 @@ public class Reply {
     private String content;
     private final String author;
     private final LocalDateTime createdAt;
+    
+    // an array of user who have read the reply
+    private ArrayList<String> readUsers;
     private int parentPostId;
 	
     /**
@@ -29,6 +33,10 @@ public class Reply {
     	this.author = author;
     	this.createdAt = LocalDateTime.now();
     	this.parentPostId = parentPostId;
+    	
+    	// init the array of read users
+    	this.readUsers = new ArrayList<String>();
+    	this.readUsers.add(author); // the author is consider read when created 
     }
     
     /**
@@ -77,6 +85,15 @@ public class Reply {
     }
     
     /**
+     * Check if the given user have read the reply 
+     * @param user a string contain the username
+     * @return true if the user have read the reply, otherwise return false
+     */
+    public boolean hadRead(String user) {
+    	return readUsers.contains(user);
+    }
+    
+    /**
      * Updates the reply content if the provided content is valid.
      *
      * @param content the new content for the reply
@@ -87,6 +104,21 @@ public class Reply {
     	if (content.isBlank() || content == null) return errorMessage;
     	this.content = content;
     	return "";
+    }
+
+    /**
+     * This function mark the given user as read the reply
+     * @param user a string contain the username
+     * @return true if mark successfully, otherwise false
+     */
+    public boolean markAsRead(String user) {
+    	// if the user already read the reply, not mark as read
+    	if (hadRead(user)) {
+    		return false;
+    	}
+    	
+    	readUsers.add(user);
+    	return true;
     }
     
     /**

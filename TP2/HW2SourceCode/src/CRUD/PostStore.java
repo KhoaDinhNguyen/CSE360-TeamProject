@@ -168,6 +168,23 @@ public class PostStore {
         return (s == null) ? "" : s.toLowerCase();
     }
     
+    /**
+     * Get an subset list of unread posts given the user name
+     * @param user a string contain the user name
+     * @return an ArrayList of Post class
+     */
+    public ArrayList<Post> getUnreadPosts(String user) {
+    	subsetPostList.clear();
+    	for (int i = 0; i < PostList.size(); i++) {
+    		Post post = PostList.get(i);
+    		if (!post.hasRead(user) ) {
+    			subsetPostList.add(post);
+    		}
+    	}
+    	
+    	return subsetPostList;
+    }
+    
     public void hardReset() {
     	PostList.clear();
     	subsetPostList.clear();

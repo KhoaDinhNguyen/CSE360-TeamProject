@@ -260,7 +260,7 @@ public class ModelForum {
 
 	    int id = replyStore.getMaxId()+1;
 	    
-//	    System.out.println(id);
+	    System.out.println("replyID:" + parentId);
 
 	    // Create + save reply
 	    Reply newReply = new Reply(id, content, author, parentId);
@@ -357,8 +357,7 @@ public class ModelForum {
 	/**
 	 * Clears the current post filter so that all posts are included again.
 	 */
-	public static void clearPostFilter() {
-	    postStore.clearFilter();
+	public static void clearPostFilter() { postStore.clearFilter();
 	}
 
 	/**
@@ -467,5 +466,57 @@ public class ModelForum {
 	    addReply("Use git status to inspect conflicts.", "Admin", 4);
 
 	    addReply("Infinite recursion without base case causes it.", "Alice", 5);
+	}
+	
+	private static String titleValidation(String title) {
+		if (title == null || title.isBlank()) {
+			return "Title could not be empty";
+		}
+		else if (title.length() > 300) {
+			return "Title length can not be longer than 300";
+		}
+		
+		return "";
+	}
+	
+	private static String contentValidation(String content) {
+		if (content == null || content.isBlank()) {
+			return "Content could not be empty";
+		}
+		else if (content.length() > 2000) {
+			return "Content length can not be longer than 2000";
+		}
+		
+		return "";
+	}
+	
+	private static String threadValidation(String thread) {
+		if (thread.length() > 100) {
+			return "Thread name could not be longer than 100 characters";
+		}
+		else if (!threadStore.checkThreadExist(thread)) {
+			return "Thread does not exist in the database";
+		}
+		
+		return "";
+	}
+	
+	/**
+	 * Return a list of unread posts given the username
+	 * @param user a string contain the username
+	 * @return an ArrayList class of Post class
+	 */
+	public static List<Post> getUnreads(String user) {
+		return postStore.getUnreadPosts(user);
+	}
+	
+	/**
+	 * Mark all the reply belong to a post as read
+	 * @param postId the post id
+	 */
+	public static void markAsReadAllRepies(int postId) {
+		for (Reply reply: getRepliesByPostId(postId)) {
+			reply.markAsRead(ViewerForum.theUser.getUserName());
+		}
 	}
 }
