@@ -113,9 +113,6 @@ public class PostStore {
             return subsetPostList;
         }
         
-        
-        
-
         for (Post p : PostList) {
             String title = safeLower(p.getTitle());
             String content = safeLower(p.getContent());

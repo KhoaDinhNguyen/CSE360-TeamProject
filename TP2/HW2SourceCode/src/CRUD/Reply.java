@@ -13,7 +13,7 @@ public class Reply {
     private String content;
     private final String author;
     private final LocalDateTime createdAt;
-    private static int parentPostId;
+    private int parentPostId;
 	
     /**
      * Creates a new reply with the given identifier, content, author, and parent post ID.
@@ -87,6 +87,33 @@ public class Reply {
     	if (content.isBlank() || content == null) return errorMessage;
     	this.content = content;
     	return "";
+    }
+    
+    /**
+     * <p>Defines the comparison of two replies</p>
+     * 
+     * @return a boolean value is true if two replies are the same, otherwise, return false.
+     */
+    @Override
+    public boolean equals(Object o) {
+    	if (this == o) return true;
+    	if (o == null || getClass() != o.getClass()) return false;
+    	
+    	Reply otherPost = (Reply)o;
+    	
+    	return java.util.Objects.equals(this.author, otherPost.author)
+                && java.util.Objects.equals(this.content, otherPost.content)
+                && java.util.Objects.equals(this.parentPostId, otherPost.parentPostId);
+    }
+    
+    /**
+     * <p>Defines the hash value of the reply</p>
+     * 
+     * @return a integer represents the hash code of the reply 
+     */
+    @Override
+    public int hashCode() {
+    	return java.util.Objects.hash(this.id, this.author);
     }
     
 }
