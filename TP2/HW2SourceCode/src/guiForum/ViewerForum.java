@@ -311,11 +311,12 @@ public class ViewerForum {
 		    selectedPost = postListView.getSelectionModel().getSelectedItem();
 		    
 		    // post selected, mark the user as read
-		    selectedPost.markAsRead(theUser.getUserName());
-		    ModelForum.markAsReadAllRepies(selectedPost.getId());
 //		    updatingList(ModelForum.getPostList());
 
 		    displayPostDetails(selectedPost);
+
+		    selectedPost.markAsRead(theUser.getUserName());
+		    ModelForum.markAsReadAllRepies(selectedPost.getId());
 		});
 		
 		replyPane = new VBox(8);
@@ -479,6 +480,10 @@ public class ViewerForum {
 	        Label replyLabel = new Label(r.getAuthor() + ": " + r.getContent());
 	        replyLabel.setWrapText(true);
 	        replyLabel.setPickOnBounds(true); // helps clicking
+	        
+	        // if Unread, tags at unread
+	        if (!r.hadRead(theUser.getUserName()))
+	        	replyLabel.setText("[UNREAD] " + replyLabel.getText());
 
 	        // TEMP: attach menu to EVERY reply so you can test it works
 	        ContextMenu menu = new ContextMenu();
