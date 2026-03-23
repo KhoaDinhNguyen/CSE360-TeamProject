@@ -379,12 +379,15 @@ public class ViewerForum {
 		replyPane.getChildren().addAll(replyLabel, replyTextArea, replyButton);
 		detailPane.getChildren().add(replyPane);
 		// GUI Area 3
-        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+		
+		setupButtonUI(button_Return, "Dialog", 18, 250, Pos.CENTER, 20, 540);
+        button_Return.setOnAction((_) -> {ControllerForum.performReturn(); });
+        
+        setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 300, 540);
         button_Logout.setOnAction((_) -> {ControllerForum.performLogout(); });
         
-        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 300, 540);
+        setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 580, 540);
         button_Quit.setOnAction((_) -> {ControllerForum.performQuit(); });
-        
         
         
         // Add in Functionality
@@ -394,8 +397,10 @@ public class ViewerForum {
 		// Place all of the widget items into the Root Pane's list of children
         theRootPane.getChildren().addAll(
         	    label_PageTitle, label_UserDetails, line_Separator1,
-        	    line_Separator4, button_Logout, button_Quit,
+
+        	    line_Separator4, button_Logout, button_Quit, button_Return,
         	    button_NewPost, button_MyPost, postListView, detailPane, threadLabelMain, threadChoiceBoxMain,
+
         	    detailScrollPane, 
         	    tfSearch, button_Search, button_Clear, button_Unread
         	);
@@ -553,7 +558,6 @@ public class ViewerForum {
 	    threadContainer.setAlignment(Pos.CENTER_LEFT);
 	    
 	    
-	    //threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
 
 	    Label labelTitle = new Label("Title:");
 	    labelTitle.setFont(Font.font("Arial", 14));

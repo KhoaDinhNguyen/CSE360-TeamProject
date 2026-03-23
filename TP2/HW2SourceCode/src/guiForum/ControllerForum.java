@@ -27,4 +27,8 @@ public class ControllerForum {
 	protected static void performQuit() {
 		System.exit(0);
 	}
+	
+	protected static void performReturn() {
+		Student.ViewRole1Home.displayRole1Home(ViewerForum.theStage, ViewerForum.theUser);
+	}
 }
