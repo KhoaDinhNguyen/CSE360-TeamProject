@@ -175,6 +175,7 @@ public class ViewerForum {
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
 		
 		// Create Post button
+		button_NewPost = new Button("Create Post");
 		setupButtonUI(button_NewPost, "Dialog", 16, 100, Pos.CENTER, 200, 55);
 		button_NewPost.setOnAction((_) -> { ControllerForum.performAddPost(); });
 		
@@ -427,6 +428,10 @@ public class ViewerForum {
 	 */
 	private static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, 
 			double y){
+		if (b == null) {
+			System.out.println(x);
+			System.out.println(y);
+		}
 		b.setFont(Font.font(ff, f));
 		b.setMinWidth(w);
 		b.setAlignment(p);
