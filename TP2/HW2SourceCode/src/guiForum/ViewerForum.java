@@ -52,10 +52,19 @@ public class ViewerForum {
 	
 	// GUI Area 1: It informs the user about the purpose of this page, whose account is being used,
 	// and a button to allow this user to update the account settings
+	/**
+	 * Page title label
+	 */
 	protected static Label label_PageTitle = new Label();
+	
+	/**
+	 * User detail label
+	 */
 	protected static Label label_UserDetails = new Label();
 	
-	// This is a separator and it is used to partition the GUI for various tasks
+	/**
+	 * This is a separator and it is used to partition the GUI for various tasks
+	 */
 	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
 
 	// GUI ARea 2: This is a stub, so there are no widgets here.  For an actual role page, this are
@@ -63,14 +72,21 @@ public class ViewerForum {
 	
 	private static ListView<Post> postListView;
 	
-	
 	private static VBox detailPane;
 	private static Label detailThread;
 	private static Label detailTitle;
 	private static Label detailAuthor;
 	private static Label detailContent;
 	private static ScrollPane detailScrollPane;
+	
+	/**
+	 * Create Post button
+	 */
 	protected static Button button_NewPost;
+	
+	/**
+	 * MyPost button 
+	 */
 	protected static Button button_MyPost;
 	
 	Label threadLabelMain = new Label("Thread:");
@@ -101,14 +117,34 @@ public class ViewerForum {
 	private static List<Reply> unreadReplies;
 	
 	
-	// This is a separator and it is used to partition the GUI for various tasks
+	/**
+	 * This is a separator and it is used to partition the GUI for various tasks
+	 */
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
 	
+	/**
+	 * Logout button
+	 */
 	protected static Button button_Logout = new Button("Logout");
+	
+	/**
+	 * Return to homepage button
+	 */
 	protected static Button button_Return = new Button("Return");
+	
+	/**
+	 * Quit application button
+	 */
 	protected static Button button_Quit = new Button("Quit");
 	
+	/**
+	 * Edit button
+	 */
 	private static Button editPostButton = new Button("Edit");
+	
+	/**
+	 * Delete button
+	 */
 	private static Button deletePostButton = new Button("Delete");
 	
 	private static boolean unreadState = false;
@@ -119,11 +155,24 @@ public class ViewerForum {
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
 	
 	private static Scene theForumScene;	// The shared Scene each invocation populates
+	
+	/**
+	 * The role of user
+	 */
 	protected static final int theRole = 2;
 	
-	protected static Stage theStage;			// The Stage that JavaFX has established for us	
-	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets
-	protected static User theUser;				// The current logged in User
+	/**
+	 * The Stage that JavaFX has established for us	
+	 */
+	protected static Stage theStage;
+	/**
+	 * The Pane that holds all the GUI widgets
+	 */
+	protected static Pane theRootPane;
+	/**
+	 * The current logged in User
+	 */
+	protected static User theUser;				
 	
 	/**
 	 * Displays the forum view for the specified user on the provided stage.
@@ -189,7 +238,7 @@ public class ViewerForum {
 		button_MyPost = new Button("My Post");
 		setupButtonUI(button_MyPost, "Dialog", 13, 75, Pos.CENTER, 145, 55);
 		button_MyPost.setOnAction((_) -> {
-			updatingList(ModelForum.getPostsByUser(theUser.getUserName()));
+			ControllerForum.performMyPostButton();
 		});
 
 		// Filter Search

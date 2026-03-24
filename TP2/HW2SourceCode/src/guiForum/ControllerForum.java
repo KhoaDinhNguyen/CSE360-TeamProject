@@ -103,6 +103,14 @@ public class ControllerForum {
 	}
 	
 	/**
+	 * <p>Performs button to list all posts of the current user</p>
+	 */
+	protected static void performMyPostButton() {
+		List<Post> results = ModelForum.getPostsByUser(ViewerForum.theUser.getUserName());
+		ViewerForum.updatingList(results);
+	}
+	
+	/**
 	 * Logs the current user out of the forum and returns to the login screen.
 	 */
 	protected static void performLogout() {
