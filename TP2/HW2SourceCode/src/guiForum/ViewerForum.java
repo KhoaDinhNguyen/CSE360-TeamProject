@@ -180,14 +180,14 @@ public class ViewerForum {
 		label_UserDetails.setText("User: " + theUser.getUserName());
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
 		
-		// New Post button
-		button_NewPost = new Button("New Post");
-		setupButtonUI(button_NewPost, "Dialog", 13, 75, Pos.CENTER, 235, 55);
-		button_NewPost.setOnAction((_) -> { showAddPostWindow(); });
+		// Create Post button
+		button_NewPost = new Button("Create Post");
+		setupButtonUI(button_NewPost, "Dialog", 13, 75, Pos.CENTER, 225, 55);
+		button_NewPost.setOnAction((_) -> { ControllerForum.performAddPost(); });
 		
 		// My Post button
 		button_MyPost = new Button("My Post");
-		setupButtonUI(button_MyPost, "Dialog", 13, 75, Pos.CENTER, 150, 55);
+		setupButtonUI(button_MyPost, "Dialog", 13, 75, Pos.CENTER, 145, 55);
 		button_MyPost.setOnAction((_) -> {
 			updatingList(ModelForum.getPostsByUser(theUser.getUserName()));
 		});
@@ -209,10 +209,9 @@ public class ViewerForum {
 		button_Search.setOnAction(e -> {
 		    String keyword = tfSearch.getText();
 		    String thread = threadChoiceBoxMain.getValue();
-		    System.out.println(thread);
+//		    System.out.println(thread);
 
-		    List<Post> results = ModelForum.filterPosts(keyword, thread);
-		    updatingList(results);
+		    ControllerForum.performSearchButton(keyword, thread);
 		});
 		
 		// Clear Button		
@@ -221,7 +220,8 @@ public class ViewerForum {
 
 		button_Clear.setOnAction(e -> {
 		    tfSearch.clear();
-		    updatingList(ModelForum.getPostList());
+		    
+		    ControllerForum.performClearButton();
 		});
 		
 		
@@ -268,11 +268,6 @@ public class ViewerForum {
 				
 		
 		detailPane = new VBox(10);
-//		detailPane.setLayoutX(340);     // to the right of the list
-//		detailPane.setLayoutY(105);
-//		detailPane.setPrefWidth(width - 360);
-//		detailPane.setPrefHeight(410);
-//		detailPane.setStyle("-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 1;");
 
 		detailScrollPane = new ScrollPane(detailPane);
 		detailScrollPane.setPrefWidth(width - 360);
@@ -301,12 +296,12 @@ public class ViewerForum {
 
 		editPostButton.setOnAction(e -> {
 		    if (selectedPost == null) return;
-		    showEditPostWindow(selectedPost);
+		    ControllerForum.performEditPost(selectedPost);
 		});
 
 		deletePostButton.setOnAction(e -> {
 		    if (selectedPost == null) return;
-		    confirmAndDeletePost(selectedPost);
+		    ControllerForum.performDeletePost(selectedPost);
 		});
 
 		unreadReplyButton = new Button("Unread replies");
@@ -342,10 +337,8 @@ public class ViewerForum {
 		    unreadState = false;
 		    unreadReplies = ModelForum.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
 
-		    displayPostDetails(selectedPost);
 
-		    selectedPost.markAsRead(theUser.getUserName());
-		    ModelForum.markAsReadAllRepies(selectedPost.getId());
+		    ControllerForum.performReadSpecificPost(selectedPost);	
 		});
 		
 		replyPane = new VBox(8);
@@ -369,9 +362,8 @@ public class ViewerForum {
 		    String author = theUser.getUserName();
 		    // basic validation
 		    int parentId = selectedPost.getId();
-		    String errorMessage = ModelForum.addReply(replyText, author, parentId);
-		    
-		    
+		    String errorMessage = ControllerForum.performAddReply(parentId, author, replyText);
+		   
 	        // If Model returns error → show it
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
@@ -382,7 +374,7 @@ public class ViewerForum {
 	            return;
 	        }
 	        
-	        displayPostDetails(selectedPost);
+	        ControllerForum.performReadSpecificPost(selectedPost);
 
 		    // For now just clear input and show success
 		    replyTextArea.clear();
@@ -458,6 +450,10 @@ public class ViewerForum {
 	 */
 	private static void setupButtonUI(Button b, String ff, double f, double w, Pos p, double x, 
 			double y){
+		if (b == null) {
+			System.out.println(x);
+			System.out.println(y);
+		}
 		b.setFont(Font.font(ff, f));
 		b.setMinWidth(w);
 		b.setAlignment(p);
@@ -470,7 +466,7 @@ public class ViewerForum {
 	 *
 	 * @param newPosts the posts to display in the list view
 	 */
-	private static void updatingList(List<Post> newPosts) {
+	protected static void updatingList(List<Post> newPosts) {
 		postListView.getItems().setAll(newPosts);
 	}
 	
@@ -482,7 +478,7 @@ public class ViewerForum {
 	 *
 	 * @param selectedPost the post whose details should be shown
 	 */
-	private void displayPostDetails(Post selectedPost) {
+	protected static void displayPostDetails(Post selectedPost) {
 
 	    if (selectedPost == null) return;
 
@@ -531,12 +527,12 @@ public class ViewerForum {
 
 	        MenuItem editItem = new MenuItem("Edit");
 	        editItem.setOnAction(e -> {
-	            showEditReplyWindow(r);  // should open your edit window
+	            ControllerForum.performEditReply(r);  // should open your edit window
 	        });
 
 	        MenuItem deleteItem = new MenuItem("Delete");
 	        deleteItem.setOnAction(e -> {
-	        	confirmAndDeleteReply(r); // should open confirm + delete
+	        	ControllerForum.performDeleteReply(r); // should open confirm + delete
 	        });
 
 	        menu.getItems().addAll(editItem, deleteItem);
@@ -555,7 +551,7 @@ public class ViewerForum {
 	/**
 	 * Opens a window that allows the current user to create a new post.
 	 */
-	private static void showAddPostWindow() {
+	protected static void showAddPostWindow() {
 	    Stage addStage = new Stage();
 	    addStage.setTitle("Create New Post");
 
@@ -578,10 +574,10 @@ public class ViewerForum {
 	    threadChoiceBox.setPrefWidth(220);
 			threadChoiceBox.setValue("General");
 			
-	    HBox threadContainer = new HBox(10, threadLabel, threadChoiceBox);
+	    HBox threadContainer = new HBox(10);
 	    threadContainer.setAlignment(Pos.CENTER_LEFT);
 	    
-	    
+	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
 
 	    Label labelTitle = new Label("Title:");
 	    labelTitle.setFont(Font.font("Arial", 14));
@@ -679,7 +675,7 @@ public class ViewerForum {
 	 *
 	 * @param post the post to edit
 	 */
-	private static void showEditPostWindow(Post post) {
+	protected static void showEditPostWindow(Post post) {
 	    Stage editStage = new Stage();
 	    editStage.setTitle("Edit Post");
 
@@ -743,9 +739,10 @@ public class ViewerForum {
 	    	String newThread = threadChoiceBox.getValue();
 	        String newTitle = tfTitle.getText();
 	        String newContent = taContent.getText();
-
+	        
 	        // You can rename this to match your actual ModelForum method
 	        String errorMessage = ModelForum.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
+	        System.out.println(errorMessage);
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
 	            alert.setTitle("Cannot Update Post");
@@ -768,7 +765,7 @@ public class ViewerForum {
 	        if (refreshed != null) postListView.getSelectionModel().select(refreshed);
 
 	        // Update detail display
-	        if (theView != null) theView.displayPostDetails(refreshed);
+	        if (theView != null) ControllerForum.performReadSpecificPost(post);
 
 	        editStage.close();
 	    });
@@ -794,7 +791,7 @@ public class ViewerForum {
 	 *
 	 * @param post the post to delete
 	 */
-	private static void confirmAndDeletePost(Post post) {
+	protected static void confirmAndDeletePost(Post post) {
 
 	    Alert confirm = new Alert(AlertType.CONFIRMATION);
 	    confirm.setTitle("Delete Post");
@@ -839,7 +836,7 @@ public class ViewerForum {
 
 	            if (refreshed != null) {
 	                postListView.getSelectionModel().select(refreshed);
-	                if (theView != null) theView.displayPostDetails(refreshed);
+	                if (theView != null) ControllerForum.performReadSpecificPost(refreshed);
 	            } else {
 	                postListView.getSelectionModel().clearSelection();
 	                selectedPost = null;
@@ -877,7 +874,7 @@ public class ViewerForum {
 	 *
 	 * @param reply the reply to edit
 	 */
-	private void showEditReplyWindow(Reply reply) {
+	protected static void showEditReplyWindow(Reply reply) {
 	    Stage editStage = new Stage();
 	    editStage.setTitle("Edit Reply");
 
@@ -929,7 +926,7 @@ public class ViewerForum {
 	        }
 
 	        // refresh current post details (reload replies)
-	        displayPostDetails(selectedPost);
+	        ControllerForum.performReadSpecificPost(selectedPost);
 
 	        editStage.close();
 	    });
@@ -946,7 +943,7 @@ public class ViewerForum {
 	 *
 	 * @param reply the reply to delete
 	 */
-	private void confirmAndDeleteReply(Reply reply) {
+	protected static void confirmAndDeleteReply(Reply reply) {
 	    Alert confirm = new Alert(AlertType.CONFIRMATION);
 	    confirm.setTitle("Delete Reply");
 	    confirm.setHeaderText("Delete this reply?");
@@ -968,7 +965,7 @@ public class ViewerForum {
 	            }
 
 	            // refresh UI
-	            displayPostDetails(selectedPost);
+	            ControllerForum.performReadSpecificPost(selectedPost);
 	        }
 	    });
 	}
