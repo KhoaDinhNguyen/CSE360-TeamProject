@@ -2,8 +2,8 @@ package guiForum;
 
 import java.util.List;
 
-import CRUD.Post;
-import CRUD.Reply;
+import entityClasses.Post;
+import entityClasses.Reply;
 
 /**
  * Provides controller actions for the forum user interface.

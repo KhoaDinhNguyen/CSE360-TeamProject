@@ -3,12 +3,7 @@ package guiForum;
 import java.util.ArrayList;
 import java.util.List;
 
-import CRUD.Post;
-import CRUD.PostStore;
-import CRUD.Reply;
-import CRUD.ReplyStore;
 import entityClasses.*;
-import CRUD.*;
 
 /**
  * Provides the in-memory model logic for the forum feature.
@@ -18,8 +13,8 @@ import CRUD.*;
  * operations for the forum user interface.</p>
  */
 public class ModelForum {
-	private static CRUD.PostStore postStore = new CRUD.PostStore();
-	private static CRUD.ReplyStore replyStore = new CRUD.ReplyStore();
+	private static entityClasses.PostStore postStore = new entityClasses.PostStore();
+	private static entityClasses.ReplyStore replyStore = new entityClasses.ReplyStore();
 	private static ThreadStore threadStore = new ThreadStore();
 	
 	/**

@@ -1,4 +1,4 @@
-package CRUD;
+package entityClasses;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 

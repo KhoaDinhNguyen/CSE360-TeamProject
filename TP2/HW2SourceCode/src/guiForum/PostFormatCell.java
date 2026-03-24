@@ -2,8 +2,8 @@ package guiForum;
 
 import java.util.ArrayList;
 
-import CRUD.Post;
-import CRUD.Reply;
+import entityClasses.Post;
+import entityClasses.Reply;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
