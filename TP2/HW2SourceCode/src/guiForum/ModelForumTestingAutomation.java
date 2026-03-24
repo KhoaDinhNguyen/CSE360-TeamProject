@@ -47,8 +47,8 @@ public class ModelForumTestingAutomation {
         Field replyStoreField = mf.getDeclaredField("replyStore");
         postStoreField.setAccessible(true);
         replyStoreField.setAccessible(true);
-        postStoreField.set(null, new CRUD.PostStore());
-        replyStoreField.set(null, new CRUD.ReplyStore());
+        postStoreField.set(null, new entityClasses.PostStore());
+        replyStoreField.set(null, new entityClasses.ReplyStore());
     }
 
     /**

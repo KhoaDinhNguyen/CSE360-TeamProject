@@ -12,16 +12,14 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 
-import CRUD.Post;
-import CRUD.Reply;
 import entityClasses.*;
 
 /**
  * <p>ModalForumTest class is used to contain all test cases related to Post, Reply, and Thread on CRUD operations and test them</p>
  */
 public class ModelForumTest {
-	private CRUD.PostStore postStore;
-	private CRUD.ReplyStore replyStore;
+	private entityClasses.PostStore postStore;
+	private entityClasses.ReplyStore replyStore;
 	private ThreadStore threadStore;
 	
 	private static final String ALPHANUMERIC = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

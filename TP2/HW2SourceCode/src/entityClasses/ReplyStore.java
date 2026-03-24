@@ -1,4 +1,4 @@
-package CRUD;
+package entityClasses;
 import java.util.ArrayList;
 
 // Note: ArrayList is used to store the data because it supports dynamic resizing, simplifies memory management, and provides fast random access to elements.
