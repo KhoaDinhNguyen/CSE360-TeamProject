@@ -22,7 +22,12 @@ public class ModelForum {
 	private static CRUD.ReplyStore replyStore = new CRUD.ReplyStore();
 	private static ThreadStore threadStore = new ThreadStore();
 	
-	
+	/**
+	 * The class constructor but it will not be used in this project
+	 */
+	public ModelForum() {
+		
+	}
 	static {
 
 	    // Sample THREADS
@@ -86,6 +91,15 @@ public class ModelForum {
 	    return addPost("General", title, content, author);
 	}
 	
+	/**
+	 * Adds a new post to the forum after validating its thread, title, content, and author.
+	 *
+	 * @param thread is post's thread
+	 * @param title the title of the post
+	 * @param content the body content of the post
+	 * @param author the username of the author creating the post
+	 * @return an empty string if the post is added successfully; otherwise, an error message
+	 */
 	public static String addPost(String thread, String title, String content, String author) {		
 		// Validate author
 	    if (author == null || author.isBlank()) {
@@ -216,7 +230,7 @@ public class ModelForum {
 		
 		// Validate content
 	    String contentErrorMessage = Post.validateContent(content);
-		if (contentErrorMessage.isEmpty()) editedPost.setTitle(title);
+		if (contentErrorMessage.isEmpty()) editedPost.setContent(content);
 		else errorMessage += (errorMessage.isEmpty() ? "" : "\n") + contentErrorMessage;
 	    
 	    return errorMessage;
@@ -339,6 +353,7 @@ public class ModelForum {
 	 * Filters the list of posts using the provided keyword.
 	 *
 	 * @param keyword the keyword used to filter posts
+	 * @param thread is the thread name used to filter posts
 	 * @return the filtered list of matching posts
 	 */
 	public static List<Post> filterPosts(String keyword, String thread) {
@@ -386,31 +401,49 @@ public class ModelForum {
 	}
 	
 	/**
-	 * <p>Read all threads in the database</p>
+	 * <p>Reads all threads in the database</p>
 	 * @return a String list that contains all thread's name in the database
 	 */
 	public static ArrayList<String> getAllThreads() {
 		return threadStore.getAllThreads();
 	}
 	
+	/**
+	 * <p>Gets the database storing all posts, used for testing</p>
+	 * @return PostStore object is the object storing all posts
+	 */
 	public static PostStore getPostStore() {
 		return postStore;
 	}
 	
+	/**
+	 * <p>Gets the database storing all replies, used for testing</p>
+	 * @return ReplyStore object is the object storing all replies
+	 */
 	public static ReplyStore getReplyStore() {
 		return replyStore;
 	}
 	
+	/**
+	 * <p>Gets the database storing all threads, used for testing</p>
+	 * @return ThreadStore object is the object storing all threads
+	 */
 	public static ThreadStore getThreadStore() {
 		return threadStore;
 	}
 	
+	/**
+	 * <p><strong>Danger</strong>: clears all posts, replies, and threads in the database, used only be used when testing</p>
+	 */
 	public static void hardReset() {
 		replyStore.hardReset();
 		postStore.hardReset();
 		threadStore.hardReset();
 	}
 	
+	/**
+	 * <p>Reset to the default state of the forum</p>
+	 */
 	public static void setUpDefaultForum() {
 		// Sample THREADS
 	    addThread("General");
@@ -457,39 +490,6 @@ public class ModelForum {
 	    addReply("Use git status to inspect conflicts.", "Admin", 4);
 
 	    addReply("Infinite recursion without base case causes it.", "Alice", 5);
-	}
-	
-	private static String titleValidation(String title) {
-		if (title == null || title.isBlank()) {
-			return "Title could not be empty";
-		}
-		else if (title.length() > 300) {
-			return "Title length can not be longer than 300";
-		}
-		
-		return "";
-	}
-	
-	private static String contentValidation(String content) {
-		if (content == null || content.isBlank()) {
-			return "Content could not be empty";
-		}
-		else if (content.length() > 2000) {
-			return "Content length can not be longer than 2000";
-		}
-		
-		return "";
-	}
-	
-	private static String threadValidation(String thread) {
-		if (thread.length() > 100) {
-			return "Thread name could not be longer than 100 characters";
-		}
-		else if (!threadStore.checkThreadExist(thread)) {
-			return "Thread does not exist in the database";
-		}
-		
-		return "";
 	}
 	
 	/**
