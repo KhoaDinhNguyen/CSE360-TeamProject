@@ -82,6 +82,7 @@ public class ViewerForum {
 	private static VBox replyPane;
 	private static TextArea replyTextArea;
 	private static Button replyButton;
+	private static Button unreadReplyButton;
 	
 	private static VBox repliesBox;
 	private static Label repliesLabel;
@@ -96,6 +97,9 @@ public class ViewerForum {
 	private static Button button_Clear;
 	private static Button button_Unread;
 	
+	// Unread reply cache 
+	private static List<Reply> unreadReplies;
+	
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -106,6 +110,8 @@ public class ViewerForum {
 	
 	private static Button editPostButton = new Button("Edit");
 	private static Button deletePostButton = new Button("Delete");
+	
+	private static boolean unreadState = false;
 	
 	private static ViewerForum theView;
 	
@@ -298,8 +304,16 @@ public class ViewerForum {
 		    ControllerForum.performDeletePost(selectedPost);
 		});
 
+		unreadReplyButton = new Button("Unread replies");
+		unreadReplyButton.setDisable(true);
+		unreadReplyButton.setOnAction(e -> {
+			unreadState = (unreadState? false: true);
+			// refresh
+		    displayPostDetails(selectedPost);
+		});
+
 		// Put buttons in a small row
-		VBox postActions = new VBox(6, editPostButton, deletePostButton);
+		VBox postActions = new VBox(6, editPostButton, deletePostButton, unreadReplyButton);
 		// OR use HBox if you want them side-by-side:
 		// HBox postActions = new HBox(10, editPostButton, deletePostButton);
 
@@ -317,6 +331,13 @@ public class ViewerForum {
 		postListView.setOnMouseClicked(event -> {
 		    selectedPost = postListView.getSelectionModel().getSelectedItem();
 		    
+		    // post selected, mark the user as read
+//		    updatingList(ModelForum.getPostList());
+		    
+		    unreadState = false;
+		    unreadReplies = ModelForum.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
+
+
 		    ControllerForum.performReadSpecificPost(selectedPost);	
 		});
 		
@@ -363,6 +384,7 @@ public class ViewerForum {
 		    ok.setContentText("Your reply was posted.");
 		    ok.showAndWait();
 		});
+		
 
 		replyPane.getChildren().addAll(replyLabel, replyTextArea, replyButton);
 		detailPane.getChildren().add(replyPane);
@@ -475,6 +497,8 @@ public class ViewerForum {
 	    editPostButton.setDisable(!isOwner || isDeleted);
 	    deletePostButton.setDisable(!isOwner || isDeleted);
 	    
+	    
+	    
 	    replyButton.setDisable(isDeleted);
 	    replyTextArea.setDisable(isDeleted);
 
@@ -483,15 +507,19 @@ public class ViewerForum {
 
 	    // Load replies
 	    List<Reply> replies = ModelForum.getRepliesByPostId(selectedPost.getId());
+	    //unreadReplies = ModelForum.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
+	    
+	    // enable unread replies button
+	    unreadReplyButton.setDisable(unreadReplies.size() == 0);
 
-	    for (Reply r : replies) {
+	    for (Reply r : ( unreadState? unreadReplies: replies ) ) {
 
 	        Label replyLabel = new Label(r.getAuthor() + ": " + r.getContent());
 	        replyLabel.setWrapText(true);
 	        replyLabel.setPickOnBounds(true); // helps clicking
 	        
 	        // if Unread, tags at unread
-	        if (!r.hadRead(theUser.getUserName()))
+	        if (unreadState || !r.hadRead(theUser.getUserName()))
 	        	replyLabel.setText("[UNREAD] " + replyLabel.getText());
 
 	        // TEMP: attach menu to EVERY reply so you can test it works
