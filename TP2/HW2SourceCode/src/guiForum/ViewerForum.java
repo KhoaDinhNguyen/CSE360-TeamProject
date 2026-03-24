@@ -176,12 +176,12 @@ public class ViewerForum {
 		
 		// Create Post button
 		button_NewPost = new Button("Create Post");
-		setupButtonUI(button_NewPost, "Dialog", 16, 100, Pos.CENTER, 200, 55);
+		setupButtonUI(button_NewPost, "Dialog", 13, 75, Pos.CENTER, 225, 55);
 		button_NewPost.setOnAction((_) -> { ControllerForum.performAddPost(); });
 		
 		// My Post button
 		button_MyPost = new Button("My Post");
-		setupButtonUI(button_MyPost, "Dialog", 13, 75, Pos.CENTER, 150, 55);
+		setupButtonUI(button_MyPost, "Dialog", 13, 75, Pos.CENTER, 145, 55);
 		button_MyPost.setOnAction((_) -> {
 			updatingList(ModelForum.getPostsByUser(theUser.getUserName()));
 		});
