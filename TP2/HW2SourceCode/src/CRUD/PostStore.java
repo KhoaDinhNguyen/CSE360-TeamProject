@@ -131,6 +131,24 @@ public class PostStore {
 
         return subsetPostList;
     }
+	
+	/**
+	 * Get a subset of post list that belong to the given user
+	 * 
+	 * @param user the username of the user
+	 * @return an ArrayList of Post class
+	 */
+	public ArrayList<Post> getPostsByUser(String user) {
+		subsetPostList.clear();
+		
+		for (Post post: PostList) {
+			if (post.getAuthor().equals(user)) {
+				subsetPostList.add(post);
+			}
+		}
+		
+		return subsetPostList;
+	}
 
 	/**
 	 * Clears any active filtering and resets the subset to include all posts.
