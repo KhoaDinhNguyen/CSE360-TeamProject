@@ -260,6 +260,11 @@ public class User {
     	return numRoles;
     }
     
+    /**
+     * Get the roles of the user 
+     * 
+     * @return a string contain the roles name
+     */
     public String getRoles() {
     	String roles = "";
     	

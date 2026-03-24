@@ -117,6 +117,9 @@ public class ControllerForum {
 		System.exit(0);
 	}
 	
+	/**
+	 * This function return the user to the home page
+	 */
 	protected static void performReturn() {
 		Student.ViewRole1Home.displayRole1Home(ViewerForum.theStage, ViewerForum.theUser);
 	}

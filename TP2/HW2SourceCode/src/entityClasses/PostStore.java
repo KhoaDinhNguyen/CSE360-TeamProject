@@ -185,6 +185,9 @@ public class PostStore {
     	return subsetPostList;
     }
     
+    /**
+     * Reset the data of the lists
+     */
     public void hardReset() {
     	PostList.clear();
     	subsetPostList.clear();

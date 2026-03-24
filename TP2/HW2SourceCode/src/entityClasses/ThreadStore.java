@@ -44,6 +44,9 @@ public class ThreadStore {
 		return false;
 	}
 	
+	/**
+	 * Reset the lists
+	 */
 	public void hardReset() {
 		this.ThreadList.clear();
 	}

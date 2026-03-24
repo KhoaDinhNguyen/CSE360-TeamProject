@@ -1194,6 +1194,11 @@ public class ModelForumTest {
 		}
 	}
 	
+	/**
+	 * Generate a random string given the length 
+	 * @param length an integer which is the length
+	 * @return a string 
+	 */
 	private static String generateRandomString(int length) {
 		if (length <= 0) {
 			return "";
