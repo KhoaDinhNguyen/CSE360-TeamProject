@@ -3,7 +3,6 @@ package entityClasses;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import org.junit.jupiter.api.*;
 
@@ -34,7 +33,7 @@ public class PostStoreTest {
 
 		int expectedID = 0;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 
 	@Test
@@ -43,7 +42,7 @@ public class PostStoreTest {
 
 		int expectedID = 1;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 
 	@Test
@@ -52,7 +51,7 @@ public class PostStoreTest {
 
 		int expectedID = 5;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 
 	@Test
@@ -61,7 +60,7 @@ public class PostStoreTest {
 
 		int expectedID = 8;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 
 	@Test
@@ -70,7 +69,7 @@ public class PostStoreTest {
 
 		int expectedID = 9;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 
 	@Test
@@ -78,7 +77,7 @@ public class PostStoreTest {
 		try {
 			Post returnObj = testPostStore.getPostList().get(-1);
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Index -1 out of bounds for length 10");
+			assertEquals("Index -1 out of bounds for length 10", e.getMessage());
 		}
 	}
 		
@@ -87,7 +86,7 @@ public class PostStoreTest {
 		try {
 			Post returnObj = testPostStore.getPostList().get(10);
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Index 10 out of bounds for length 10");
+			assertEquals("Index 10 out of bounds for length 10", e.getMessage());
 		}
 	}
 	
@@ -99,7 +98,7 @@ public class PostStoreTest {
 		
 		int expectedID = 1;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 	
 	@Test
@@ -110,7 +109,7 @@ public class PostStoreTest {
 		
 		int expectedID = 2;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 	
 	@Test
@@ -121,7 +120,7 @@ public class PostStoreTest {
 		
 		int expectedID = 6;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 	
 	@Test
@@ -132,7 +131,7 @@ public class PostStoreTest {
 		
 		int expectedID = 9;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 	
 	@Test
@@ -142,7 +141,7 @@ public class PostStoreTest {
 		
 			Post returnObj = testPostStore.getPostList().get(9);
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Index 9 out of bounds for length 9");
+			assertEquals("Index 9 out of bounds for length 9", e.getMessage());
 		}
 	}
 	
@@ -154,7 +153,7 @@ public class PostStoreTest {
 		
 		int expectedID = 10;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 	
 	@Test 
@@ -165,7 +164,7 @@ public class PostStoreTest {
 		
 		int expectedID = 9;
 		
-		assertEquals(returnObj.getId(), expectedID);
+		assertEquals(expectedID, returnObj.getId());
 	}
 	
 	@Test 
@@ -175,7 +174,7 @@ public class PostStoreTest {
 		try {
 			Post returnObj = testPostStore.getPostList().get(11);
 		} catch (Exception e) {
-			assertEquals(e.getMessage(), "Index 11 out of bounds for length 11");
+			assertEquals("Index 11 out of bounds for length 11", e.getMessage());
 		}
 	}
 	
@@ -183,7 +182,7 @@ public class PostStoreTest {
 	public void UnreadPost1() {
 		ArrayList<Post> UnreadList = testPostStore.getUnreadPosts("dummy");
 		
-		assertEquals(testPostStore.getPostList().size(), UnreadList.size());
+		assertEquals(UnreadList.size(), testPostStore.getPostList().size());
 	}
 	
 	@Test 
@@ -192,6 +191,6 @@ public class PostStoreTest {
 		testPostStore.retrieve(9).markAsRead("dummy");
 		ArrayList<Post> UnreadList = testPostStore.getUnreadPosts("dummy");
 		
-		assertEquals(testPostStore.getPostList().size() - 2, UnreadList.size());
+		assertEquals(UnreadList.size(), testPostStore.getPostList().size() - 2);
 	}
 }
