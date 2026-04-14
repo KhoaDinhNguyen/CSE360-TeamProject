@@ -129,6 +129,12 @@ public class ControllerForum {
 	 * This function return the user to the home page
 	 */
 	protected static void performReturn() {
-		Student.ViewRole1Home.displayRole1Home(ViewerForum.theStage, ViewerForum.theUser);
+		if (ViewerForum.theRole == 2) {
+			Student.ViewRole1Home.displayRole1Home(ViewerForum.theStage, ViewerForum.theUser);
+		}
+		else {
+			guiRole2.ViewRole2Home.displayRole2Home(ViewerForum.theStage, ViewerForum.theUser);
+		}
+		
 	}
 }

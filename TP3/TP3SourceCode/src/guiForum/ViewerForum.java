@@ -92,7 +92,7 @@ public class ViewerForum {
 	Label threadLabelMain = new Label("Thread:");
    
     
-    ChoiceBox<String> threadChoiceBoxMain = new ChoiceBox<String>();
+    private static ChoiceBox<String> threadChoiceBoxMain = new ChoiceBox<String>();
 	
 	// Reply UI (shown only when a post is selected)
 	private static VBox replyPane;
@@ -159,7 +159,7 @@ public class ViewerForum {
 	/**
 	 * The role of user
 	 */
-	protected static final int theRole = 2;
+	protected static int theRole = 2;
 	
 	/**
 	 * The Stage that JavaFX has established for us	
@@ -185,6 +185,12 @@ public class ViewerForum {
 		// Establish the references to the GUI and the current user
 		theStage = ps;
 		theUser = user;
+		if (user.getRole1()) {
+			theRole = 2;
+		}
+		else if (user.getRole2()) {
+			theRole = 3;
+		}
 		
 		// If not yet established, populate the static aspects of the GUI
 		
@@ -193,7 +199,8 @@ public class ViewerForum {
 		}
 		
 		if (theView == null) theView = new ViewerForum();		// Instantiate singleton if needed
-		
+		threadChoiceBoxMain.getItems().setAll(ModelForum.getAllThreads());
+
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
 		theDatabase.getUserAccountDetails(user.getUserName());
@@ -201,8 +208,6 @@ public class ViewerForum {
 		
 		label_UserDetails.setText("User: " + theUser.getUserName());
 		
-		
-				
 		// Set the title for the window, display the page, and wait for the Admin to do something
 		theStage.setTitle("CSE 360 Foundations: Role1 Home Page");
 		theStage.setScene(theForumScene);
@@ -515,7 +520,7 @@ public class ViewerForum {
 	 *
 	 * @param newPosts the posts to display in the list view
 	 */
-	protected static void updatingList(List<Post> newPosts) {
+	public static void updatingList(List<Post> newPosts) {
 		postListView.getItems().setAll(newPosts);
 	}
 	

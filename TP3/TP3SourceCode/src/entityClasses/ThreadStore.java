@@ -23,6 +23,18 @@ public class ThreadStore {
 		this.ThreadList.add(name);
 	}
 	
+	public void deleteThread(String name) {
+		this.ThreadList.remove(name);
+	}
+	
+	public void editThread(String oldName, String newName) {
+		for (int i = 0; i < ThreadList.size(); ++i) {
+			if(ThreadList.get(i).compareTo(oldName) == 0) {
+				ThreadList.set(i, newName);
+			}
+		}
+	}
+	
 	/**
 	 * <p>Read all threads in the database</p>
 	 * @return a String list contains all threads
