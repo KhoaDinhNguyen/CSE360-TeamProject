@@ -1,5 +1,6 @@
 package guiRole2;
 
+import Student.ViewRole1Home;
 
 /*******
  * <p> Title: ControllerRole2Home Class. </p>
@@ -23,16 +24,6 @@ package guiRole2;
 
 public class ControllerRole2Home {
 	
-	/*-*******************************************************************************************
-
-	User Interface Actions for this page
-	
-	This controller is not a class that gets instantiated.  Rather, it is a collection of protected
-	static methods that can be called by the View (which is a singleton instantiated object) and 
-	the Model is often just a stub, or will be a singleton instantiated object.
-	
-	 */
-
 	/**
 	 * Default constructor is not used.
 	 */
@@ -50,6 +41,14 @@ public class ControllerRole2Home {
 		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewRole2Home.theStage, ViewRole2Home.theUser);
 	}	
 
+	protected static void performForumManagement() {
+		guiForumManagement.ViewerForumManagement.displayForumManagement(ViewRole2Home.theStage, ViewRole2Home.theUser);
+	}
+	
+	public static void performReturn() {
+		guiRole2.ViewRole2Home.displayRole2Home(ViewRole2Home.theStage, ViewRole2Home.theUser);
+	}
+	
 	/**********
 	 * <p> Method: performLogout() </p>
 	 * 
@@ -63,13 +62,23 @@ public class ControllerRole2Home {
 	}
 	
 	/**********
+	 * <p> Method: performForum() </p>
+	 * 
+	 * <p> Description: This method move user to the Forum page.</p>
+	 * 
+	 */
+	protected static void performForum() {
+		guiForum.ViewerForum.displayViewerForum(ViewRole2Home.theStage, ViewRole2Home.theUser);
+	}
+	
+	/**********
 	 * <p> Method: performQuit() </p>
 	 * 
 	 * <p> Description: This method terminates the execution of the program.  It leaves the
 	 * database in a state where the normal login page will be displayed when the application is
 	 * restarted.</p>
 	 * 
-	 */	
+	 */
 	protected static void performQuit() {
 		System.exit(0);
 	}

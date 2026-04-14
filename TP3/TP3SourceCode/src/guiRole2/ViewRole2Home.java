@@ -1,4 +1,4 @@
-package guiRole2;
+	package guiRole2;
 
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import Student.ControllerRole1Home;
 import database.Database;
 //import database.Database;
 import entityClasses.User;
@@ -56,7 +57,8 @@ public class ViewRole2Home {
 	// GUI ARea 2: This is a stub, so there are no widgets here.  For an actual role page, this are
 	// would contain the widgets needed for the user to play the assigned role.
 	
-	
+	protected static Button button_Forum = new Button("Forum");
+	protected static Button button_Forum_Management = new Button("Forum Management");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -164,9 +166,11 @@ public class ViewRole2Home {
 		
 		// GUI Area 2
 		
-			// This is a stub, so this area is empty
+		setupButtonUI(button_Forum, "Dialog",18, 250, Pos.CENTER, 20, 140 );
+		button_Forum.setOnAction((_)-> {ControllerRole2Home.performForum(); });
 		
-		
+		setupButtonUI(button_Forum_Management, "Dialog",18, 250, Pos.CENTER, 20, 190 );
+		button_Forum_Management.setOnAction((_) -> {ControllerRole2Home.performForumManagement(); });
 		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
         button_Logout.setOnAction((_) -> {ControllerRole2Home.performLogout(); });
@@ -179,7 +183,7 @@ public class ViewRole2Home {
 		// Place all of the widget items into the Root Pane's list of children
         theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit);
+	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management);
 	}
 	
 	
