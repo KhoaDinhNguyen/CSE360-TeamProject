@@ -252,6 +252,10 @@ public class ModelForum {
 	 * @return an empty string if the reply is added successfully; otherwise, an error message
 	 */
 	public static String addReply(String content, String author, int parentId) {
+	    return addReply(content, author, parentId, false);
+	}
+	
+	public static String addReply(String content, String author, int parentId, boolean isPrivate) {
 
 	    // Validate content
 		String contentErrorMessage = Post.validateContent(content);
@@ -272,7 +276,7 @@ public class ModelForum {
 	    System.out.println("replyID:" + parentId);
 
 	    // Create + save reply
-	    Reply newReply = new Reply(id, content, author, parentId);
+	    Reply newReply = new Reply(id, content, author, parentId, isPrivate);
 	    replyStore.add(newReply);
 
 	    // Link reply id to parent post 
@@ -343,10 +347,42 @@ public class ModelForum {
 	    List<Reply> replies = new ArrayList<>();
 	    
 	    for (Integer replyId : replyIdList) {
-	    	System.out.println(replyId);
 	        Reply r = replyStore.retrieve(replyId); // assuming retrieve(id) exists
 	        if (r != null) {
 	            replies.add(r);
+	        }
+	    }
+
+	    return replies;
+	}
+	
+	public static List<Reply> getRepliesByPostId(User reader, int id) {
+
+	    Post currentPost = postStore.retrieve(id);
+	    if (currentPost == null) {
+	        return new ArrayList<>();
+	    }
+
+	    ArrayList<Integer> replyIdList = currentPost.getReplyPostId();
+	    
+	    List<Reply> replies = new ArrayList<>();
+	    
+	    for (Integer replyId : replyIdList) {
+	        Reply r = replyStore.retrieve(replyId); // assuming retrieve(id) exists
+	        boolean visibleReply = false;
+	        
+	        if (r != null) {
+	        	if (!r.getIsPrivate()) {
+	        		visibleReply = true;
+	        	}
+	        	else if (r.getIsPrivate() && 
+	        			(r.getAuthor().equals(reader.getUserName()) || currentPost.getAuthor().equals(reader.getUserName()))) {
+	        		visibleReply = true;
+	        	}
+	        }
+	        
+	        if (visibleReply) {
+	        	replies.add(r);
 	        }
 	    }
 
