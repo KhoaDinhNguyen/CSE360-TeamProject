@@ -14,6 +14,7 @@ public class Reply {
     private String content;
     private final String author;
     private final LocalDateTime createdAt;
+    private final boolean isPrivate;
     
     // an array of user who have read the reply
     private ArrayList<String> readUsers;
@@ -33,6 +34,20 @@ public class Reply {
     	this.author = author;
     	this.createdAt = LocalDateTime.now();
     	this.parentPostId = parentPostId;
+    	this.isPrivate = false;
+    	
+    	// init the array of read users
+    	this.readUsers = new ArrayList<String>();
+    	this.readUsers.add(author); // the author is consider read when created 
+    }
+    
+    public Reply(int id, String content, String author, int parentPostId, boolean isPrivate) {
+    	this.id = id;
+    	this.content = content;
+    	this.author = author;
+    	this.createdAt = LocalDateTime.now();
+    	this.parentPostId = parentPostId;
+    	this.isPrivate = isPrivate;
     	
     	// init the array of read users
     	this.readUsers = new ArrayList<String>();
@@ -84,6 +99,9 @@ public class Reply {
         return createdAt;
     }
     
+    public boolean getIsPrivate() {
+    	return isPrivate;
+    }
     /**
      * Check if the given user have read the reply 
      * @param user a string contain the username

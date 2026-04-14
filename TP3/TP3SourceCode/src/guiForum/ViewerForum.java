@@ -10,6 +10,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import database.Database;
 import entityClasses.Post;
@@ -115,6 +116,7 @@ public class ViewerForum {
 	
 	// Unread reply cache 
 	private static List<Reply> unreadReplies;
+	private static HBox container_Checkbox = new HBox(5);
 	
 	
 	/**
@@ -185,10 +187,14 @@ public class ViewerForum {
 		// Establish the references to the GUI and the current user
 		theStage = ps;
 		theUser = user;
+		
+		// Private option is only visible to staff members
 		if (user.getRole1()) {
+			container_Checkbox.setVisible(false);
 			theRole = 2;
 		}
 		else if (user.getRole2()) {
+			container_Checkbox.setVisible(true);
 			theRole = 3;
 		}
 		
@@ -199,6 +205,7 @@ public class ViewerForum {
 		}
 		
 		if (theView == null) theView = new ViewerForum();		// Instantiate singleton if needed
+		
 		threadChoiceBoxMain.getItems().setAll(ModelForum.getAllThreads());
 
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
@@ -404,6 +411,11 @@ public class ViewerForum {
 		replyTextArea.setWrapText(true);
 		replyTextArea.setPromptText("Write your reply...");
 
+		// Checkbox
+		CheckBox checkbox_Private = new CheckBox();
+		Label label_CheckBox = new Label("Private");
+		container_Checkbox.getChildren().addAll(checkbox_Private, label_CheckBox);
+		
 		replyButton = new Button("Reply");
 		replyButton.setDisable(true);     
 		replyPane.setVisible(false);      
@@ -416,8 +428,14 @@ public class ViewerForum {
 		    String author = theUser.getUserName();
 		    // basic validation
 		    int parentId = selectedPost.getId();
-		    String errorMessage = ControllerForum.performAddReply(parentId, author, replyText);
-		   
+		    
+		    String errorMessage = "";
+		    if (theUser.getRole1()) {
+		    	 errorMessage = ControllerForum.performAddReply(parentId, author, replyText, false);
+		    }
+		    else if (theUser.getRole2()) {
+		    	errorMessage = ControllerForum.performAddReply(parentId, author, replyText, checkbox_Private.isSelected());
+		    }
 	        // If Model returns error → show it
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
@@ -432,6 +450,7 @@ public class ViewerForum {
 
 		    // For now just clear input and show success
 		    replyTextArea.clear();
+		    checkbox_Private.setSelected(false);
 		    Alert ok = new Alert(AlertType.INFORMATION);
 		    ok.setTitle("Reply Posted");
 		    ok.setHeaderText(null);
@@ -439,8 +458,9 @@ public class ViewerForum {
 		    ok.showAndWait();
 		});
 		
+		
+		replyPane.getChildren().addAll(replyLabel, replyTextArea, container_Checkbox, replyButton);
 
-		replyPane.getChildren().addAll(replyLabel, replyTextArea, replyButton);
 		detailPane.getChildren().add(replyPane);
 		// GUI Area 3
 		
@@ -560,7 +580,7 @@ public class ViewerForum {
 	    repliesBox.getChildren().clear();
 
 	    // Load replies
-	    List<Reply> replies = ModelForum.getRepliesByPostId(selectedPost.getId());
+	    List<Reply> replies = ModelForum.getRepliesByPostId(theUser, selectedPost.getId());
 	    //unreadReplies = ModelForum.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
 	    
 	    // enable unread replies button
