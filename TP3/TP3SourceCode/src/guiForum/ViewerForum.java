@@ -430,10 +430,10 @@ public class ViewerForum {
 		    int parentId = selectedPost.getId();
 		    
 		    String errorMessage = "";
-		    if (theUser.getRole1()) {
+		    if (theUser.getStudent()) {
 		    	 errorMessage = ControllerForum.performAddReply(parentId, author, replyText, false);
 		    }
-		    else if (theUser.getRole2()) {
+		    else if (theUser.getStaff()) {
 		    	errorMessage = ControllerForum.performAddReply(parentId, author, replyText, checkbox_Private.isSelected());
 		    }
 	        // If Model returns error → show it
