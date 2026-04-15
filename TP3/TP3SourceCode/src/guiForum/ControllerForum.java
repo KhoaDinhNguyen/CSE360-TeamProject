@@ -80,8 +80,8 @@ public class ControllerForum {
 	 * @param content is reply's content
 	 * @return a String represents error message, empty if there is no error
 	 */
-	protected static String performAddReply(int postId, String author, String content) {
-		return ModelForum.addReply(content, author, postId);
+	protected static String performAddReply(int postId, String author, String content, boolean isPrivate) {
+		return ModelForum.addReply(content, author, postId, isPrivate);
 	}
 	
 	/**

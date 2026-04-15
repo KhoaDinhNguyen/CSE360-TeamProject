@@ -16,7 +16,7 @@ public class Post {
     private String author;
     private final LocalDateTime createdAt;
     private ArrayList<Integer> replyPostId;
-
+    
     // A list of user who had read the post
     private ArrayList<String> readUsers;
     private boolean deleted;
