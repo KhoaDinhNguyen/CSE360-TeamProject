@@ -78,10 +78,10 @@ public class GUISingleRoleDispatch {
 
 		if (user.getAdminRole()) {
 			guiAdminHome.ViewAdminHome.displayAdminHome(ps, user);
-		} else if (user.getNewRole1()) {
-			Student.ViewRole1Home.displayRole1Home(ps, user);
-		} else if (user.getNewRole2()) {
-			guiRole2.ViewRole2Home.displayRole2Home(ps, user);
+		} else if (user.getNewStudent()) {
+			guiStudentHome.ViewStudentHome.displayStudentHome(ps, user);
+		} else if (user.getNewStaff()) {
+			guiStaffHome.ViewStaffHome.displayStaffHome(ps, user);
 		} else {
 			// Invalid role
 			System.out.println("*** ERROR *** GUISingleRoleDispatch was asked to dispatch to " +

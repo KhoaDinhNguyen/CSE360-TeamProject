@@ -189,11 +189,11 @@ public class ViewerForum {
 		theUser = user;
 		
 		// Private option is only visible to staff members
-		if (user.getRole1()) {
+		if (user.getStudent()) {
 			container_Checkbox.setVisible(false);
 			theRole = 2;
 		}
-		else if (user.getRole2()) {
+		else if (user.getStaff()) {
 			container_Checkbox.setVisible(true);
 			theRole = 3;
 		}

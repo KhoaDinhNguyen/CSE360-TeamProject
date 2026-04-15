@@ -130,10 +130,10 @@ public class ControllerForum {
 	 */
 	protected static void performReturn() {
 		if (ViewerForum.theRole == 2) {
-			Student.ViewRole1Home.displayRole1Home(ViewerForum.theStage, ViewerForum.theUser);
+			guiStudentHome.ViewStudentHome.displayStudentHome(ViewerForum.theStage, ViewerForum.theUser);
 		}
 		else {
-			guiRole2.ViewRole2Home.displayRole2Home(ViewerForum.theStage, ViewerForum.theUser);
+			guiStaffHome.ViewStaffHome.displayStaffHome(ViewerForum.theStage, ViewerForum.theUser);
 		}
 		
 	}

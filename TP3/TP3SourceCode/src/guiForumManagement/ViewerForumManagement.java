@@ -27,12 +27,12 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import Student.ControllerRole1Home;
 import database.Database;
 import entityClasses.ThreadStore;
 //import database.Database;
 import entityClasses.User;
-import guiRole2.ControllerRole2Home;
+import guiStaffHome.ControllerStaffHome;
+import guiStudentHome.ControllerStudentHome;
 
 
 public class ViewerForumManagement {
@@ -121,7 +121,7 @@ public class ViewerForumManagement {
 	}
 	
 	/**********
-	 * <p> Method: ViewRole2Home() </p>
+	 * <p> Method: ViewStaffHome() </p>
 	 * 
 	 * <p> Description: This method initializes all the elements of the graphical user interface.
 	 * This method determines the location, size, font, color, and change and event handlers for
@@ -155,13 +155,13 @@ public class ViewerForumManagement {
 		
 		// GUI Area 3
 		setupButtonUI(button_Return, "Dialog", 18, 250, Pos.CENTER, 20, 540);
-		button_Return.setOnAction((_) -> { ControllerRole2Home.performReturn(); });
+		button_Return.setOnAction((_) -> { ControllerStaffHome.performReturn(); });
 		
 	    setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 300, 540);
-//	    button_Logout.setOnAction((_) -> {ControllerRole2Home.performLogout(); });
+//	    button_Logout.setOnAction((_) -> {ControllerStaffHome.performLogout(); });
 	    
 	    setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 580, 540);
-//	    button_Quit.setOnAction((_) -> {ControllerRole2Home.performQuit(); });
+//	    button_Quit.setOnAction((_) -> {ControllerStaffHome.performQuit(); });
 	
 		// This is the end of the GUI initialization code
 		
