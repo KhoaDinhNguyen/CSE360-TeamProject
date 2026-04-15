@@ -1,8 +1,8 @@
-package Student;
+package guiStudentHome;
 
 
 /*******
- * <p> Title: ControllerRole1Home Class. </p>
+ * <p> Title: ControllerStudentHome Class. </p>
  * 
  * <p> Description: The Java/FX-based Role 1 Home Page.  This class provides the controller
  * actions basic on the user's use of the JavaFX GUI widgets defined by the View class.
@@ -21,7 +21,7 @@ package Student;
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
  */
 
-public class ControllerRole1Home {
+public class ControllerStudentHome {
 
 	/*-*******************************************************************************************
 
@@ -36,7 +36,7 @@ public class ControllerRole1Home {
 	/**
 	 * Default constructor is not used.
 	 */
-	public ControllerRole1Home() {
+	public ControllerStudentHome() {
 	}
 
 	/**********
@@ -47,7 +47,7 @@ public class ControllerRole1Home {
 	 * 
 	 */
 	protected static void performUpdate () {
-		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewRole1Home.theStage, ViewRole1Home.theUser);
+		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewStudentHome.theStage, ViewStudentHome.theUser);
 	}	
 
 	/**********
@@ -59,7 +59,7 @@ public class ControllerRole1Home {
 	 * 
 	 */
 	protected static void performLogout() {
-		guiUserLogin.ViewUserLogin.displayUserLogin(ViewRole1Home.theStage);
+		guiUserLogin.ViewUserLogin.displayUserLogin(ViewStudentHome.theStage);
 	}
 	
 	/**********
@@ -69,7 +69,7 @@ public class ControllerRole1Home {
 	 * 
 	 */
 	protected static void performForum() {
-		guiForum.ViewerForum.displayViewerForum(ViewRole1Home.theStage, ViewRole1Home.theUser);
+		guiForum.ViewerForum.displayViewerForum(ViewStudentHome.theStage, ViewStudentHome.theUser);
 	}
 	
 	/**********

@@ -1,9 +1,9 @@
-package guiRole2;
+package guiStaffHome;
 
-public class ModelRole2Home {
+public class ModelStaffHome {
 
 /*******
- * <p> Title: ModelRole2Home Class. </p>
+ * <p> Title: ModelStaffHome Class. </p>
  * 
  * <p> Description: The Role2Home Page Model.  This class is a stub for future expansion.
  * 

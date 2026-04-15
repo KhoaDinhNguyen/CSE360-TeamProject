@@ -1,9 +1,9 @@
-package guiRole2;
+package guiStaffHome;
 
-import Student.ViewRole1Home;
+import guiStudentHome.ViewStudentHome;
 
 /*******
- * <p> Title: ControllerRole2Home Class. </p>
+ * <p> Title: ControllerStaffHome Class. </p>
  * 
  * <p> Description: The Java/FX-based Role 2 Home Page.  This class provides the controller
  * actions basic on the user's use of the JavaFX GUI widgets defined by the View class.
@@ -22,12 +22,12 @@ import Student.ViewRole1Home;
  * @version 1.01		2025-09-16 Update Javadoc documentation *  
  */
 
-public class ControllerRole2Home {
+public class ControllerStaffHome {
 	
 	/**
 	 * Default constructor is not used.
 	 */
-	public ControllerRole2Home() {
+	public ControllerStaffHome() {
 	}
 
 	/**********
@@ -38,15 +38,15 @@ public class ControllerRole2Home {
 	 * 
 	 */
 	protected static void performUpdate () {
-		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewRole2Home.theStage, ViewRole2Home.theUser);
+		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}	
 
 	protected static void performForumManagement() {
-		guiForumManagement.ViewerForumManagement.displayForumManagement(ViewRole2Home.theStage, ViewRole2Home.theUser);
+		guiForumManagement.ViewerForumManagement.displayForumManagement(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
 	
 	public static void performReturn() {
-		guiRole2.ViewRole2Home.displayRole2Home(ViewRole2Home.theStage, ViewRole2Home.theUser);
+		guiStaffHome.ViewStaffHome.displayStaffHome(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
 	
 	/**********
@@ -58,7 +58,7 @@ public class ControllerRole2Home {
 	 * 
 	 */
 	protected static void performLogout() {
-		guiUserLogin.ViewUserLogin.displayUserLogin(ViewRole2Home.theStage);
+		guiUserLogin.ViewUserLogin.displayUserLogin(ViewStaffHome.theStage);
 	}
 	
 	/**********
@@ -68,7 +68,7 @@ public class ControllerRole2Home {
 	 * 
 	 */
 	protected static void performForum() {
-		guiForum.ViewerForum.displayViewerForum(ViewRole2Home.theStage, ViewRole2Home.theUser);
+		guiForum.ViewerForum.displayViewerForum(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
 	
 	/**********

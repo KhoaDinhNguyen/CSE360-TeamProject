@@ -185,10 +185,10 @@ public class ViewerForum {
 		// Establish the references to the GUI and the current user
 		theStage = ps;
 		theUser = user;
-		if (user.getRole1()) {
+		if (user.getStudent()) {
 			theRole = 2;
 		}
-		else if (user.getRole2()) {
+		else if (user.getStaff()) {
 			theRole = 3;
 		}
 		
