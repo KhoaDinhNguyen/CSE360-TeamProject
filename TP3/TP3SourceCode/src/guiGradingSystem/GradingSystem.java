@@ -71,7 +71,7 @@ public class GradingSystem {
 	 * @return an integer, the current score of the student
 	 */
 	public int getScore(int index, String studentName) {
-		return getAssignment(index).getScore(studentName);
+		return getAssignment(index).getScore(studentName).getScore();
 	}
 	
 	/**

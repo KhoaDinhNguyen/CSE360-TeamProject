@@ -83,7 +83,7 @@ public class ModelGradingSytem {
 	 */
 	// Post Action
 	public static String addPost(String title, String content, String author) {
-	    return addPost("General", title, content, author);
+	    return newAssignment("General", title, content, author);
 	}
 	
 	/**
@@ -95,44 +95,8 @@ public class ModelGradingSytem {
 	 * @param author the username of the author creating the post
 	 * @return an empty string if the post is added successfully; otherwise, an error message
 	 */
-	public static String addPost(String thread, String title, String content, String author) {		
-		// Validate author
-	    if (author == null || author.isBlank()) {
-	    	return "Author can’t be null";
-	    }
-		// Validate thread
-		if (thread == null || thread.isBlank()) {
-			return addPost("General", title, content, author);
-		}
-		String threadErrorMessage = Post.validateThread(thread, threadStore);
-		
-		if (threadErrorMessage.compareTo("") != 0) {
-			return threadErrorMessage;
-		}
-		
-	    // Validate title and content
-		String titleErrorMessage = Post.validateTitle(title);
-		boolean isTitleInvalid = !titleErrorMessage.isEmpty();
-		
-	    String contentErrorMessage = Post.validateContent(content);
-	    boolean isContentInvalid = !contentErrorMessage.isEmpty();
-	    
-	    
-	    if (isTitleInvalid && isContentInvalid) {
-	    	return titleErrorMessage + "\n" + contentErrorMessage;
-	    }
-	    else if (isTitleInvalid) {
-	    	return titleErrorMessage;
-	    }
-	    else if (isContentInvalid) {
-	    	return contentErrorMessage;
-	    }
+	public static String newAssignment(String title, String content, int maxScore, int weight) {		
 
-	    int id = postStore.getMaxId() + 1;
-	    Post newPost = new Post(id, thread, title, content, author);
-	    postStore.addPost(newPost);
-
-	    return "";
 	}
 	
   	/**

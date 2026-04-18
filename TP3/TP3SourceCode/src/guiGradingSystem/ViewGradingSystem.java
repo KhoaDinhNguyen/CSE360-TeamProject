@@ -83,7 +83,7 @@ public class ViewGradingSystem {
 	/**
 	 * Create Post button
 	 */
-	protected static Button button_NewPost;
+	protected static Button button_New_Assignment;
 	
 	// Reply UI (shown only when a post is selected)
 	private static VBox replyPane;
@@ -209,9 +209,9 @@ public class ViewGradingSystem {
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
 		
 		// Create Post button
-		button_NewPost = new Button("Create Post");
-		setupButtonUI(button_NewPost, "Dialog", 13, 75, Pos.CENTER, 225, 55);
-		button_NewPost.setOnAction((_) -> { ControllerGradingSystem.performAddPost(); });
+		button_New_Assignment = new Button("Create Assignment");
+		setupButtonUI(button_New_Assignment, "Dialog", 13, 75, Pos.CENTER, 225, 55);
+		button_New_Assignment.setOnAction((_) -> { ControllerGradingSystem.performNewAssignment(); });
 		
 		postListView.setFixedCellSize(50);
 		
@@ -369,7 +369,7 @@ public class ViewGradingSystem {
         	    label_PageTitle, label_UserDetails, line_Separator1,
 
         	    line_Separator4, button_Logout, button_Quit, button_Return,
-        	    button_NewPost, postListView, detailPane,
+        	    button_New_Assignment, postListView, detailPane,
 
         	    detailScrollPane 
         	);
@@ -508,9 +508,9 @@ public class ViewGradingSystem {
 	/**
 	 * Opens a window that allows the current user to create a new post.
 	 */
-	protected static void showAddPostWindow() {
+	protected static void showNewAssignmentWindow() {
 	    Stage addStage = new Stage();
-	    addStage.setTitle("Create New Post");
+	    addStage.setTitle("Create New Assignment");
 
 	    VBox addRoot = new VBox(12);
 	    addRoot.setPrefSize(560, 640);
@@ -519,22 +519,6 @@ public class ViewGradingSystem {
 
 	    Label titleLabel = new Label("Create a New Post");
 	    titleLabel.setFont(Font.font("Arial", 20));
-
-	    Label authorLabel = new Label("Posting as: " + (theUser == null ? "" : theUser.getUserName()));
-	    authorLabel.setFont(Font.font("Arial", 14));
-
-	    Label threadLabel = new Label("Thread:");
-	    threadLabel.setFont(Font.font("Arial", 14));
-
-	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<>();
-	    threadChoiceBox.getItems().addAll(ModelGradingSytem.getAllThreads());
-	    threadChoiceBox.setPrefWidth(220);
-			threadChoiceBox.setValue("General");
-			
-	    HBox threadContainer = new HBox(10);
-	    threadContainer.setAlignment(Pos.CENTER_LEFT);
-	    
-	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
 
 	    Label labelTitle = new Label("Title:");
 	    labelTitle.setFont(Font.font("Arial", 14));
@@ -554,13 +538,6 @@ public class ViewGradingSystem {
 	    taContent.setWrapText(true);
 	    taContent.setPromptText("Write your post here...");
 
-	    Label relatedLabel = new Label("Related Posts:");
-	    relatedLabel.setFont(Font.font("Arial", 14));
-
-	    ListView<Post> relatedPostView = new ListView<>();
-	    relatedPostView.setPrefHeight(170);
-	    relatedPostView.setPlaceholder(new Label("No related posts found"));
-
 	    Button btnPost = new Button("Post");
 	    Button btnCancel = new Button("Cancel");
 
@@ -573,7 +550,6 @@ public class ViewGradingSystem {
 	    btnCancel.setOnAction(e -> addStage.close());
 
 	    btnPost.setOnAction(e -> {
-	        String thread = threadChoiceBox.getValue();
 	        String title = tfTitle.getText();
 	        String content = taContent.getText();
 	        String author = theUser.getUserName();

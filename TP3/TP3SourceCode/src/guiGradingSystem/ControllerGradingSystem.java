@@ -21,8 +21,8 @@ public class ControllerGradingSystem {
 	/**
 	 * <p>Directs user to add post window</p>
 	 */
-	protected static void performAddPost() {
-		ViewGradingSystem.showAddPostWindow();
+	protected static void performNewAssignment() {
+		ViewGradingSystem.showNewAssignmentWindow();
 	}
 	
 	/**

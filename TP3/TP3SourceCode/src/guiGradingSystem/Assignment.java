@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import javafx.util.Pair;
+
 /**
  * This class is the prototype for Assignment class 
  */
@@ -14,14 +16,83 @@ public class Assignment {
 	private String title;
 	
 	/**
+	 * content of the assignment
+	 */
+	private String content;
+	
+	/**
 	 * max score of the assignment
 	 */
 	private int maxScore;
 	
-	/**
-	 * current list of student's score of the assignment 
+	/** 
+	 * A class used for feedback including numeric grade and and comment 
 	 */
-	private Map<String, Integer> score;
+	private class Feedback {
+		/** 
+		 * The numeric score of the feedback
+		 */
+		private int score;
+		
+		/**
+		 * The comment of the grade
+		 */
+		private String comment;
+		
+		/**
+		 * Default constructor, set score to 0 and comment to empty 
+		 */
+		public Feedback() {
+			score = 0;
+			comment = "";
+		}
+
+		/**
+		 * Public constructor to create a feedback
+		 * @param score an Integer which is the set score of the student
+		 * @param comment an String which is the comment of the grade
+		 */
+		public Feedback(int score, String comment) {
+			this.score = score;
+			this.comment = comment;
+		}
+		
+		/**
+		 * Get the score of the feedback
+		 * @return an integer which is the score 
+		 */
+		public int getScore() {
+			return score;
+		}
+		
+		/** 
+		 * Get the comment string of the feedback
+		 * @return a String which is the comment 
+		 */
+		public String getComment() {
+			return comment;
+		}
+		
+		/** 
+		 * Set the score for the feedback
+		 * @param score an integer which is the feedback score
+		 */
+		public void setScore(int score) {
+			this.score = score;
+		}
+		
+		/**
+		 * Set the comment for the feedback
+		 * @param comment an String which is the comment
+		 */
+		public void setComment(String comment) {
+			this.comment = comment;
+		}
+	}
+	/**
+	 * current list of student's score and feedbacks (pair of Integer and String) of the assignment  
+	 */
+	private Map<String, Feedback> feedbacks;
 	
 	/**
 	 * weight percentage of the assignment
@@ -36,7 +107,7 @@ public class Assignment {
 		maxScore = 0;
 		weight = 0;
 		
-		score = new HashMap<>();
+		feedbacks = new HashMap<>();
 	}
 	
 	/**
@@ -50,7 +121,7 @@ public class Assignment {
 		this.maxScore = maxScore;
 		this.weight = weight;
 		
-		score = new HashMap<>();
+		feedbacks = new HashMap<>();
 	}
 	
 	/**
@@ -62,6 +133,14 @@ public class Assignment {
 	}
 	
 	/**
+	 * Get the content of the assignment
+	 * @return a String which is the content of the assignment
+	 */
+	public String getContent() {
+		return content;
+	}
+	
+	/**
 	 * Function to get the set max score of the assignment 
 	 * @return an integer which is the max score
 	 */
@@ -70,22 +149,22 @@ public class Assignment {
 	}
 	
 	/**
-	 * Function to get the current student's score of the assignment
-	 * @param studentName a string contains student's name
-	 * @return an integer which is the current score, if the student dont have a score yet, return 0
+	 * Return the feedback given the student's name. If the student haven't graded yet, return default feedback
+	 * @param studentName an string contains the student's name
+	 * @return a Feedback class that contain information about the student's grade
 	 */
-	public int getScore(String studentName) {
-		if (!score.containsKey(studentName))
-			return 0;
-		return score.get(studentName);
+	public Feedback getFeedback(String studentName) {
+		if (!feedbacks.containsKey(studentName))
+			return new Feedback();
+		return feedbacks.get(studentName);
 	}
 
 	/**
-	 * Function to get the score map of students
-	 * @return a map of score
+	 * Function to get the feedbacks map of students
+	 * @return a map of feedbacks
 	 */
-	public Map<String, Integer> getScoreMap() {
-		return score;
+	public Map<String, Feedback> getFeedbacksMap() {
+		return feedbacks;
 	}
 	
 	/** 
@@ -120,17 +199,32 @@ public class Assignment {
 	 * @param studentScore an integer of the student's score
 	 */
 	public void setScore(String studentName, int studentScore) {
-		if (score.containsKey(studentName))
-			score.replace(studentName, studentScore);
-		else 
-			score.put(studentName, studentScore);
+		if (feedbacks.containsKey(studentName))
+			feedbacks.replace(studentName, new Feedback(studentScore, ""));
+		else {
+			String currentComment = feedbacks.get(studentName).getComment();
+			feedbacks.put(studentName, new Feedback(studentScore, currentComment));
+		}
 	}
 	
+	/**
+	 * Set feedback for a student given their name and the comment string
+	 * @param studentName a String contains the name of the student
+	 * @param comment a String contains the feedback's comment
+	 */
+	public void setFeedback(String studentName, String comment) {
+		if (feedbacks.containsKey(studentName))
+			feedbacks.replace(studentName, new Feedback(0, comment));
+		else {
+			int currentScore = feedbacks.get(studentName).getScore();
+			feedbacks.put(studentName, new Feedback(currentScore, comment));
+		}
+	}
 	/**
 	 * Reset the score map
 	 */
 	public void resetScore() {
-		score.clear();
+		feedbacks.clear();
 	}
 	
 	/**
