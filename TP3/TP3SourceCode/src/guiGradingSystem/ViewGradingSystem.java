@@ -1,4 +1,4 @@
-package guiForum;
+package guiGradingSystem;
 
 import java.util.List;
 import javafx.beans.value.ChangeListener;
@@ -45,7 +45,7 @@ import javafx.util.Duration;
  * post details, reply area, search controls, and actions for creating, editing,
  * deleting, and viewing posts and replies.</p>
  */
-public class ViewerForum {
+public class ViewGradingSystem {
 	
 	
 	private static double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
@@ -151,7 +151,7 @@ public class ViewerForum {
 	
 	private static boolean unreadState = false;
 	
-	private static ViewerForum theView;
+	private static ViewGradingSystem theView;
 	
 	// Reference for the in-memory database so this package has access
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
@@ -182,7 +182,7 @@ public class ViewerForum {
 	 * @param ps the stage used to display the forum scene
 	 * @param user the user currently viewing the forum
 	 */
-	public static void displayViewerForum(Stage ps, User user) {
+	public static void displayGradingSystem(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user
 		theStage = ps;
@@ -204,9 +204,9 @@ public class ViewerForum {
 			postListView = new ListView<>();
 		}
 		
-		if (theView == null) theView = new ViewerForum();		// Instantiate singleton if needed
+		if (theView == null) theView = new ViewGradingSystem();		// Instantiate singleton if needed
 		
-		threadChoiceBoxMain.getItems().setAll(ModelForum.getAllThreads());
+		threadChoiceBoxMain.getItems().setAll(ModelGradingSytem.getAllThreads());
 
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
@@ -227,7 +227,7 @@ public class ViewerForum {
 	 * <p>This constructor is private because the class uses shared static UI state
 	 * and is not intended to be instantiated freely from outside the class.</p>
 	 */
-	private ViewerForum() {
+	private ViewGradingSystem() {
 		// Create the Pane for the list of widgets and the Scene for the window
 		theRootPane = new Pane();
 		theForumScene = new Scene(theRootPane, width, height);	// Create the scene
@@ -244,13 +244,13 @@ public class ViewerForum {
 		// Create Post button
 		button_NewPost = new Button("Create Post");
 		setupButtonUI(button_NewPost, "Dialog", 13, 75, Pos.CENTER, 225, 55);
-		button_NewPost.setOnAction((_) -> { ControllerForum.performAddPost(); });
+		button_NewPost.setOnAction((_) -> { ControllerGradingSystem.performAddPost(); });
 		
 		// My Post button
 		button_MyPost = new Button("My Post");
 		setupButtonUI(button_MyPost, "Dialog", 13, 75, Pos.CENTER, 145, 55);
 		button_MyPost.setOnAction((_) -> {
-			ControllerForum.performMyPostButton();
+			ControllerGradingSystem.performMyPostButton();
 		});
 
 		// Filter Search
@@ -272,7 +272,7 @@ public class ViewerForum {
 		    String thread = threadChoiceBoxMain.getValue();
 //		    System.out.println(thread);
 
-		    ControllerForum.performSearchButton(keyword, thread);
+		    ControllerGradingSystem.performSearchButton(keyword, thread);
 		});
 		
 		// Clear Button		
@@ -282,7 +282,7 @@ public class ViewerForum {
 		button_Clear.setOnAction(e -> {
 		    tfSearch.clear();
 		    
-		    ControllerForum.performClearButton();
+		    ControllerGradingSystem.performClearButton();
 		});
 		
 		
@@ -297,7 +297,7 @@ public class ViewerForum {
 		threadChoiceBoxMain.setPrefWidth(130);
 		threadChoiceBoxMain.setPrefHeight(28);
 		threadChoiceBoxMain.getItems().add("Default");
-		threadChoiceBoxMain.getItems().addAll(ModelForum.getAllThreads());
+		threadChoiceBoxMain.getItems().addAll(ModelGradingSytem.getAllThreads());
 		threadChoiceBoxMain.setValue("Default");
 
 		
@@ -306,7 +306,7 @@ public class ViewerForum {
 		setupButtonUI(button_Unread, "Dialog", 13, 75, Pos.CENTER, 650, 55);
 
 		button_Unread.setOnAction(e -> {
-			updatingList(ModelForum.getUnreads(theUser.getUserName()));
+			updatingList(ModelGradingSytem.getUnreads(theUser.getUserName()));
 		});
 		// GUI Area 2
 		
@@ -314,7 +314,7 @@ public class ViewerForum {
 		postListView.setCellFactory(new Callback<ListView<Post>, ListCell<Post>>(){
 			@Override 
 			public ListCell<Post> call(ListView<Post> list) {
-				return new PostFormatCell();
+				return new ListCellFormat();
 			}
 		});
 		
@@ -324,7 +324,7 @@ public class ViewerForum {
 		postListView.setLayoutY(105);
 		postListView.setPrefWidth(300);
 		postListView.setPrefHeight(410); // from y=105 to around y=525
-		List<Post> PostItemList = ModelForum.getPostList();
+		List<Post> PostItemList = ModelGradingSytem.getPostList();
 		updatingList(PostItemList);
 				
 		
@@ -357,12 +357,12 @@ public class ViewerForum {
 
 		editPostButton.setOnAction(e -> {
 		    if (selectedPost == null) return;
-		    ControllerForum.performEditPost(selectedPost);
+		    ControllerGradingSystem.performEditPost(selectedPost);
 		});
 
 		deletePostButton.setOnAction(e -> {
 		    if (selectedPost == null) return;
-		    ControllerForum.performDeletePost(selectedPost);
+		    ControllerGradingSystem.performDeletePost(selectedPost);
 		});
 
 		unreadReplyButton = new Button("Unread replies");
@@ -396,10 +396,10 @@ public class ViewerForum {
 //		    updatingList(ModelGradingSytem.getPostList());
 		    
 		    unreadState = false;
-		    unreadReplies = ModelForum.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
+		    unreadReplies = ModelGradingSytem.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
 
 
-		    ControllerForum.performReadSpecificPost(selectedPost);	
+		    ControllerGradingSystem.performReadSpecificPost(selectedPost);	
 		});
 		
 		replyPane = new VBox(8);
@@ -431,10 +431,10 @@ public class ViewerForum {
 		    
 		    String errorMessage = "";
 		    if (theUser.getStudent()) {
-		    	 errorMessage = ControllerForum.performAddReply(parentId, author, replyText, false);
+		    	 errorMessage = ControllerGradingSystem.performAddReply(parentId, author, replyText, false);
 		    }
 		    else if (theUser.getStaff()) {
-		    	errorMessage = ControllerForum.performAddReply(parentId, author, replyText, checkbox_Private.isSelected());
+		    	errorMessage = ControllerGradingSystem.performAddReply(parentId, author, replyText, checkbox_Private.isSelected());
 		    }
 	        // If Model returns error → show it
 	        if (errorMessage != null && !errorMessage.isBlank()) {
@@ -446,7 +446,7 @@ public class ViewerForum {
 	            return;
 	        }
 	        
-	        ControllerForum.performReadSpecificPost(selectedPost);
+	        ControllerGradingSystem.performReadSpecificPost(selectedPost);
 
 		    // For now just clear input and show success
 		    replyTextArea.clear();
@@ -465,13 +465,13 @@ public class ViewerForum {
 		// GUI Area 3
 		
 		setupButtonUI(button_Return, "Dialog", 18, 250, Pos.CENTER, 20, 540);
-        button_Return.setOnAction((_) -> {ControllerForum.performReturn(); });
+        button_Return.setOnAction((_) -> {ControllerGradingSystem.performReturn(); });
         
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 300, 540);
-        button_Logout.setOnAction((_) -> {ControllerForum.performLogout(); });
+        button_Logout.setOnAction((_) -> {ControllerGradingSystem.performLogout(); });
         
         setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 580, 540);
-        button_Quit.setOnAction((_) -> {ControllerForum.performQuit(); });
+        button_Quit.setOnAction((_) -> {ControllerGradingSystem.performQuit(); });
         
         
         // Add in Functionality
@@ -580,7 +580,7 @@ public class ViewerForum {
 	    repliesBox.getChildren().clear();
 
 	    // Load replies
-	    List<Reply> replies = ModelForum.getRepliesByPostId(theUser, selectedPost.getId());
+	    List<Reply> replies = ModelGradingSytem.getRepliesByPostId(theUser, selectedPost.getId());
 	    //unreadReplies = ModelGradingSytem.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
 	    
 	    // enable unread replies button
@@ -601,12 +601,12 @@ public class ViewerForum {
 
 	        MenuItem editItem = new MenuItem("Edit");
 	        editItem.setOnAction(e -> {
-	            ControllerForum.performEditReply(r);  // should open your edit window
+	            ControllerGradingSystem.performEditReply(r);  // should open your edit window
 	        });
 
 	        MenuItem deleteItem = new MenuItem("Delete");
 	        deleteItem.setOnAction(e -> {
-	        	ControllerForum.performDeleteReply(r); // should open confirm + delete
+	        	ControllerGradingSystem.performDeleteReply(r); // should open confirm + delete
 	        });
 
 	        menu.getItems().addAll(editItem, deleteItem);
@@ -644,7 +644,7 @@ public class ViewerForum {
 	    threadLabel.setFont(Font.font("Arial", 14));
 
 	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<>();
-	    threadChoiceBox.getItems().addAll(ModelForum.getAllThreads());
+	    threadChoiceBox.getItems().addAll(ModelGradingSytem.getAllThreads());
 	    threadChoiceBox.setPrefWidth(220);
 			threadChoiceBox.setValue("General");
 			
@@ -695,7 +695,7 @@ public class ViewerForum {
 	        String content = taContent.getText();
 	        String author = theUser.getUserName();
 
-	        String errorMessage = ModelForum.addPost(thread, title, content, author);
+	        String errorMessage = ModelGradingSytem.addPost(thread, title, content, author);
 
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
@@ -706,7 +706,7 @@ public class ViewerForum {
 	            return;
 	        }
 
-	        updatingList(ModelForum.getPostList());
+	        updatingList(ModelGradingSytem.getPostList());
 	        addStage.close();
 	    });
 	    
@@ -715,7 +715,7 @@ public class ViewerForum {
 	    	@Override
 	    	public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 	    		if (!newValue.isBlank()) {
-	    			List<Post> filtered = ModelForum.filterPosts(newValue, "Default"); // your logic
+	    			List<Post> filtered = ModelGradingSytem.filterPosts(newValue, "Default"); // your logic
 		            relatedPostView.getItems().setAll(filtered);
 	    		} else {
 	    			relatedPostView.getItems().clear();
@@ -776,7 +776,7 @@ public class ViewerForum {
 	    threadLabel.setFont(Font.font("Arial"));
 	    
 	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
-	    threadChoiceBox.getItems().addAll(ModelForum.getAllThreads());
+	    threadChoiceBox.getItems().addAll(ModelGradingSytem.getAllThreads());
 	    threadChoiceBox.setValue(post.getThread());
 	    
 	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
@@ -815,7 +815,7 @@ public class ViewerForum {
 	        String newContent = taContent.getText();
 	        
 	        // You can rename this to match your actual ModelGradingSytem method
-	        String errorMessage = ModelForum.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
+	        String errorMessage = ModelGradingSytem.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
 	        System.out.println(errorMessage);
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
@@ -827,7 +827,7 @@ public class ViewerForum {
 	        }
 
 	        // Refresh list + keep selection updated
-	        updatingList(ModelForum.getPostList());
+	        updatingList(ModelGradingSytem.getPostList());
 
 	        // Re-select the edited post if still present
 	        Post refreshed = postListView.getItems().stream()
@@ -839,7 +839,7 @@ public class ViewerForum {
 	        if (refreshed != null) postListView.getSelectionModel().select(refreshed);
 
 	        // Update detail display
-	        if (theView != null) ControllerForum.performReadSpecificPost(post);
+	        if (theView != null) ControllerGradingSystem.performReadSpecificPost(post);
 
 	        editStage.close();
 	    });
@@ -876,7 +876,7 @@ public class ViewerForum {
 	        if (result.getButtonData().isDefaultButton()) {
 
 	            // rename to match your model
-	            String errorMessage = ModelForum.deletePost(post.getId(), theUser.getUserName());
+	            String errorMessage = ModelGradingSytem.deletePost(post.getId(), theUser.getUserName());
 
 	            if (errorMessage != null && !errorMessage.isBlank()) {
 	                Alert alert = new Alert(AlertType.ERROR);
@@ -888,7 +888,7 @@ public class ViewerForum {
 	            }
 
 	            // Refresh list
-	            updatingList(ModelForum.getPostList());
+	            updatingList(ModelGradingSytem.getPostList());
 
 	            // Clear selection + detail UI
 	            /*
@@ -910,7 +910,7 @@ public class ViewerForum {
 
 	            if (refreshed != null) {
 	                postListView.getSelectionModel().select(refreshed);
-	                if (theView != null) ControllerForum.performReadSpecificPost(refreshed);
+	                if (theView != null) ControllerGradingSystem.performReadSpecificPost(refreshed);
 	            } else {
 	                postListView.getSelectionModel().clearSelection();
 	                selectedPost = null;
@@ -988,7 +988,7 @@ public class ViewerForum {
 	        String newContent = ta.getText();
 
 	        // rename these to your actual ModelGradingSytem method name
-	        String errorMessage = ModelForum.editReply(reply.getId(), theUser.getUserName(), newContent);
+	        String errorMessage = ModelGradingSytem.editReply(reply.getId(), theUser.getUserName(), newContent);
 
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
@@ -1000,7 +1000,7 @@ public class ViewerForum {
 	        }
 
 	        // refresh current post details (reload replies)
-	        ControllerForum.performReadSpecificPost(selectedPost);
+	        ControllerGradingSystem.performReadSpecificPost(selectedPost);
 
 	        editStage.close();
 	    });
@@ -1027,7 +1027,7 @@ public class ViewerForum {
 	        if (result == ButtonType.OK) {
 
 	            // rename these to your actual ModelGradingSytem method name
-	            String errorMessage = ModelForum.deleteReply(reply.getId(), theUser.getUserName());
+	            String errorMessage = ModelGradingSytem.deleteReply(reply.getId(), theUser.getUserName());
 
 	            if (errorMessage != null && !errorMessage.isBlank()) {
 	                Alert alert = new Alert(AlertType.ERROR);
@@ -1039,7 +1039,7 @@ public class ViewerForum {
 	            }
 
 	            // refresh UI
-	            ControllerForum.performReadSpecificPost(selectedPost);
+	            ControllerGradingSystem.performReadSpecificPost(selectedPost);
 	        }
 	    });
 	}
