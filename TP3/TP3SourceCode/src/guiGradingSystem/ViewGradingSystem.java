@@ -85,16 +85,6 @@ public class ViewGradingSystem {
 	 */
 	protected static Button button_NewPost;
 	
-	/**
-	 * MyPost button 
-	 */
-	protected static Button button_MyPost;
-	
-	Label threadLabelMain = new Label("Thread:");
-   
-    
-    private static ChoiceBox<String> threadChoiceBoxMain = new ChoiceBox<String>();
-	
 	// Reply UI (shown only when a post is selected)
 	private static VBox replyPane;
 	private static TextArea replyTextArea;
@@ -106,18 +96,6 @@ public class ViewGradingSystem {
 
 	// Track which post is selected
 	private static Post selectedPost;
-	
-	// Filter
-	
-	private static TextField tfSearch;
-	private static Button button_Search;
-	private static Button button_Clear;
-	private static Button button_Unread;
-	
-	// Unread reply cache 
-	private static List<Reply> unreadReplies;
-	private static HBox container_Checkbox = new HBox(5);
-	
 	
 	/**
 	 * This is a separator and it is used to partition the GUI for various tasks
@@ -188,16 +166,6 @@ public class ViewGradingSystem {
 		theStage = ps;
 		theUser = user;
 		
-		// Private option is only visible to staff members
-		if (user.getStudent()) {
-			container_Checkbox.setVisible(false);
-			theRole = 2;
-		}
-		else if (user.getStaff()) {
-			container_Checkbox.setVisible(true);
-			theRole = 3;
-		}
-		
 		// If not yet established, populate the static aspects of the GUI
 		
 		if (postListView == null) {
@@ -206,7 +174,6 @@ public class ViewGradingSystem {
 		
 		if (theView == null) theView = new ViewGradingSystem();		// Instantiate singleton if needed
 		
-		threadChoiceBoxMain.getItems().setAll(ModelGradingSytem.getAllThreads());
 
 		// Populate the dynamic aspects of the GUI with the data from the user and the current
 		// state of the system.
@@ -245,78 +212,6 @@ public class ViewGradingSystem {
 		button_NewPost = new Button("Create Post");
 		setupButtonUI(button_NewPost, "Dialog", 13, 75, Pos.CENTER, 225, 55);
 		button_NewPost.setOnAction((_) -> { ControllerGradingSystem.performAddPost(); });
-		
-		// My Post button
-		button_MyPost = new Button("My Post");
-		setupButtonUI(button_MyPost, "Dialog", 13, 75, Pos.CENTER, 145, 55);
-		button_MyPost.setOnAction((_) -> {
-			ControllerGradingSystem.performMyPostButton();
-		});
-
-		// Filter Search
-		
-		// Search TextField
-		tfSearch = new TextField();
-		tfSearch.setLayoutX(320);
-		tfSearch.setLayoutY(55);
-		tfSearch.setPrefWidth(160);
-		tfSearch.setPrefHeight(28);
-		tfSearch.setPromptText("Enter keyword...");
-
-		// Search Button
-		button_Search = new Button("Search");
-		setupButtonUI(button_Search, "Dialog", 13, 75, Pos.CENTER, 490, 55);
-
-		button_Search.setOnAction(e -> {
-		    String keyword = tfSearch.getText();
-		    String thread = threadChoiceBoxMain.getValue();
-//		    System.out.println(thread);
-
-		    ControllerGradingSystem.performSearchButton(keyword, thread);
-		});
-		
-		// Clear Button		
-		button_Clear = new Button("Clear");
-		setupButtonUI(button_Clear, "Dialog", 13, 75, Pos.CENTER, 570, 55);
-
-		button_Clear.setOnAction(e -> {
-		    tfSearch.clear();
-		    
-		    ControllerGradingSystem.performClearButton();
-		});
-		
-		
-		// Thread Label
-		threadLabelMain.setFont(Font.font("Arial", 14));
-		threadLabelMain.setLayoutX(750);
-		threadLabelMain.setLayoutY(60);
-
-		// Thread ChoiceBox
-		threadChoiceBoxMain.setLayoutX(835);
-		threadChoiceBoxMain.setLayoutY(55);
-		threadChoiceBoxMain.setPrefWidth(130);
-		threadChoiceBoxMain.setPrefHeight(28);
-		threadChoiceBoxMain.getItems().add("Default");
-		threadChoiceBoxMain.getItems().addAll(ModelGradingSytem.getAllThreads());
-		threadChoiceBoxMain.setValue("Default");
-
-		
-		// Unread Button		
-		button_Unread = new Button("Unread");
-		setupButtonUI(button_Unread, "Dialog", 13, 75, Pos.CENTER, 650, 55);
-
-		button_Unread.setOnAction(e -> {
-			updatingList(ModelGradingSytem.getUnreads(theUser.getUserName()));
-		});
-		// GUI Area 2
-		
-		// override PostView cell format factory 
-		postListView.setCellFactory(new Callback<ListView<Post>, ListCell<Post>>(){
-			@Override 
-			public ListCell<Post> call(ListView<Post> list) {
-				return new ListCellFormat();
-			}
-		});
 		
 		postListView.setFixedCellSize(50);
 		
@@ -396,7 +291,6 @@ public class ViewGradingSystem {
 //		    updatingList(ModelGradingSytem.getPostList());
 		    
 		    unreadState = false;
-		    unreadReplies = ModelGradingSytem.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
 
 
 		    ControllerGradingSystem.performReadSpecificPost(selectedPost);	
@@ -410,11 +304,6 @@ public class ViewGradingSystem {
 		replyTextArea.setPrefHeight(90);
 		replyTextArea.setWrapText(true);
 		replyTextArea.setPromptText("Write your reply...");
-
-		// Checkbox
-		CheckBox checkbox_Private = new CheckBox();
-		Label label_CheckBox = new Label("Private");
-		container_Checkbox.getChildren().addAll(checkbox_Private, label_CheckBox);
 		
 		replyButton = new Button("Reply");
 		replyButton.setDisable(true);     
@@ -434,7 +323,6 @@ public class ViewGradingSystem {
 		    	 errorMessage = ControllerGradingSystem.performAddReply(parentId, author, replyText, false);
 		    }
 		    else if (theUser.getStaff()) {
-		    	errorMessage = ControllerGradingSystem.performAddReply(parentId, author, replyText, checkbox_Private.isSelected());
 		    }
 	        // If Model returns error → show it
 	        if (errorMessage != null && !errorMessage.isBlank()) {
@@ -450,7 +338,6 @@ public class ViewGradingSystem {
 
 		    // For now just clear input and show success
 		    replyTextArea.clear();
-		    checkbox_Private.setSelected(false);
 		    Alert ok = new Alert(AlertType.INFORMATION);
 		    ok.setTitle("Reply Posted");
 		    ok.setHeaderText(null);
@@ -459,7 +346,6 @@ public class ViewGradingSystem {
 		});
 		
 		
-		replyPane.getChildren().addAll(replyLabel, replyTextArea, container_Checkbox, replyButton);
 
 		detailPane.getChildren().add(replyPane);
 		// GUI Area 3
@@ -483,10 +369,9 @@ public class ViewGradingSystem {
         	    label_PageTitle, label_UserDetails, line_Separator1,
 
         	    line_Separator4, button_Logout, button_Quit, button_Return,
-        	    button_NewPost, button_MyPost, postListView, detailPane, threadLabelMain, threadChoiceBoxMain,
+        	    button_NewPost, postListView, detailPane,
 
-        	    detailScrollPane, 
-        	    tfSearch, button_Search, button_Clear, button_Unread
+        	    detailScrollPane 
         	);
 		
 	}
@@ -583,37 +468,35 @@ public class ViewGradingSystem {
 	    List<Reply> replies = ModelGradingSytem.getRepliesByPostId(theUser, selectedPost.getId());
 	    //unreadReplies = ModelGradingSytem.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
 	    
-	    // enable unread replies button
-	    unreadReplyButton.setDisable(unreadReplies.size() == 0);
 
-	    for (Reply r : ( unreadState? unreadReplies: replies ) ) {
-
-	        Label replyLabel = new Label(r.getAuthor() + ": " + r.getContent());
-	        replyLabel.setWrapText(true);
-	        replyLabel.setPickOnBounds(true); // helps clicking
-	        
-	        // if Unread, tags at unread
-	        if (unreadState || !r.hadRead(theUser.getUserName()))
-	        	replyLabel.setText("[UNREAD] " + replyLabel.getText());
-
-	        // TEMP: attach menu to EVERY reply so you can test it works
-	        ContextMenu menu = new ContextMenu();
-
-	        MenuItem editItem = new MenuItem("Edit");
-	        editItem.setOnAction(e -> {
-	            ControllerGradingSystem.performEditReply(r);  // should open your edit window
-	        });
-
-	        MenuItem deleteItem = new MenuItem("Delete");
-	        deleteItem.setOnAction(e -> {
-	        	ControllerGradingSystem.performDeleteReply(r); // should open confirm + delete
-	        });
-
-	        menu.getItems().addAll(editItem, deleteItem);
-	        replyLabel.setContextMenu(menu);
-
-	        repliesBox.getChildren().add(replyLabel);
-	    }
+//	    for (Reply r : ( unreadState? unreadReplies: replies ) ) {
+//
+//	        Label replyLabel = new Label(r.getAuthor() + ": " + r.getContent());
+//	        replyLabel.setWrapText(true);
+//	        replyLabel.setPickOnBounds(true); // helps clicking
+//	        
+//	        // if Unread, tags at unread
+//	        if (unreadState || !r.hadRead(theUser.getUserName()))
+//	        	replyLabel.setText("[UNREAD] " + replyLabel.getText());
+//
+//	        // TEMP: attach menu to EVERY reply so you can test it works
+//	        ContextMenu menu = new ContextMenu();
+//
+//	        MenuItem editItem = new MenuItem("Edit");
+//	        editItem.setOnAction(e -> {
+//	            ControllerGradingSystem.performEditReply(r);  // should open your edit window
+//	        });
+//
+//	        MenuItem deleteItem = new MenuItem("Delete");
+//	        deleteItem.setOnAction(e -> {
+//	        	ControllerGradingSystem.performDeleteReply(r); // should open confirm + delete
+//	        });
+//
+//	        menu.getItems().addAll(editItem, deleteItem);
+//	        replyLabel.setContextMenu(menu);
+//
+//	        repliesBox.getChildren().add(replyLabel);
+//	    }
 	    
 	    // Enable reply UI
 	    replyPane.setVisible(true);
