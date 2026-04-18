@@ -28,7 +28,7 @@ public class Assignment {
 	/** 
 	 * A class used for feedback including numeric grade and and comment 
 	 */
-	private class Feedback {
+	class Feedback {
 		/** 
 		 * The numeric score of the feedback
 		 */

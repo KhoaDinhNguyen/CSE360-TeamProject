@@ -71,7 +71,7 @@ public class GradingSystem {
 	 * @return an integer, the current score of the student
 	 */
 	public int getScore(int index, String studentName) {
-		return getAssignment(index).getScore(studentName).getScore();
+		return getAssignment(index).getFeedback(studentName).getScore();
 	}
 	
 	/**
@@ -171,7 +171,7 @@ public class GradingSystem {
 	public float getTotalScore(String studentName) {
 		float totalScore = 0;
 		for (Assignment a: AssnList) {
-			int score = a.getScore(studentName);
+			int score = a.getFeedback(studentName).getScore();
 			int maxScore = a.getMaxScore();
 			int weight = a.getWeight();
 			
