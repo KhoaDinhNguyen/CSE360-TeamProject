@@ -75,6 +75,16 @@ public class GradingSystem {
 	}
 	
 	/**
+	 * Get feedback comment of a student's assignment
+	 * @param index an integer which is the index of the assignment
+	 * @param studentName an string which is the student's name
+	 * @return a String which is the feedback comment
+	 */
+	public String getComment(int index, String studentName) {
+		return getAssignment(index).getFeedback(studentName).getComment();
+	}
+	
+	/**
 	 * Get the assignment's weight
 	 * @param index an integer that is the assignmemnt's index
 	 * @return an integer which is the percentage weight
@@ -123,19 +133,21 @@ public class GradingSystem {
 	}
 	
 	/**
-	 * Assign score for the student given the assignment index
+	 * Assign feedback's score and comment for the student given the assignment index
 	 * @param index an integer which is the assignment's index
 	 * @param studentName a string contains the student's name
 	 * @param score an integer which is the assigned score
+	 * @param a string contain the comment of the feedback
 	 * @return an string contain error message, will be null if execute successfully
 	 */
-	public String setScore(int index, String studentName, int score) {
+	public String setFeedback(int index, String studentName, int score, String comment) {
 		if (score < 0)
 			return "Negative grade are not allowed";
 		if (score > getMaxScore(index))
 			return "Assigned grade cannot be exceed the max grade";
 		
 		getAssignment(index).setScore(studentName, score);
+		getAssignment(index).setComment(studentName, comment);
 		
 		return null;
 	}

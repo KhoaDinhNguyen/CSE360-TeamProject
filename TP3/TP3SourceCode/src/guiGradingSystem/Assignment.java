@@ -212,7 +212,7 @@ public class Assignment {
 	 * @param studentName a String contains the name of the student
 	 * @param comment a String contains the feedback's comment
 	 */
-	public void setFeedback(String studentName, String comment) {
+	public void setComment(String studentName, String comment) {
 		if (feedbacks.containsKey(studentName))
 			feedbacks.replace(studentName, new Feedback(0, comment));
 		else {
