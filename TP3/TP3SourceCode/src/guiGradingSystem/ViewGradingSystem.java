@@ -537,64 +537,66 @@ public class ViewGradingSystem {
 	    taContent.setPrefHeight(180);
 	    taContent.setWrapText(true);
 	    taContent.setPromptText("Write your post here...");
+	    
+	    // Max Score field 
+	    Label labelMaxScore = new Label("Max Score: ");
+	    labelContent.setFont(Font.font("Arial", 14));
 
-	    Button btnPost = new Button("Post");
+	    TextField tfMaxScore = new TextField();
+	    tfMaxScore.setPrefWidth(50);
+	    
+	    HBox hboxMaxGrade = new HBox();
+	    hboxMaxGrade.getChildren().addAll(labelMaxScore, tfMaxScore);
+
+	    // Weight field
+	    Label labelWeight = new Label("Weight (%): ");
+	    labelContent.setFont(Font.font("Arial", 14));
+
+	    TextField tfWeight = new TextField();
+	    tfWeight.setPrefWidth(50);
+	    
+	    HBox hboxWeight = new HBox();
+	    hboxWeight.getChildren().addAll(labelWeight, tfWeight);
+
+	    Button btnUpdate = new Button("Update");
 	    Button btnCancel = new Button("Cancel");
 
-	    setupButtonUI(btnPost, "Dialog", 16, 160, Pos.CENTER, 0, 0);
+	    setupButtonUI(btnUpdate, "Dialog", 16, 160, Pos.CENTER, 0, 0);
 	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 0, 0);
 
-	    HBox buttonBar = new HBox(10, btnCancel, btnPost);
+	    HBox buttonBar = new HBox(10, btnCancel, btnUpdate);
 	    buttonBar.setAlignment(Pos.CENTER_RIGHT);
 
 	    btnCancel.setOnAction(e -> addStage.close());
 
-	    btnPost.setOnAction(e -> {
+	    btnUpdate.setOnAction(e -> {
 	        String title = tfTitle.getText();
 	        String content = taContent.getText();
-	        String author = theUser.getUserName();
+	        int maxScore = Integer.parseInt(tfMaxScore.getText());
+	        int weight = Integer.parseInt(tfWeight.getText());
 
-	        String errorMessage = ModelGradingSytem.addPost(thread, title, content, author);
+	        String errorMessage = ModelGradingSytem.newAssignment(title, content, maxScore, weight);
 
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Cannot Create Post");
+	            alert.setTitle("Cannot Create Assignment");
 	            alert.setHeaderText(null);
 	            alert.setContentText(errorMessage);
 	            alert.showAndWait();
 	            return;
 	        }
 
-	        updatingList(ModelGradingSytem.getPostList());
 	        addStage.close();
 	    });
 	    
-	    
-	    tfTitle.textProperty().addListener(new ChangeListener<String>() {
-	    	@Override
-	    	public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-	    		if (!newValue.isBlank()) {
-	    			List<Post> filtered = ModelGradingSytem.filterPosts(newValue, "Default"); // your logic
-		            relatedPostView.getItems().setAll(filtered);
-	    		} else {
-	    			relatedPostView.getItems().clear();
-	    			relatedPostView.setPlaceholder(new Label("No related posts found"));
-	    		}
-	        }
-	    
-	    });
-
-
 	    addRoot.getChildren().addAll(
 	        titleLabel,
-	        authorLabel,
-	        threadContainer,
 	        labelTitle,
 	        tfTitle,
 	        labelContent,
 	        taContent,
-	        relatedLabel,
-	        relatedPostView,
+	        hboxMaxGrade,
+	        hboxWeight,
 	        buttonBar
 	    );
 

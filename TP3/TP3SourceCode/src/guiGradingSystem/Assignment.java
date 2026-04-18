@@ -104,6 +104,7 @@ public class Assignment {
 	 */
 	public Assignment() {
 		title = "";
+		content = "";
 		maxScore = 0;
 		weight = 0;
 		
@@ -116,10 +117,11 @@ public class Assignment {
 	 * @param maxScore the maximum integer score of the assignment 
 	 * @param weight the percentage weight of the assignment
 	 */
-	public Assignment(String title, int maxScore, int weight) {
+	public Assignment(String title, String content, int maxScore, int weight) {
 		this.title = title; 
 		this.maxScore = maxScore;
 		this.weight = weight;
+		this.content = content;
 		
 		feedbacks = new HashMap<>();
 	}
@@ -181,6 +183,14 @@ public class Assignment {
 	 */
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	
+	/**
+	 * Set the content of the assignment
+	 * @param content a string which is the new content
+	 */
+	public void setContent(String content) {
+		this.content = content;
 	}
 	
 	/**

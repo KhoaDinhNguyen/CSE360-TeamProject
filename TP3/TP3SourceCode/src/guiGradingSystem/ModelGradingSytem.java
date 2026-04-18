@@ -17,6 +17,8 @@ public class ModelGradingSytem {
 	private static entityClasses.ReplyStore replyStore = new entityClasses.ReplyStore();
 	private static ThreadStore threadStore = new ThreadStore();
 	
+	private static GradingSystem gradeSystem = new GradingSystem();
+	
 	/**
 	 * The class constructor but it will not be used in this project
 	 */
@@ -83,20 +85,21 @@ public class ModelGradingSytem {
 	 */
 	// Post Action
 	public static String addPost(String title, String content, String author) {
-	    return newAssignment("General", title, content, author);
+	    return newAssignment(title, content, 0, 0);
 	}
 	
 	/**
-	 * Adds a new post to the forum after validating its thread, title, content, and author.
-	 *
-	 * @param thread is post's thread
-	 * @param title the title of the post
-	 * @param content the body content of the post
-	 * @param author the username of the author creating the post
-	 * @return an empty string if the post is added successfully; otherwise, an error message
+	 * Create new assignment with title, content, maxScore and weight
+	 * @param title an String contains the title of the assignment
+	 * @param content an String contains the content of the assignment
+	 * @param maxScore an integer of the maximum score possible
+	 * @param weight an integer for the percentage weight contribute to the total weight
+	 * @return a String if empty, there are no errors. Otherwise it returns error messages
 	 */
 	public static String newAssignment(String title, String content, int maxScore, int weight) {		
-
+		/** TODO: Validate the field **/
+		gradeSystem.createAssignment(title, content, maxScore, weight);
+		return "";
 	}
 	
   	/**

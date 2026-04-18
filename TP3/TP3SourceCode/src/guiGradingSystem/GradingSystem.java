@@ -24,8 +24,8 @@ public class GradingSystem {
 	 * @param maxScore an integer which is the max score
 	 * @param weight an integer which is the percentage weight
 	 */
-	public void createAssignment(String title, int maxScore, int weight) {
-		Assignment newAssn = new Assignment(title, maxScore, weight); 
+	public void createAssignment(String title, String content, int maxScore, int weight) {
+		Assignment newAssn = new Assignment(title, content, maxScore, weight); 
 		AssnList.add(newAssn);
 	}
 	
