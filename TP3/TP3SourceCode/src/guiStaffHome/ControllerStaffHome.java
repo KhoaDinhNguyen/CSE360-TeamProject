@@ -74,6 +74,8 @@ public class ControllerStaffHome {
 	
 	protected static void performDM() {
 		guiMessage.ViewerMessage.displayMessageView(ViewStaffHome.theStage, ViewStaffHome.theUser);
+	}
+	
 	protected static void performReviewingDiscussionDashboard() {
 		guiReviewingDiscussionDashboard.ViewerReviewingDiscussionDashboard.displayReviewingDiscussionDashboard(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
