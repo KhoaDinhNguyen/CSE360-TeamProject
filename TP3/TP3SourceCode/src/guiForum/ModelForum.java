@@ -472,6 +472,7 @@ public class ModelForum {
 		return threadStore;
 	}
 	
+	
 	/**
 	 * <p><strong>Danger</strong>: clears all posts, replies, and threads in the database, used only be used when testing</p>
 	 */

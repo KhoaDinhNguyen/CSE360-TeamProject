@@ -49,6 +49,7 @@ public class ControllerStaffHome {
 		guiStaffHome.ViewStaffHome.displayStaffHome(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
 	
+	
 	/**********
 	 * <p> Method: performLogout() </p>
 	 * 
@@ -73,6 +74,8 @@ public class ControllerStaffHome {
 	
 	protected static void performDM() {
 		guiMessage.ViewerMessage.displayMessageView(ViewStaffHome.theStage, ViewStaffHome.theUser);
+	protected static void performReviewingDiscussionDashboard() {
+		guiReviewingDiscussionDashboard.ViewerReviewingDiscussionDashboard.displayReviewingDiscussionDashboard(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
 	
 	/**********

@@ -9,6 +9,8 @@ import guiForum.ModelForum;
 
 public class ModelForumManagement {
 	private static ThreadStore theThreadStore = ModelForum.getThreadStore();
+	private static entityClasses.PostStore postStore = ModelForum.getPostStore();
+	private static entityClasses.ReplyStore replyStore = ModelForum.getReplyStore();
 	
 	protected static String createThread(String threadName) {
 		if (threadName.isBlank()) {
