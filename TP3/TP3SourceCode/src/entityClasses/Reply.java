@@ -90,6 +90,10 @@ public class Reply {
         return author;
     }
 
+    
+    public ArrayList<String> getReadUsers(){
+    	return readUsers;
+    }
     /**
      * Returns the time at which the reply was created.
      *

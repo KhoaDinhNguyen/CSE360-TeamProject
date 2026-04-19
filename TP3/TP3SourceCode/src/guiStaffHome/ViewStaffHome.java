@@ -59,6 +59,7 @@ public class ViewStaffHome {
 	
 	protected static Button button_Forum = new Button("Forum");
 	protected static Button button_Forum_Management = new Button("Forum Management");
+	protected static Button button_Reviewing_Discussion_Dashboard = new Button("Review Discussion Dashboard");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -171,6 +172,11 @@ public class ViewStaffHome {
 		
 		setupButtonUI(button_Forum_Management, "Dialog",18, 250, Pos.CENTER, 20, 190 );
 		button_Forum_Management.setOnAction((_) -> {ControllerStaffHome.performForumManagement(); });
+		
+		setupButtonUI(button_Reviewing_Discussion_Dashboard, "Dialog", 18, 250, Pos.CENTER, 20, 230);
+		button_Reviewing_Discussion_Dashboard.setOnAction((_)-> {ControllerStaffHome.performReviewingDiscussionDashboard(); ;});
+		
+		
 		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
         button_Logout.setOnAction((_) -> {ControllerStaffHome.performLogout(); });
@@ -183,7 +189,8 @@ public class ViewStaffHome {
 		// Place all of the widget items into the Root Pane's list of children
         theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management);
+	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management,
+	        button_Reviewing_Discussion_Dashboard);
 	}
 	
 	
