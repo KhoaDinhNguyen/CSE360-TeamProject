@@ -72,6 +72,9 @@ public class ControllerStudentHome {
 		guiForum.ViewerForum.displayViewerForum(ViewStudentHome.theStage, ViewStudentHome.theUser);
 	}
 	
+	protected static void performMessageView() {
+		guiMessage.ViewerMessage.displayMessageView(ViewStudentHome.theStage, ViewStudentHome.theUser);
+	}
 	/**********
 	 * <p> Method: performQuit() </p>
 	 * 
