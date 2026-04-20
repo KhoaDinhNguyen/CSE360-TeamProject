@@ -77,10 +77,7 @@ public class ViewGradingSystem {
 	private static ListView<String> studentListView;
 	
 	private static VBox detailPane;
-	private static Label detailThread;
 	private static Label detailTitle;
-	private static Label detailAuthor;
-	private static Label detailContent;
 	private static ScrollPane detailScrollPane;
 	
 	/**
@@ -88,15 +85,6 @@ public class ViewGradingSystem {
 	 */
 	protected static Button button_New_Assignment;
 	
-	// Reply UI (shown only when a post is selected)
-	private static VBox replyPane;
-	private static TextArea replyTextArea;
-	private static Button replyButton;
-	private static Button unreadReplyButton;
-	
-	private static VBox repliesBox;
-	private static Label repliesLabel;
-
 	// Track which post is selected
 	private static String selectedStudent;
 	
@@ -124,8 +112,6 @@ public class ViewGradingSystem {
 	 * Delete button
 	 */
 	private static Button button_Delete = new Button("Delete");
-	
-	private static boolean unreadState = false;
 	
 	private static ViewGradingSystem theView;
 	
@@ -626,194 +612,4 @@ public class ViewGradingSystem {
 	    addStage.initOwner(theStage);
 	    addStage.show();
 	}
-
-	
-	/**
-	 * Shows a confirmation dialog and, if confirmed, deletes the specified post.
-	 *
-	 * <p>After deletion, the forum list and detail pane are refreshed to reflect
-	 * the updated post state.</p>
-	 *
-	 * @param post the post to delete
-	 */
-	protected static void confirmAndDeletePost(Post post) {
-
-	    Alert confirm = new Alert(AlertType.CONFIRMATION);
-	    confirm.setTitle("Delete Post");
-	    confirm.setHeaderText("Are you sure you want to delete this post?");
-	    confirm.setContentText("This cannot be undone.");
-
-	    confirm.showAndWait().ifPresent(result -> {
-	        if (result.getButtonData().isDefaultButton()) {
-
-	            // rename to match your model
-	            String errorMessage = ModelGradingSystem.deletePost(post.getId(), theUser.getUserName());
-
-	            if (errorMessage != null && !errorMessage.isBlank()) {
-	                Alert alert = new Alert(AlertType.ERROR);
-	                alert.setTitle("Cannot Delete Post");
-	                alert.setHeaderText(null);
-	                alert.setContentText(errorMessage);
-	                alert.showAndWait();
-	                return;
-	            }
-
-	            // Refresh list
-	            updatingList(ModelGradingSystem.getStudentList());
-
-	            // Clear selection + detail UI
-	            /*
-	            studentListView.getSelectionModel().clearSelection();
-	            selectedStudent = null;
-
-	            detailTitle.setText("Title: ");
-	            detailAuthor.setText("Author: ");
-	            detailContent.setText("Content: ");
-	            */
-	            //updatingList(ModelGradingSystem.getPostList());
-
-	       //     Post refreshed = studentListView.getItems().stream()
-	       //             .filter(p -> p.getId() == post.getId())
-	       //             .findFirst()
-	       //             .orElse(null);
-
-	       //     selectedStudent = refreshed;
-
-	       //     if (refreshed != null) {
-	       //         studentListView.getSelectionModel().select(refreshed);
-	       //         if (theView != null) ControllerGradingSystem.performReadSpecificPost(refreshed);
-	       //     } else {
-	       //         studentListView.getSelectionModel().clearSelection();
-	       //         selectedStudent = null;
-
-	       //         detailTitle.setText("Title: ");
-	       //         detailAuthor.setText("Author: ");
-	       //         detailContent.setText("Content: ");
-	       //         repliesBox.getChildren().clear();
-
-	       //         replyPane.setVisible(false);
-	       //         replyPane.setManaged(false);
-	       //         replyButton.setDisable(true);
-
-	       //         editPostButton.setDisable(true);
-	       //         deletePostButton.setDisable(true);
-	       //     }
-	            
-	            /*
-	            repliesBox.getChildren().clear();
-
-	            // Hide reply UI again
-	            replyPane.setVisible(false);
-	            replyPane.setManaged(false);
-	            replyButton.setDisable(true);
-
-	            editPostButton.setDisable(true);
-	            deletePostButton.setDisable(true);
-	            */
-	        }
-	    });
-	}
-	
-	/**
-	 * Opens a window that allows the current user to edit an existing reply.
-	 *
-	 * @param reply the reply to edit
-	 */
-	protected static void showEditReplyWindow(Reply reply) {
-	    Stage editStage = new Stage();
-	    editStage.setTitle("Edit Reply");
-
-	    Pane root = new Pane();
-	    Scene scene = new Scene(root, 520, 320);
-
-	    Label title = new Label("Edit Reply");
-	    title.setFont(Font.font("Arial", 20));
-	    title.setLayoutX(20);
-	    title.setLayoutY(15);
-
-	    Label author = new Label("Editing as: " + (theUser == null ? "" : theUser.getUserName()));
-	    author.setFont(Font.font("Arial", 14));
-	    author.setLayoutX(20);
-	    author.setLayoutY(55);
-
-	    Label contentLabel = new Label("Content:");
-	    contentLabel.setLayoutX(20);
-	    contentLabel.setLayoutY(90);
-
-	    TextArea ta = new TextArea(reply.getContent());
-	    ta.setLayoutX(20);
-	    ta.setLayoutY(115);
-	    ta.setPrefWidth(480);
-	    ta.setPrefHeight(120);
-	    ta.setWrapText(true);
-
-	    Button btnSave = new Button("Save");
-	    Button btnCancel = new Button("Cancel");
-
-	    setupButtonUI(btnSave, "Dialog", 16, 160, Pos.CENTER, 340, 250);
-	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 160, 250);
-
-	    btnCancel.setOnAction(e -> editStage.close());
-
-	    btnSave.setOnAction(e -> {
-	        String newContent = ta.getText();
-
-	        // rename these to your actual ModelGradingSystem method name
-	        String errorMessage = ModelGradingSystem.editReply(reply.getId(), theUser.getUserName(), newContent);
-
-	        if (errorMessage != null && !errorMessage.isBlank()) {
-	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Cannot Update Reply");
-	            alert.setHeaderText(null);
-	            alert.setContentText(errorMessage);
-	            alert.showAndWait();
-	            return;
-	        }
-
-	        // refresh current post details (reload replies)
-	//        ControllerGradingSystem.performReadSpecificPost(selectedStudent);
-
-	        editStage.close();
-	    });
-
-	    root.getChildren().addAll(title, author, contentLabel, ta, btnCancel, btnSave);
-
-	    editStage.setScene(scene);
-	    editStage.initOwner(theStage);
-	    editStage.show();
-	}
-	
-	/**
-	 * Shows a confirmation dialog and, if confirmed, deletes the specified reply.
-	 *
-	 * @param reply the reply to delete
-	 */
-	protected static void confirmAndDeleteReply(Reply reply) {
-	    Alert confirm = new Alert(AlertType.CONFIRMATION);
-	    confirm.setTitle("Delete Reply");
-	    confirm.setHeaderText("Delete this reply?");
-	    confirm.setContentText("This cannot be undone.");
-
-	    confirm.showAndWait().ifPresent(result -> {
-	        if (result == ButtonType.OK) {
-
-	            // rename these to your actual ModelGradingSystem method name
-	            String errorMessage = ModelGradingSystem.deleteReply(reply.getId(), theUser.getUserName());
-
-	            if (errorMessage != null && !errorMessage.isBlank()) {
-	                Alert alert = new Alert(AlertType.ERROR);
-	                alert.setTitle("Cannot Delete Reply");
-	                alert.setHeaderText(null);
-	                alert.setContentText(errorMessage);
-	                alert.showAndWait();
-	                return;
-	            }
-
-	            // refresh UI
-	   //         ControllerGradingSystem.performReadSpecificPost(selectedStudent);
-	        }
-	    });
-	}
-
-	
 }
