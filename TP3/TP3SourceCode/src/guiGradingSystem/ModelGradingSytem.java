@@ -3,6 +3,7 @@ package guiGradingSystem;
 import java.util.ArrayList;
 import java.util.List;
 
+import database.Database;
 import entityClasses.*;
 
 /**
@@ -13,11 +14,15 @@ import entityClasses.*;
  * operations for the forum user interface.</p>
  */
 public class ModelGradingSytem {
+
 	private static entityClasses.PostStore postStore = new entityClasses.PostStore();
 	private static entityClasses.ReplyStore replyStore = new entityClasses.ReplyStore();
 	private static ThreadStore threadStore = new ThreadStore();
 	
 	private static GradingSystem gradeSystem = new GradingSystem();
+
+	// Reference for the in-memory database so this package has access
+	private static Database theDatabase = applicationMain.FoundationsMain.database;
 	
 	/**
 	 * The class constructor but it will not be used in this project
@@ -73,6 +78,10 @@ public class ModelGradingSytem {
 
 	    addReply("Infinite recursion without base case causes it.", "Alice", 5);
 	    
+	    
+	    newAssignment("Assignment 1", "this", 100, 25);
+	    newAssignment("Assignment 2", "this", 100, 25);
+	    newAssignment("Assignment 3", "this", 100, 50);
 	}
 	
 	/**
@@ -102,13 +111,27 @@ public class ModelGradingSytem {
 		return "";
 	}
 	
-  	/**
-	 * Returns the complete list of forum posts.
-	 *
-	 * @return the list of posts currently stored in the forum
+	/**
+	 * Get the student list of the entire system
+	 * @return a List of string contains all the username
 	 */
-	public static List<Post> getPostList() {
-		return postStore.getPostList();
+	public static List<String> getStudentList() {
+		List<String> userList = theDatabase.getUserList();
+		
+		// the result student list
+		List<String> studentList = new ArrayList<String>(); 
+		
+		for (String username: userList) {
+			// get the User from the theDatabase
+			User user = theDatabase.getUserDetails(username);
+			
+			// check if the user is student
+			if (user != null && user.getStudent()) {
+				studentList.add(username);
+			}
+		}
+		
+		return studentList;
 	}
 	
 	/**

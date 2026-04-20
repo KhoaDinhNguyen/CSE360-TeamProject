@@ -3,6 +3,7 @@ package applicationMain;
 import java.sql.SQLException;
 import database.Database;
 import entityClasses.User;
+import guiNewAccount.ControllerNewAccount;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
@@ -99,19 +100,19 @@ public class FoundationsMain extends Application {
 		// If the database is empty, no users have been established, so this user must be an admin
 		// user doing initial system startup activities and we need to set that admin's username
 		// and password using a special start you page.
-	//	if (database.isDatabaseEmpty()) {
-	//		// This is a first use, so have the user set up the admin account
-	//		guiFirstAdmin.ViewFirstAdmin.displayFirstAdmin(theStage);	
-	//	}
-	//	else
-	//		// This is not a first use, so set up for the user to log in or create a new account
-	//		guiUserLogin.ViewUserLogin.displayUserLogin(theStage);
+		if (database.isDatabaseEmpty()) {
+				// This is a first use, so have the user set up the admin account
+				guiFirstAdmin.ViewFirstAdmin.displayFirstAdmin(theStage);	
+			}
+			else
+				// This is not a first use, so set up for the user to log in or create a new account
+				guiUserLogin.ViewUserLogin.displayUserLogin(theStage);
 		
 		// With the JavaFX pages set up, this thread of the execution comes to an end.
-		
-		User dummyUser = new User();
-		dummyUser.setStaffUser(true);
-		guiGradingSystem.ViewGradingSystem.displayGradingSystem(theStage, dummyUser);
+
+//		User dummyUser = new User();
+//		dummyUser.setStaffUser(true);
+//		guiGradingSystem.ViewGradingSystem.displayGradingSystem(theStage, dummyUser);
 	}
 
 	/*******

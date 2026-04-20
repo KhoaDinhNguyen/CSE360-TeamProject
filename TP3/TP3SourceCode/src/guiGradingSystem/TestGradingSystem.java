@@ -30,9 +30,9 @@ public class TestGradingSystem {
 	public void setUp() {
 		gradeSys = new GradingSystem();
 		
-		gradeSys.createAssignment("Assignment1", 100, 25);
-		gradeSys.createAssignment("Assignment2", 100, 25);
-		gradeSys.createAssignment("Assignment3", 100, 50);
+		gradeSys.createAssignment("Assignment1", "", 100, 25);
+		gradeSys.createAssignment("Assignment2", "", 100, 25);
+		gradeSys.createAssignment("Assignment3", "", 100, 50);
 	}
 	
 	/**
@@ -118,7 +118,7 @@ public class TestGradingSystem {
 	@Test
 	public void AssignGradeBoundary1() {
 		int expectedGrade = 0;
-		gradeSys.setScore(0, "me", expectedGrade);
+		gradeSys.setFeedback(0, "me", expectedGrade, "");
 		
 		assertEquals(gradeSys.getScore(0, "me"), expectedGrade);
 	}
@@ -129,7 +129,7 @@ public class TestGradingSystem {
 	@Test
 	public void AssignGradeBoundary2() {
 		int expectedGrade = 1;
-		gradeSys.setScore(0, "me", expectedGrade);
+		gradeSys.setFeedback(0, "me", expectedGrade, "");
 		
 		assertEquals(gradeSys.getScore(0, "me"), expectedGrade);
 	}
@@ -140,7 +140,7 @@ public class TestGradingSystem {
 	@Test
 	public void AssignGradeBoundary3() {
 		int expectedGrade = 50;
-		gradeSys.setScore(0, "me", expectedGrade);
+		gradeSys.setFeedback(0, "me", expectedGrade, "");
 		
 		assertEquals(gradeSys.getScore(0, "me"), expectedGrade);
 	}
@@ -151,7 +151,7 @@ public class TestGradingSystem {
 	@Test
 	public void AssignGradeBoundary4() {
 		int expectedGrade = 99;
-		gradeSys.setScore(0, "me", expectedGrade);
+		gradeSys.setFeedback(0, "me", expectedGrade, "");
 		
 		assertEquals(gradeSys.getScore(0, "me"), expectedGrade);
 	}
@@ -162,7 +162,7 @@ public class TestGradingSystem {
 	@Test
 	public void AssignGradeBoundary5() {
 		int expectedGrade = 100;
-		gradeSys.setScore(0, "me", expectedGrade);
+		gradeSys.setFeedback(0, "me", expectedGrade, "");
 		
 		assertEquals(gradeSys.getScore(0, "me"), expectedGrade);
 	}
@@ -172,7 +172,7 @@ public class TestGradingSystem {
 	 */
 	@Test
 	public void AssignGradeBoundary6() {
-		String errMsg = gradeSys.setScore(0, "me", -1);
+		String errMsg = gradeSys.setFeedback(0, "me", -1, "");
 		String expectedMsg = "Negative grade are not allowed";
 		
 		assertEquals(expectedMsg, errMsg);
@@ -183,7 +183,7 @@ public class TestGradingSystem {
 	 */
 	@Test
 	public void AssignGradeBoundary7() {
-		String errMsg = gradeSys.setScore(0, "me", 101);
+		String errMsg = gradeSys.setFeedback(0, "me", 101, "");
 		String expectedMsg = "Assigned grade cannot be exceed the max grade";
 		
 		assertEquals(expectedMsg, errMsg);
@@ -299,11 +299,11 @@ public class TestGradingSystem {
 	public void TotalGrade1() {
 		gradeSys = new GradingSystem();
 		
-		gradeSys.createAssignment("Assn1", 10, 30);
-		gradeSys.createAssignment("Assn2", 10, 70);
+		gradeSys.createAssignment("Assn1", "", 10, 30);
+		gradeSys.createAssignment("Assn2", "", 10, 70);
 		
-		gradeSys.setScore(0, "me", 5);
-		gradeSys.setScore(1, "me", 7);
+		gradeSys.setFeedback(0, "me", 5, "");
+		gradeSys.setFeedback(1, "me", 7, "");
 		
 		float expectedGrade = 64;
 		float totalGrade = gradeSys.getTotalScore("me");
@@ -320,11 +320,11 @@ public class TestGradingSystem {
 	public void TotalGrade2() {
 		gradeSys = new GradingSystem();
 		
-		gradeSys.createAssignment("Assn1", 10, 30);
-		gradeSys.createAssignment("Assn2", 10, 70);
+		gradeSys.createAssignment("Assn1", "", 10, 30);
+		gradeSys.createAssignment("Assn2", "", 10, 70);
 		
-		gradeSys.setScore(0, "me", 0);
-		gradeSys.setScore(1, "me", 0);
+		gradeSys.setFeedback(0, "me", 0, "");
+		gradeSys.setFeedback(1, "me", 0, "");
 		
 		float expectedGrade = 0;
 		float totalGrade = gradeSys.getTotalScore("me");
@@ -341,12 +341,12 @@ public class TestGradingSystem {
 	public void TotalGrade3() {
 		gradeSys = new GradingSystem();
 		
-		gradeSys.createAssignment("Assn1", 10, 30);
-		gradeSys.createAssignment("Assn2", 10, 70);
+		gradeSys.createAssignment("Assn1", "", 10, 30);
+		gradeSys.createAssignment("Assn2", "", 10, 70);
 		
-		gradeSys.setScore(0, "me", 10);
-		gradeSys.setScore(1, "me", 10);
-		
+		gradeSys.setFeedback(0, "me", 10, "");
+		gradeSys.setFeedback(1, "me", 10, "");
+
 		float expectedGrade = 100;
 		float totalGrade = gradeSys.getTotalScore("me");
 		

@@ -34,7 +34,7 @@ public class ControllerGradingSystem {
 		post.markAsRead( ViewGradingSystem.theUser.getUserName());
 	    ModelGradingSytem.markAsReadAllRepies(post.getId());
 
-	    ViewGradingSystem.displayPostDetails(post);	
+	    //ViewGradingSystem.displayPostDetails(post);	
 	}
 
 	/**
@@ -62,15 +62,15 @@ public class ControllerGradingSystem {
 	 */
 	protected static void performSearchButton(String keyword, String thread) {
 		 List<Post> results = ModelGradingSytem.filterPosts(keyword, thread);
-		 ViewGradingSystem.updatingList(results);
+		 //ViewGradingSystem.updatingList(results);
 	}
 	
 	/**
 	 * <p>Updates post list to all posts in the database </p>
 	 */
 	protected static void performClearButton() {
-		List<Post> results = ModelGradingSytem.getPostList();
-		ViewGradingSystem.updatingList(results);
+//		List<Post> results = ModelGradingSytem.getStudentList();
+//		ViewGradingSystem.updatingList(results);
 	}
 	
 	/**
@@ -106,8 +106,8 @@ public class ControllerGradingSystem {
 	 * <p>Performs button to list all posts of the current user</p>
 	 */
 	protected static void performMyPostButton() {
-		List<Post> results = ModelGradingSytem.getPostsByUser(ViewGradingSystem.theUser.getUserName());
-		ViewGradingSystem.updatingList(results);
+//		List<Post> results = ModelGradingSytem.getPostsByUser(ViewGradingSystem.theUser.getUserName());
+//		ViewGradingSystem.updatingList(results);
 	}
 	
 	/**

@@ -71,7 +71,7 @@ public class ViewGradingSystem {
 	// GUI ARea 2: This is a stub, so there are no widgets here.  For an actual role page, this are
 	// would contain the widgets needed for the user to play the assigned role.
 	
-	private static ListView<Post> postListView;
+	private static ListView<String> studentListView;
 	
 	private static VBox detailPane;
 	private static Label detailThread;
@@ -95,7 +95,7 @@ public class ViewGradingSystem {
 	private static Label repliesLabel;
 
 	// Track which post is selected
-	private static Post selectedPost;
+	private static String selectedPost;
 	
 	/**
 	 * This is a separator and it is used to partition the GUI for various tasks
@@ -168,8 +168,8 @@ public class ViewGradingSystem {
 		
 		// If not yet established, populate the static aspects of the GUI
 		
-		if (postListView == null) {
-			postListView = new ListView<>();
+		if (studentListView == null) {
+			studentListView = new ListView<>();
 		}
 		
 		if (theView == null) theView = new ViewGradingSystem();		// Instantiate singleton if needed
@@ -202,7 +202,7 @@ public class ViewGradingSystem {
 		// Populate the window with the title and other common widgets and set their static state
 		
 		// GUI Area 1
-		label_PageTitle.setText("Role1 Home Page");
+		label_PageTitle.setText("Grading System");
 		setupLabelUI(label_PageTitle, "Arial", 28, width, Pos.CENTER, 0, 5);
 		
 		label_UserDetails.setText("User: " + theUser.getUserName());
@@ -213,13 +213,13 @@ public class ViewGradingSystem {
 		setupButtonUI(button_New_Assignment, "Dialog", 13, 75, Pos.CENTER, 225, 55);
 		button_New_Assignment.setOnAction((_) -> { ControllerGradingSystem.performNewAssignment(); });
 		
-		postListView.setFixedCellSize(50);
+		studentListView.setFixedCellSize(50);
 		
-		postListView.setLayoutX(20);
-		postListView.setLayoutY(105);
-		postListView.setPrefWidth(300);
-		postListView.setPrefHeight(410); // from y=105 to around y=525
-		List<Post> PostItemList = ModelGradingSytem.getPostList();
+		studentListView.setLayoutX(20);
+		studentListView.setLayoutY(105);
+		studentListView.setPrefWidth(300);
+		studentListView.setPrefHeight(410); // from y=105 to around y=525
+		List<String> PostItemList = ModelGradingSytem.getStudentList();
 		updatingList(PostItemList);
 				
 		
@@ -237,55 +237,9 @@ public class ViewGradingSystem {
 		
 		detailTitle = new Label("Title: ");
 		detailTitle.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
-
-		detailThread = new Label("Thread: ");
-		detailAuthor = new Label("Author: ");
-		detailContent = new Label("Content: ");
-		detailContent.setWrapText(true);
-
-		detailPane.getChildren().addAll(detailTitle, detailThread, detailAuthor, detailContent);
 		
-		// Delete and Edit Button
-		// disabled until a post is selected (and you are allowed)
-		editPostButton.setDisable(true);
-		deletePostButton.setDisable(true);
-
-		editPostButton.setOnAction(e -> {
-		    if (selectedPost == null) return;
-		    ControllerGradingSystem.performEditPost(selectedPost);
-		});
-
-		deletePostButton.setOnAction(e -> {
-		    if (selectedPost == null) return;
-		    ControllerGradingSystem.performDeletePost(selectedPost);
-		});
-
-		unreadReplyButton = new Button("Unread replies");
-		unreadReplyButton.setDisable(true);
-		unreadReplyButton.setOnAction(e -> {
-			unreadState = (unreadState? false: true);
-			// refresh
-		    displayPostDetails(selectedPost);
-		});
-
-		// Put buttons in a small row
-		VBox postActions = new VBox(6, editPostButton, deletePostButton, unreadReplyButton);
-		// OR use HBox if you want them side-by-side:
-		// HBox postActions = new HBox(10, editPostButton, deletePostButton);
-
-		detailPane.getChildren().add(postActions);
-		// Replies section
-		repliesLabel = new Label("Replies:");
-		repliesLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
-
-		repliesBox = new VBox(6);
-		repliesBox.setStyle("-fx-padding: 5 0 10 0;");
-
-		// Add to detail pane BEFORE replyPane
-		detailPane.getChildren().addAll(repliesLabel, repliesBox);
-		
-		postListView.setOnMouseClicked(event -> {
-		    selectedPost = postListView.getSelectionModel().getSelectedItem();
+		studentListView.setOnMouseClicked(event -> {
+		    selectedPost = studentListView.getSelectionModel().getSelectedItem();
 		    
 		    // post selected, mark the user as read
 //		    updatingList(ModelGradingSytem.getPostList());
@@ -293,61 +247,9 @@ public class ViewGradingSystem {
 		    unreadState = false;
 
 
-		    ControllerGradingSystem.performReadSpecificPost(selectedPost);	
+		   // ControllerGradingSystem.performReadSpecificPost(selectedPost);	
 		});
 		
-		replyPane = new VBox(8);
-		replyPane.setStyle("-fx-padding: 10 0 0 0;");
-
-		Label replyLabel = new Label("Reply:");
-		replyTextArea = new TextArea();
-		replyTextArea.setPrefHeight(90);
-		replyTextArea.setWrapText(true);
-		replyTextArea.setPromptText("Write your reply...");
-		
-		replyButton = new Button("Reply");
-		replyButton.setDisable(true);     
-		replyPane.setVisible(false);      
-		replyPane.setManaged(false);      
-
-		replyButton.setOnAction(e -> {
-		    if (selectedPost == null) return;
-
-		    String replyText = replyTextArea.getText();
-		    String author = theUser.getUserName();
-		    // basic validation
-		    int parentId = selectedPost.getId();
-		    
-		    String errorMessage = "";
-		    if (theUser.getStudent()) {
-		    	 errorMessage = ControllerGradingSystem.performAddReply(parentId, author, replyText, false);
-		    }
-		    else if (theUser.getStaff()) {
-		    }
-	        // If Model returns error → show it
-	        if (errorMessage != null && !errorMessage.isBlank()) {
-	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Cannot Create Post");
-	            alert.setHeaderText(null);
-	            alert.setContentText(errorMessage);
-	            alert.showAndWait();
-	            return;
-	        }
-	        
-	        ControllerGradingSystem.performReadSpecificPost(selectedPost);
-
-		    // For now just clear input and show success
-		    replyTextArea.clear();
-		    Alert ok = new Alert(AlertType.INFORMATION);
-		    ok.setTitle("Reply Posted");
-		    ok.setHeaderText(null);
-		    ok.setContentText("Your reply was posted.");
-		    ok.showAndWait();
-		});
-		
-		
-
-		detailPane.getChildren().add(replyPane);
 		// GUI Area 3
 		
 		setupButtonUI(button_Return, "Dialog", 18, 250, Pos.CENTER, 20, 540);
@@ -369,7 +271,7 @@ public class ViewGradingSystem {
         	    label_PageTitle, label_UserDetails, line_Separator1,
 
         	    line_Separator4, button_Logout, button_Quit, button_Return,
-        	    button_New_Assignment, postListView, detailPane,
+        	    button_New_Assignment, studentListView, detailPane,
 
         	    detailScrollPane 
         	);
@@ -421,12 +323,11 @@ public class ViewGradingSystem {
 	}
 	
 	/**
-	 * Replaces the contents of the forum post list view with the provided posts.
-	 *
-	 * @param newPosts the posts to display in the list view
+	 * Update the list view to have all the student
+	 * @param studentUsernames a List of string contains all the student's username
 	 */
-	public static void updatingList(List<Post> newPosts) {
-		postListView.getItems().setAll(newPosts);
+	public static void updatingList(List<String> studentUsernames) {
+		studentListView.getItems().setAll(studentUsernames);
 	}
 	
 	/**
@@ -437,72 +338,11 @@ public class ViewGradingSystem {
 	 *
 	 * @param selectedPost the post whose details should be shown
 	 */
-	protected static void displayPostDetails(Post selectedPost) {
+	protected static void displayPostDetails(String studentUsername) {
 
 	    if (selectedPost == null) return;
+	    //TODO: add view 
 
-	    detailThread.setText("Thread: " + selectedPost.getThread());;
-	    detailTitle.setText("Title: " + selectedPost.getTitle());
-	    detailAuthor.setText("Author: " + selectedPost.getAuthor());
-	    detailContent.setText("Content: " + selectedPost.getContent());
-
-	    // Enable edit/delete only if current user is author
-	    boolean isOwner = (theUser != null)
-	            && (selectedPost.getAuthor() != null)
-	            && selectedPost.getAuthor().equals(theUser.getUserName());
-
-	    boolean isDeleted = selectedPost.isDeleted();
-
-	    editPostButton.setDisable(!isOwner || isDeleted);
-	    deletePostButton.setDisable(!isOwner || isDeleted);
-	    
-	    
-	    
-	    replyButton.setDisable(isDeleted);
-	    replyTextArea.setDisable(isDeleted);
-
-	    // Clear old replies
-	    repliesBox.getChildren().clear();
-
-	    // Load replies
-	    List<Reply> replies = ModelGradingSytem.getRepliesByPostId(theUser, selectedPost.getId());
-	    //unreadReplies = ModelGradingSytem.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
-	    
-
-//	    for (Reply r : ( unreadState? unreadReplies: replies ) ) {
-//
-//	        Label replyLabel = new Label(r.getAuthor() + ": " + r.getContent());
-//	        replyLabel.setWrapText(true);
-//	        replyLabel.setPickOnBounds(true); // helps clicking
-//	        
-//	        // if Unread, tags at unread
-//	        if (unreadState || !r.hadRead(theUser.getUserName()))
-//	        	replyLabel.setText("[UNREAD] " + replyLabel.getText());
-//
-//	        // TEMP: attach menu to EVERY reply so you can test it works
-//	        ContextMenu menu = new ContextMenu();
-//
-//	        MenuItem editItem = new MenuItem("Edit");
-//	        editItem.setOnAction(e -> {
-//	            ControllerGradingSystem.performEditReply(r);  // should open your edit window
-//	        });
-//
-//	        MenuItem deleteItem = new MenuItem("Delete");
-//	        deleteItem.setOnAction(e -> {
-//	        	ControllerGradingSystem.performDeleteReply(r); // should open confirm + delete
-//	        });
-//
-//	        menu.getItems().addAll(editItem, deleteItem);
-//	        replyLabel.setContextMenu(menu);
-//
-//	        repliesBox.getChildren().add(replyLabel);
-//	    }
-	    
-	    // Enable reply UI
-	    replyPane.setVisible(true);
-	    replyPane.setManaged(true);
-	    replyButton.setDisable(isDeleted);
-	    replyTextArea.setDisable(isDeleted);
 	}	
 	
 	/**
@@ -517,10 +357,10 @@ public class ViewGradingSystem {
 
 	    Scene addScene = new Scene(addRoot, 560, 640);
 
-	    Label titleLabel = new Label("Create a New Post");
+	    Label titleLabel = new Label("Create Assignment");
 	    titleLabel.setFont(Font.font("Arial", 20));
 
-	    Label labelTitle = new Label("Title:");
+	    Label labelTitle = new Label("Title: ");
 	    labelTitle.setFont(Font.font("Arial", 14));
 
 	    TextField tfTitle = new TextField();
@@ -529,14 +369,14 @@ public class ViewGradingSystem {
 	    
 	    // Making changes while typing
 	    
-	    Label labelContent = new Label("Content:");
+	    Label labelContent = new Label("Content: ");
 	    labelContent.setFont(Font.font("Arial", 14));
 
 	    TextArea taContent = new TextArea();
 	    taContent.setPrefWidth(520);
 	    taContent.setPrefHeight(180);
 	    taContent.setWrapText(true);
-	    taContent.setPromptText("Write your post here...");
+	    taContent.setPromptText("Write your assignment content here...");
 	    
 	    // Max Score field 
 	    Label labelMaxScore = new Label("Max Score: ");
@@ -611,111 +451,111 @@ public class ViewGradingSystem {
 	 * @param post the post to edit
 	 */
 	protected static void showEditPostWindow(Post post) {
-	    Stage editStage = new Stage();
-	    editStage.setTitle("Edit Post");
+	   // Stage editStage = new Stage();
+	   // editStage.setTitle("Edit Post");
 
-	    Pane editRoot = new Pane();
-	    Scene editScene = new Scene(editRoot, 520, 420);
+	   // Pane editRoot = new Pane();
+	   // Scene editScene = new Scene(editRoot, 520, 420);
 
-	    Label titleLabel = new Label("Edit Post");
-	    titleLabel.setFont(Font.font("Arial", 20));
-	    titleLabel.setLayoutX(20);
-	    titleLabel.setLayoutY(15);
+	   // Label titleLabel = new Label("Edit Post");
+	   // titleLabel.setFont(Font.font("Arial", 20));
+	   // titleLabel.setLayoutX(20);
+	   // titleLabel.setLayoutY(15);
 
-	    Label authorLabel = new Label("Editing as: " + (theUser == null ? "" : theUser.getUserName()));
-	    authorLabel.setFont(Font.font("Arial", 14));
-	    authorLabel.setLayoutX(20);
-	    authorLabel.setLayoutY(55);
+	   // Label authorLabel = new Label("Editing as: " + (theUser == null ? "" : theUser.getUserName()));
+	   // authorLabel.setFont(Font.font("Arial", 14));
+	   // authorLabel.setLayoutX(20);
+	   // authorLabel.setLayoutY(55);
 
-	    HBox threadContainer = new HBox();
-	    threadContainer.setLayoutX(20);
-	    threadContainer.setLayoutY(80);
-	    threadContainer.setAlignment(Pos.CENTER);
-	    threadContainer.setSpacing(10);
-	    
-	    Label threadLabel = new Label("Thread:");
-	    threadLabel.setFont(Font.font("Arial"));
-	    
-	    ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
-	    threadChoiceBox.getItems().addAll(ModelGradingSytem.getAllThreads());
-	    threadChoiceBox.setValue(post.getThread());
-	    
-	    threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
-	    
-	    Label labelTitle = new Label("Title:");
-	    labelTitle.setLayoutX(20);
-	    labelTitle.setLayoutY(110);
+	   // HBox threadContainer = new HBox();
+	   // threadContainer.setLayoutX(20);
+	   // threadContainer.setLayoutY(80);
+	   // threadContainer.setAlignment(Pos.CENTER);
+	   // threadContainer.setSpacing(10);
+	   // 
+	   // Label threadLabel = new Label("Thread:");
+	   // threadLabel.setFont(Font.font("Arial"));
+	   // 
+	   // ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
+	   // threadChoiceBox.getItems().addAll(ModelGradingSytem.getAllThreads());
+	   // threadChoiceBox.setValue(post.getThread());
+	   // 
+	   // threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
+	   // 
+	   // Label labelTitle = new Label("Title:");
+	   // labelTitle.setLayoutX(20);
+	   // labelTitle.setLayoutY(110);
 
-	    TextField tfTitle = new TextField(post.getTitle());
-	    tfTitle.setLayoutX(20);
-	    tfTitle.setLayoutY(135);
-	    tfTitle.setPrefWidth(480);
+	   // TextField tfTitle = new TextField(post.getTitle());
+	   // tfTitle.setLayoutX(20);
+	   // tfTitle.setLayoutY(135);
+	   // tfTitle.setPrefWidth(480);
 
-	    Label labelContent = new Label("Content:");
-	    labelContent.setLayoutX(20);
-	    labelContent.setLayoutY(175);
+	   // Label labelContent = new Label("Content:");
+	   // labelContent.setLayoutX(20);
+	   // labelContent.setLayoutY(175);
 
-	    TextArea taContent = new TextArea(post.getContent());
-	    taContent.setLayoutX(20);
-	    taContent.setLayoutY(200);
-	    taContent.setPrefWidth(480);
-	    taContent.setPrefHeight(160);
-	    taContent.setWrapText(true);
+	   // TextArea taContent = new TextArea(post.getContent());
+	   // taContent.setLayoutX(20);
+	   // taContent.setLayoutY(200);
+	   // taContent.setPrefWidth(480);
+	   // taContent.setPrefHeight(160);
+	   // taContent.setWrapText(true);
 
-	    Button btnSave = new Button("Save");
-	    Button btnCancel = new Button("Cancel");
+	   // Button btnSave = new Button("Save");
+	   // Button btnCancel = new Button("Cancel");
 
-	    setupButtonUI(btnSave, "Dialog", 16, 160, Pos.CENTER, 340, 375);
-	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 160, 375);
+	   // setupButtonUI(btnSave, "Dialog", 16, 160, Pos.CENTER, 340, 375);
+	   // setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 160, 375);
 
-	    btnCancel.setOnAction(e -> editStage.close());
+	   // btnCancel.setOnAction(e -> editStage.close());
 
-	    btnSave.setOnAction(e -> {
-	    	String newThread = threadChoiceBox.getValue();
-	        String newTitle = tfTitle.getText();
-	        String newContent = taContent.getText();
-	        
-	        // You can rename this to match your actual ModelGradingSytem method
-	        String errorMessage = ModelGradingSytem.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
-	        System.out.println(errorMessage);
-	        if (errorMessage != null && !errorMessage.isBlank()) {
-	            Alert alert = new Alert(AlertType.ERROR);
-	            alert.setTitle("Cannot Update Post");
-	            alert.setHeaderText(null);
-	            alert.setContentText(errorMessage);
-	            alert.showAndWait();
-	            return;
-	        }
+	   // btnSave.setOnAction(e -> {
+	   // 	String newThread = threadChoiceBox.getValue();
+	   //     String newTitle = tfTitle.getText();
+	   //     String newContent = taContent.getText();
+	   //     
+	   //     // You can rename this to match your actual ModelGradingSytem method
+	   //     String errorMessage = ModelGradingSytem.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
+	   //     System.out.println(errorMessage);
+	   //     if (errorMessage != null && !errorMessage.isBlank()) {
+	   //         Alert alert = new Alert(AlertType.ERROR);
+	   //         alert.setTitle("Cannot Update Post");
+	   //         alert.setHeaderText(null);
+	    //        alert.setContentText(errorMessage);
+	    //        alert.showAndWait();
+	    //        return;
+	    //    }
 
-	        // Refresh list + keep selection updated
-	        updatingList(ModelGradingSytem.getPostList());
+	    //    // Refresh list + keep selection updated
+	    //    updatingList(ModelGradingSytem.getStudentList());
 
-	        // Re-select the edited post if still present
-	        Post refreshed = postListView.getItems().stream()
-	                .filter(p -> p.getId() == post.getId())
-	                .findFirst()
-	                .orElse(null);
+	    //    // Re-select the edited post if still present
+	    //    Post refreshed = studentListView.getItems().stream()
+	    //            .filter(p -> p.getId() == post.getId())
+	    //            .findFirst()
+	    //            .orElse(null);
 
-	        selectedPost = refreshed;
-	        if (refreshed != null) postListView.getSelectionModel().select(refreshed);
+	    //    selectedPost = refreshed;
+	    //    if (refreshed != null) studentListView.getSelectionModel().select(refreshed);
 
-	        // Update detail display
-	        if (theView != null) ControllerGradingSystem.performReadSpecificPost(post);
+	    //    // Update detail display
+	    //    if (theView != null) ControllerGradingSystem.performReadSpecificPost(post);
 
-	        editStage.close();
-	    });
+	    //    editStage.close();
+	    //});
 
-	    editRoot.getChildren().addAll(
-	            titleLabel, authorLabel,
-	            labelTitle, tfTitle,
-	            labelContent, taContent,
-	            btnCancel, btnSave,
-	            threadContainer
-	    );
+	    //editRoot.getChildren().addAll(
+	    //        titleLabel, authorLabel,
+	    //        labelTitle, tfTitle,
+	    //        labelContent, taContent,
+	    //        btnCancel, btnSave,
+	    //        threadContainer
+	    //);
 
-	    editStage.setScene(editScene);
-	    editStage.initOwner(theStage);
-	    editStage.show();
+	    //editStage.setScene(editScene);
+	    //editStage.initOwner(theStage);
+	    //editStage.show();
 	}
 	
 	/**
@@ -749,11 +589,11 @@ public class ViewGradingSystem {
 	            }
 
 	            // Refresh list
-	            updatingList(ModelGradingSytem.getPostList());
+	            updatingList(ModelGradingSytem.getStudentList());
 
 	            // Clear selection + detail UI
 	            /*
-	            postListView.getSelectionModel().clearSelection();
+	            studentListView.getSelectionModel().clearSelection();
 	            selectedPost = null;
 
 	            detailTitle.setText("Title: ");
@@ -762,32 +602,32 @@ public class ViewGradingSystem {
 	            */
 	            //updatingList(ModelGradingSytem.getPostList());
 
-	            Post refreshed = postListView.getItems().stream()
-	                    .filter(p -> p.getId() == post.getId())
-	                    .findFirst()
-	                    .orElse(null);
+	       //     Post refreshed = studentListView.getItems().stream()
+	       //             .filter(p -> p.getId() == post.getId())
+	       //             .findFirst()
+	       //             .orElse(null);
 
-	            selectedPost = refreshed;
+	       //     selectedPost = refreshed;
 
-	            if (refreshed != null) {
-	                postListView.getSelectionModel().select(refreshed);
-	                if (theView != null) ControllerGradingSystem.performReadSpecificPost(refreshed);
-	            } else {
-	                postListView.getSelectionModel().clearSelection();
-	                selectedPost = null;
+	       //     if (refreshed != null) {
+	       //         studentListView.getSelectionModel().select(refreshed);
+	       //         if (theView != null) ControllerGradingSystem.performReadSpecificPost(refreshed);
+	       //     } else {
+	       //         studentListView.getSelectionModel().clearSelection();
+	       //         selectedPost = null;
 
-	                detailTitle.setText("Title: ");
-	                detailAuthor.setText("Author: ");
-	                detailContent.setText("Content: ");
-	                repliesBox.getChildren().clear();
+	       //         detailTitle.setText("Title: ");
+	       //         detailAuthor.setText("Author: ");
+	       //         detailContent.setText("Content: ");
+	       //         repliesBox.getChildren().clear();
 
-	                replyPane.setVisible(false);
-	                replyPane.setManaged(false);
-	                replyButton.setDisable(true);
+	       //         replyPane.setVisible(false);
+	       //         replyPane.setManaged(false);
+	       //         replyButton.setDisable(true);
 
-	                editPostButton.setDisable(true);
-	                deletePostButton.setDisable(true);
-	            }
+	       //         editPostButton.setDisable(true);
+	       //         deletePostButton.setDisable(true);
+	       //     }
 	            
 	            /*
 	            repliesBox.getChildren().clear();
@@ -861,7 +701,7 @@ public class ViewGradingSystem {
 	        }
 
 	        // refresh current post details (reload replies)
-	        ControllerGradingSystem.performReadSpecificPost(selectedPost);
+	//        ControllerGradingSystem.performReadSpecificPost(selectedPost);
 
 	        editStage.close();
 	    });
@@ -900,7 +740,7 @@ public class ViewGradingSystem {
 	            }
 
 	            // refresh UI
-	            ControllerGradingSystem.performReadSpecificPost(selectedPost);
+	   //         ControllerGradingSystem.performReadSpecificPost(selectedPost);
 	        }
 	    });
 	}
