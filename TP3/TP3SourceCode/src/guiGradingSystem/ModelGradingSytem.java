@@ -31,52 +31,6 @@ public class ModelGradingSytem {
 		
 	}
 	static {
-
-	    // Sample THREADS
-	    addThread("General");
-	    addThread("Lectures");
-	    addThread("Sections");
-	    addThread("Problem Sets");
-	    addThread("Assignments");
-	    addThread("Social");
-	    
-	    // Sample POSTS
-	    addPost("Welcome", "Welcome to the CSE 360 discussion forum!", "Admin");
-
-	    addPost("Java OOP Question",
-	            "Can someone explain inheritance vs composition?",
-	            "Alice");
-
-	    addPost("Binary Search Confusion",
-	            "Why is binary search O(log n)?",
-	            "Bob");
-
-	    addPost("Database Normalization",
-	            "What is 3NF and why is it important?",
-	            "Charlie");
-
-	    addPost("Git Merge Conflict",
-	            "How do you resolve a merge conflict safely?",
-	            "David");
-
-	    addPost("Recursion Depth",
-	            "Why do I get StackOverflowError in Java?",
-	            "Emma");
-
-	    // Sample REPLIES
-
-	    addReply("Inheritance models an 'is-a' relationship.", "Admin", 1);
-	    addReply("Composition is usually more flexible.", "Alice", 1);
-
-	    addReply("Each step halves the search space.", "Charlie", 2);
-	    addReply("That’s why it grows logarithmically.", "Admin", 2);
-
-	    addReply("3NF removes transitive dependency.", "Emma", 3);
-
-	    addReply("Always pull before pushing changes.", "Bob", 4);
-	    addReply("Use git status to inspect conflicts.", "Admin", 4);
-
-	    addReply("Infinite recursion without base case causes it.", "Alice", 5);
 	    
 	    
 	    newAssignment("Assignment 1", "this", 100, 25);
@@ -475,52 +429,7 @@ public class ModelGradingSytem {
 	 * <p>Reset to the default state of the forum</p>
 	 */
 	public static void setUpDefaultForum() {
-		// Sample THREADS
-	    addThread("General");
-	    addThread("Lectures");
-	    addThread("Sections");
-	    addThread("Problem Sets");
-	    addThread("Assignments");
-	    addThread("Social");
-	    
-	    // Sample POSTS
-	    addPost("Welcome", "Welcome to the CSE 360 discussion forum!", "Admin");
-
-	    addPost("Java OOP Question",
-	            "Can someone explain inheritance vs composition?",
-	            "Alice");
-
-	    addPost("Binary Search Confusion",
-	            "Why is binary search O(log n)?",
-	            "Bob");
-
-	    addPost("Database Normalization",
-	            "What is 3NF and why is it important?",
-	            "Charlie");
-
-	    addPost("Git Merge Conflict",
-	            "How do you resolve a merge conflict safely?",
-	            "David");
-
-	    addPost("Recursion Depth",
-	            "Why do I get StackOverflowError in Java?",
-	            "Emma");
-
-	    // Sample REPLIES
-
-	    addReply("Inheritance models an 'is-a' relationship.", "Admin", 1);
-	    addReply("Composition is usually more flexible.", "Alice", 1);
-
-	    addReply("Each step halves the search space.", "Charlie", 2);
-	    addReply("That’s why it grows logarithmically.", "Admin", 2);
-
-	    addReply("3NF removes transitive dependency.", "Emma", 3);
-
-	    addReply("Always pull before pushing changes.", "Bob", 4);
-	    addReply("Use git status to inspect conflicts.", "Admin", 4);
-
-	    addReply("Infinite recursion without base case causes it.", "Alice", 5);
-	}
+	}	
 	
 	/**
 	 * Return a list of unread posts given the username
@@ -550,5 +459,27 @@ public class ModelGradingSytem {
 		for (Reply reply: getRepliesByPostId(postId)) {
 			reply.markAsRead(ViewGradingSystem.theUser.getUserName());
 		}
+	}
+	
+	/**
+	 * Get a list of assignments
+	 * @return List of Assignment 
+	 */
+	public static List<Assignment> getAssignmentList() {
+		return gradeSystem.getAssnList();
+	}
+	
+	/**
+	 * Check the total weight if it exceed 100% or not 
+	 * @return return an empty string if it is exactly 100 else return helpful message
+	 */
+	public static String checkTotalWeight() {
+		if (gradeSystem.getTotalWeight() != 100) {
+			if (gradeSystem.getTotalWeight() < 100) {
+				return "The total weight is less than 100"; 
+			}
+			return "The total weight is greater than 100";
+		}
+		return "";
 	}
 }

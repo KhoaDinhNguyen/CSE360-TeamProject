@@ -38,6 +38,14 @@ public class GradingSystem {
 		return AssnList.get(index);
 	}
 	
+	/** 
+	 * Get the assignment list 
+	 * @return an List contain all the assignment 
+	 */
+	public ArrayList<Assignment> getAssnList() {
+		return AssnList;
+	}
+	
 	/**
 	 * Return the number of assignment 
 	 * @return an integer

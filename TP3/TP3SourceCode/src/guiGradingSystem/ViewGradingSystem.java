@@ -18,12 +18,14 @@ import entityClasses.PostStore;
 import entityClasses.Reply;
 import entityClasses.ThreadStore;
 import entityClasses.User;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
@@ -95,7 +97,7 @@ public class ViewGradingSystem {
 	private static Label repliesLabel;
 
 	// Track which post is selected
-	private static String selectedPost;
+	private static String selectedStudent;
 	
 	/**
 	 * This is a separator and it is used to partition the GUI for various tasks
@@ -211,7 +213,9 @@ public class ViewGradingSystem {
 		// Create Post button
 		button_New_Assignment = new Button("Create Assignment");
 		setupButtonUI(button_New_Assignment, "Dialog", 13, 75, Pos.CENTER, 225, 55);
-		button_New_Assignment.setOnAction((_) -> { ControllerGradingSystem.performNewAssignment(); });
+		button_New_Assignment.setOnAction((_) -> { 
+			ControllerGradingSystem.performNewAssignment(); 
+		});
 		
 		studentListView.setFixedCellSize(50);
 		
@@ -235,19 +239,19 @@ public class ViewGradingSystem {
 		detailScrollPane.setStyle("-fx-padding: 15; -fx-border-color: #cccccc; -fx-border-width: 1;");
 		detailScrollPane.setFitToWidth(true);
 		
-		detailTitle = new Label("Title: ");
+		detailTitle = new Label(" ");
 		detailTitle.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
 		
 		studentListView.setOnMouseClicked(event -> {
-		    selectedPost = studentListView.getSelectionModel().getSelectedItem();
+		    selectedStudent = studentListView.getSelectionModel().getSelectedItem();
+		    
+		    displayStudentDetails(selectedStudent);
 		    
 		    // post selected, mark the user as read
-//		    updatingList(ModelGradingSytem.getPostList());
+		    updatingList(ModelGradingSytem.getStudentList());
 		    
-		    unreadState = false;
 
-
-		   // ControllerGradingSystem.performReadSpecificPost(selectedPost);	
+		   // ControllerGradingSystem.performReadSpecificPost(selectedStudent);	
 		});
 		
 		// GUI Area 3
@@ -331,18 +335,71 @@ public class ViewGradingSystem {
 	}
 	
 	/**
-	 * Displays the details of the selected post and loads its associated replies.
-	 *
-	 * <p>This method also updates the enabled or disabled state of edit, delete,
-	 * and reply controls based on ownership and deletion status.</p>
-	 *
-	 * @param selectedPost the post whose details should be shown
+	 * This methods display all the assignment with the selected student username
+	 * @param studentUsername a String that contains the selected student's username
 	 */
-	protected static void displayPostDetails(String studentUsername) {
+	protected static void displayStudentDetails(String studentUsername) {
+		
+	    if (selectedStudent == null) return;
+	    
+	    // flush out detail pane
+	    detailPane.getChildren().clear();
+	    
+	    VBox assignmentListVBox = new VBox();
+	    
+	    List<Assignment> assnList = ModelGradingSytem.getAssignmentList();
 
-	    if (selectedPost == null) return;
-	    //TODO: add view 
+	    for (Assignment assn: assnList) {
+	    	//get the current feedback of the assignment
+	    	int score = assn.getFeedback(studentUsername).getScore();
+	    	String comment = assn.getFeedback(studentUsername).getComment();
 
+	    	// create a HBox to hold assignment info
+	    	HBox assignmentHbox = new HBox();
+	    	
+	    	assignmentHbox.setPadding(new Insets(0, 15, 15, 15));;
+	    	
+	    	// get all the component to display a assignment detail
+	    	Label titleLabel = new Label(assn.getTitle());
+	    	TextField tfScore = new TextField("" + score);
+	    	tfScore.setPrefWidth(50);
+
+	    	Label seperatorLabel = new Label("/");
+	    	TextField tfMaxScore = new TextField("" + assn.getMaxScore());
+	    	tfMaxScore.setPrefWidth(50);
+
+	    	Label weightLabel = new Label("Weight (%): ");
+	    	TextField tfWeight = new TextField("" + assn.getWeight());
+	    	tfWeight.setPrefWidth(50);
+	    	Label commentLabel = new Label("Comment: ");
+	    	TextField tfComment = new TextField(comment); 
+	    	
+	    	// add them to the Hbox and add the Hbox to Vbox
+	    	assignmentHbox.getChildren().addAll(
+	    			titleLabel, 
+	    			tfScore, seperatorLabel, 
+	    			tfMaxScore, 
+	    			weightLabel, tfWeight,
+	    			commentLabel, tfComment
+	    			);
+	    	assignmentListVBox.getChildren().addAll(assignmentHbox);
+	    }
+	    
+	    // add button to update grade
+	    Button button_Update = new Button("Update");
+	    assignmentListVBox.getChildren().add(button_Update);
+	    
+	    // add message area to annouce helpful error messages
+	    Label msgLabel = new Label("Msg Error Here");
+	    msgLabel.setTextFill(Color.RED);
+	    
+
+	    assignmentListVBox.getChildren().add(msgLabel);
+	    
+	    
+	   
+	    // Add the Vbox to the detail pane
+	    detailPane.getChildren().add(assignmentListVBox);
 	}	
 	
 	/**
@@ -426,6 +483,8 @@ public class ViewGradingSystem {
 	            return;
 	        }
 
+	        // refresh and close
+	        displayStudentDetails(selectedStudent);
 	        addStage.close();
 	    });
 	    
@@ -536,7 +595,7 @@ public class ViewGradingSystem {
 	    //            .findFirst()
 	    //            .orElse(null);
 
-	    //    selectedPost = refreshed;
+	    //    selectedStudent = refreshed;
 	    //    if (refreshed != null) studentListView.getSelectionModel().select(refreshed);
 
 	    //    // Update detail display
@@ -594,7 +653,7 @@ public class ViewGradingSystem {
 	            // Clear selection + detail UI
 	            /*
 	            studentListView.getSelectionModel().clearSelection();
-	            selectedPost = null;
+	            selectedStudent = null;
 
 	            detailTitle.setText("Title: ");
 	            detailAuthor.setText("Author: ");
@@ -607,14 +666,14 @@ public class ViewGradingSystem {
 	       //             .findFirst()
 	       //             .orElse(null);
 
-	       //     selectedPost = refreshed;
+	       //     selectedStudent = refreshed;
 
 	       //     if (refreshed != null) {
 	       //         studentListView.getSelectionModel().select(refreshed);
 	       //         if (theView != null) ControllerGradingSystem.performReadSpecificPost(refreshed);
 	       //     } else {
 	       //         studentListView.getSelectionModel().clearSelection();
-	       //         selectedPost = null;
+	       //         selectedStudent = null;
 
 	       //         detailTitle.setText("Title: ");
 	       //         detailAuthor.setText("Author: ");
@@ -701,7 +760,7 @@ public class ViewGradingSystem {
 	        }
 
 	        // refresh current post details (reload replies)
-	//        ControllerGradingSystem.performReadSpecificPost(selectedPost);
+	//        ControllerGradingSystem.performReadSpecificPost(selectedStudent);
 
 	        editStage.close();
 	    });
@@ -740,7 +799,7 @@ public class ViewGradingSystem {
 	            }
 
 	            // refresh UI
-	   //         ControllerGradingSystem.performReadSpecificPost(selectedPost);
+	   //         ControllerGradingSystem.performReadSpecificPost(selectedStudent);
 	        }
 	    });
 	}
