@@ -174,7 +174,7 @@ public class ViewStaffHome {
         // GUI Area 2
         
         
-        setupButtonUI(button_AdminRequests, "Dialog", 18, 250, Pos.CENTER, 20, 240);
+        setupButtonUI(button_AdminRequests, "Dialog", 18, 250, Pos.CENTER, 20, 290);
         button_AdminRequests.setOnAction((_) -> { ControllerStaffHome.performAdminRequests(); });
 				
 		setupButtonUI(button_Forum, "Dialog",18, 250, Pos.CENTER, 20, 140 );
@@ -186,10 +186,10 @@ public class ViewStaffHome {
 		setupButtonUI(button_Grader, "Dialog",18, 250, Pos.CENTER, 20, 240 );
 		button_Grader.setOnAction((_) -> {ControllerStaffHome.performGrader(); });
 		
-		setupButtonUI(button_DM, "Dialog",18, 250, Pos.CENTER, 20, 340 );
+		setupButtonUI(button_DM, "Dialog",18, 250, Pos.CENTER, 20, 390 );
 		
 		button_DM.setOnAction((_) -> {ControllerStaffHome.performDM(); });
-		setupButtonUI(button_Reviewing_Discussion_Dashboard, "Dialog", 18, 250, Pos.CENTER, 20, 290);
+		setupButtonUI(button_Reviewing_Discussion_Dashboard, "Dialog", 18, 250, Pos.CENTER, 20, 340);
 		button_Reviewing_Discussion_Dashboard.setOnAction((_)-> {ControllerStaffHome.performReviewingDiscussionDashboard(); ;});
 		
 		
