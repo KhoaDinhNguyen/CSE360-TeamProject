@@ -23,10 +23,19 @@ public class ThreadStore {
 		this.ThreadList.add(name);
 	}
 	
+	/**
+	 * <p>Delete thread from the database</p>
+	 * @param name is a String representing deleted thread
+	 */
 	public void deleteThread(String name) {
 		this.ThreadList.remove(name);
 	}
 	
+	/**
+	 * <p>Edit thread from the database</p>
+	 * @param oldName is a String representing old thread's name
+	 * @param newName is a String representing new thread's name
+	 */
 	public void editThread(String oldName, String newName) {
 		for (int i = 0; i < ThreadList.size(); ++i) {
 			if(ThreadList.get(i).compareTo(oldName) == 0) {

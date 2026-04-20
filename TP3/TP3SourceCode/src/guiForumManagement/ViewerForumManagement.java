@@ -34,7 +34,9 @@ import entityClasses.User;
 import guiStaffHome.ControllerStaffHome;
 import guiStudentHome.ControllerStudentHome;
 
-
+/**
+ * {@code ViewerForumManagement} is used to control the UI in forum management
+ */
 public class ViewerForumManagement {
 	
 	/*-*******************************************************************************************
@@ -53,24 +55,24 @@ public class ViewerForumManagement {
 	
 	// GUI Area 1: It informs the user about the purpose of this page, whose account is being used,
 	// and a button to allow this user to update the account settings
-	protected static Label label_PageTitle = new Label();
-	protected static Label label_UserDetails = new Label();
+	private static Label label_PageTitle = new Label();
+	private static Label label_UserDetails = new Label();
 		
 	// This is a separator and it is used to partition the GUI for various tasks
-	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
+	private static Line line_Separator1 = new Line(20, 95, width-20, 95);
 	
 	// GUI ARea 2: This is a stub, so there are no widgets here.  For an actual role page, this are
 	// would contain the widgets needed for the user to play the assigned role.
-	protected static Button button_Thread_Management = new Button("Thread Management");
+	private static Button button_Thread_Management = new Button("Thread Management");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
-	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
+	private static Line line_Separator4 = new Line(20, 525, width-20,525);
 	
 	// GUI Area 3: This is last of the GUI areas.  It is used for quitting the application and for
 	// logging out.
-	protected static Button button_Return = new Button("Return");
-	protected static Button button_Logout = new Button("Logout");
-	protected static Button button_Quit = new Button("Quit");
+	private static Button button_Return = new Button("Return");
+	private static Button button_Logout = new Button("Logout");
+	private static Button button_Quit = new Button("Quit");
 	
 	// This is the end of the GUI objects for the page.
 	
@@ -84,20 +86,33 @@ public class ViewerForumManagement {
 	private static TableView<String> threadList = null;
 
 	private static ObservableList<String> threadData;
-	
-	protected static Stage theStage;			// The Stage that JavaFX has established for us	
-	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets
-	protected static User theUser;				// The current logged in User
-	
+	/**
+	 * The Stage that JavaFX has established for us	
+	 */
+	protected static Stage theStage;
+	/**
+	 * The Pane that holds all the GUI widgets
+	 */
+	protected static Pane theRootPane;
+	/**
+	 * The current logged in User
+	 */
+	protected static User theUser;
+
 	private static Scene scene;		// The shared Scene each invocation populates
-	protected static final int theRole = 3;		// Admin: 1; Role1: 2; Role2: 3
+	private static final int theRole = 3;		// Admin: 1; Role1: 2; Role2: 3
 	
 	/*-*******************************************************************************************
 	
 	Constructors
 	
 	 */
-
+	
+	/**
+	 * Display the UI for forum management
+	 * @param ps the stage used to display the forum scene
+	 * @param user the user currently viewing the forum
+	 */
 	public static void displayForumManagement(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user
@@ -121,14 +136,7 @@ public class ViewerForumManagement {
 	}
 	
 	/**********
-	 * <p> Method: ViewStaffHome() </p>
-	 * 
-	 * <p> Description: This method initializes all the elements of the graphical user interface.
-	 * This method determines the location, size, font, color, and change and event handlers for
-	 * each GUI object. </p>
-	 * 
-	 * This is a singleton and is only performed once.  Subsequent uses fill in the changeable
-	 * fields using the displayRole2Home method.</p>
+	 * <p> Create forum management view </p>
 	 * 
 	 */
 	private ViewerForumManagement() {
@@ -155,13 +163,13 @@ public class ViewerForumManagement {
 		
 		// GUI Area 3
 		setupButtonUI(button_Return, "Dialog", 18, 250, Pos.CENTER, 20, 540);
-		button_Return.setOnAction((_) -> { ControllerStaffHome.performReturn(); });
+		button_Return.setOnAction((_) -> { ControllerForumManagement.performReturn(); });
 		
 	    setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 300, 540);
-//	    button_Logout.setOnAction((_) -> {ControllerStaffHome.performLogout(); });
+	    button_Logout.setOnAction((_) -> {ControllerForumManagement.performLogout(); });
 	    
 	    setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 580, 540);
-//	    button_Quit.setOnAction((_) -> {ControllerStaffHome.performQuit(); });
+	    button_Quit.setOnAction((_) -> {ControllerForumManagement.performQuit(); });
 	
 		// This is the end of the GUI initialization code
 		
@@ -220,23 +228,34 @@ public class ViewerForumManagement {
 		b.setLayoutY(y);		
 	}
 	
+	/**
+	 * Display thread management view
+	 */
 	protected static void displayThreadManagement() {
 		double stageWidth = width - 50, stageHeight = height - 20;
 
+		// New stage
 	    Stage addStage = new Stage();
 	    addStage.setTitle("Thread Management");
 	    
+	    // New vertical window (Root)
 	    VBox addRoot = new VBox();
 	    addRoot.setPrefSize(stageWidth, stageHeight);
 	    
+	    // The window title
 	    Label label_Title = new Label("Thread Management");
 	    setupLabelUI(label_Title, "Dialog", 24, stageWidth, Pos.CENTER, 0, 100);
 	    
+	    // Inside root window, have a horizontal container
 	    HBox splitWindow = new HBox(15);
 	
+	    // Left-hand side container is vertical
 	    VBox instructionRoot = new VBox(10);
+	    
+	    // Right-hand side container is horizontal
 	    HBox threadListRoot = new HBox(10);
 	    
+	    // Left-hand side container element
 	    Label label_Instruction = new Label("Instructions");
 	    label_Instruction.setFont(Font.font("Dialog", FontWeight.BOLD ,20));
 	    
@@ -261,7 +280,7 @@ public class ViewerForumManagement {
 	    instructionRoot.getChildren().addAll(label_Instruction, label_Note_1, label_Note_2);
 	    instructionRoot.setPrefWidth(instructionWidth);
 	    
-	    // Right-hand window
+	    // Right-hand container element
 	    
 	    // Thread Table
 	    threadList = new TableView<>();
@@ -328,8 +347,6 @@ public class ViewerForumManagement {
 	    // Line separator
 	    Line line_Separator = new Line();
 	   	line_Separator.setStrokeWidth(2);
-//		line_Separator.setStartX(0);
-//		line_Separator.setEndX(0);
 		line_Separator.setStartY(0);
 		line_Separator.setEndY(stageHeight - 100);
 	    
@@ -345,6 +362,9 @@ public class ViewerForumManagement {
 	    addStage.show();
 	}
 	
+	/**
+	 * Resets thread data on the table
+	 */
 	protected static void loadThreadData() {
 		if (threadList != null) {
 			ArrayList<String> allThreads = theThreadStore.getAllThreads();
@@ -353,6 +373,14 @@ public class ViewerForumManagement {
 		}
 	}
 	
+	/**
+	 * Display alerts on the window
+	 * @param alertType is the type of alert (CONFORMATION, WARNING, etc..)
+	 * @param title is the title of alert
+	 * @param headerText is the header of alert
+	 * @param message is the main content of alert
+	 * @return ButtonType represents the result of event
+	 */
 	protected static Optional<ButtonType> displayAlert(AlertType alertType, String title, String headerText, String message) {
 		Alert alert = new Alert(alertType);
 

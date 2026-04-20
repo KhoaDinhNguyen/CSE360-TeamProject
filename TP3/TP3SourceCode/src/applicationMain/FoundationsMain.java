@@ -1,7 +1,11 @@
 package applicationMain;
 	
 import java.sql.SQLException;
+import java.util.List;
+
 import database.Database;
+import entityClasses.User;
+import entityClasses.UserStore;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
@@ -75,6 +79,7 @@ public class FoundationsMain extends Application {
 	// application so we do not need to keep passing the reference in parameters to the rest of the
 	// system for other methods that need it can access it.
 	public static Database database = new Database();
+	public static UserStore theUserStore = new UserStore();
     private Alert databaseInUse = new Alert(AlertType.INFORMATION);
 
 	public static int activeHomePage = 0;		// Which role's home page is currently active?
@@ -104,8 +109,17 @@ public class FoundationsMain extends Application {
 		}
 		else
 			// This is not a first use, so set up for the user to log in or create a new account
+		{
 			guiUserLogin.ViewUserLogin.displayUserLogin(theStage);
-		
+			List<String> usernames = database.getUserList();
+			
+			for (int i = 0; i < usernames.size(); ++i) {
+				User user = database.getUserDetails((usernames.get(i)));
+				
+				if (user != null) theUserStore.addUser(user);
+			}
+		}
+		 
 		// With the JavaFX pages set up, this thread of the execution comes to an end.
 	}
 
