@@ -121,14 +121,9 @@ public class ViewGradingSystem {
 	protected static Button button_Quit = new Button("Quit");
 	
 	/**
-	 * Edit button
-	 */
-	private static Button editPostButton = new Button("Edit");
-	
-	/**
 	 * Delete button
 	 */
-	private static Button deletePostButton = new Button("Delete");
+	private static Button button_Delete = new Button("Delete");
 	
 	private static boolean unreadState = false;
 	
@@ -211,7 +206,7 @@ public class ViewGradingSystem {
 		label_UserDetails.setText("User: " + theUser.getUserName());
 		setupLabelUI(label_UserDetails, "Arial", 20, width, Pos.BASELINE_LEFT, 20, 55);
 		
-		// Create Post button
+		// Create Assignment button
 		button_New_Assignment = new Button("Create Assignment");
 		setupButtonUI(button_New_Assignment, "Dialog", 13, 75, Pos.CENTER, 225, 55);
 		button_New_Assignment.setOnAction((_) -> { 
@@ -383,8 +378,13 @@ public class ViewGradingSystem {
 	    			weightLabel, tfWeight,
 	    			commentLabel, tfComment
 	    			);
+
 	    	assignmentListVBox.getChildren().addAll(assignmentHbox);
 	    }
+
+	    Label totalLabel = new Label("Total (%): " + ModelGradingSystem.getTotalScore(studentUsername));
+	    	
+	    assignmentListVBox.getChildren().addAll(totalLabel);
 	    
 	    // add message area to annouce helpful error messages
 	    VBox errMsgVBox = new VBox();
@@ -415,6 +415,10 @@ public class ViewGradingSystem {
 	    		TextField tfMaxScore = (TextField)(assignmentHbox.getChildren().get(3));
 	    		
 	    		errMsg = ModelGradingSystem.setMaxScore(i, Integer.parseInt(tfMaxScore.getText()));
+	    		
+	    		// reset the score field after set max score
+	    		tfScore.setText("" + ModelGradingSystem.getAssignmentList().get(i)
+	    							.getFeedback(studentUsername).getScore());
 
 	    		// if there are err messages put that into the errMsgVBox
 	    		if (errMsg != "") {
@@ -429,8 +433,11 @@ public class ViewGradingSystem {
 	    		if (errMsg != "") {
 	    			errMsgVBox.getChildren().add(new Label(errMsg));
 	    		}
+	    		
+	    		// reload the total label 
+	    		totalLabel.setText("Total (%): " + ModelGradingSystem.getTotalScore(studentUsername));
 	    	}
-
+	    	
 	    	// check total weight
 	    	Label msgWeightLabel = new Label("");
 	    	String errMsg = ModelGradingSystem.checkTotalWeight();
@@ -438,7 +445,6 @@ public class ViewGradingSystem {
 	    	errMsgVBox.getChildren().add(msgWeightLabel);
 
 	    });
-	    
 	   
 	    // check total weight
 	    Label msgWeightLabel = new Label("");
