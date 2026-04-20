@@ -13,12 +13,36 @@ import entityClasses.Reply;
 import entityClasses.ReplyStore;
 import guiForum.ModelForum;
 
+/**
+ * Provides unit tests for the reviewing discussion dashboard model.
+ *
+ * <p>This test class verifies the calculation methods used by
+ * {@link ModelReviewingDiscussionDashboard}, including averages and totals
+ * for posts and replies.</p>
+ */
 class TestingReviewingDiscussionDashboard {
 
+    /**
+     * The post store used for test setup.
+     */
     private PostStore postStore;
+
+    /**
+     * The reply store used for test setup.
+     */
     private ReplyStore replyStore;
+
+    /**
+     * The list of users used in the test cases.
+     */
     private ArrayList<String> users;
 
+    /**
+     * Initializes the test data before each test case.
+     *
+     * <p>This method clears the existing post and reply data, then creates
+     * a fixed set of posts and replies for use in the assertions below.</p>
+     */
     @BeforeEach
     void setUp() {
         postStore = ModelForum.getPostStore();
@@ -81,6 +105,9 @@ class TestingReviewingDiscussionDashboard {
         replyStore.getReplyList().add(r5);
     }
 
+    /**
+     * Tests the average read-post calculation for all students.
+     */
     @Test
     void averageReadPost_allStudents() {
         assertEquals(3.0,
@@ -88,6 +115,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the average read-post calculation for a single student.
+     */
     @Test
     void averageReadPost_singleStudent() {
         assertEquals(4.0,
@@ -95,6 +125,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the average read-replies calculation for all students.
+     */
     @Test
     void averageReadReplies_allStudents() {
         assertEquals(3.5,
@@ -102,6 +135,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the average read-replies calculation for a single student.
+     */
     @Test
     void averageReadReplies_singleStudent() {
         assertEquals(5.0,
@@ -109,6 +145,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the average post-length calculation for all students.
+     */
     @Test
     void averagePostLength_allStudents() {
         assertEquals(18.5,
@@ -116,6 +155,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the average post-length calculation for a single student.
+     */
     @Test
     void averagePostLength_singleStudent() {
         assertEquals(35.0,
@@ -123,6 +165,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the average reply-length calculation for all students.
+     */
     @Test
     void averageReplyLength_allStudents() {
         assertEquals(21.0,
@@ -130,6 +175,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the average reply-length calculation for a single student.
+     */
     @Test
     void averageReplyLength_singleStudent() {
         assertEquals(32.0,
@@ -137,6 +185,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the total number of created posts for all students.
+     */
     @Test
     void numberOfCreatedPost_allStudents() {
         assertEquals(4.0,
@@ -144,6 +195,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the total number of created posts for Alice.
+     */
     @Test
     void numberOfCreatedPost_alice() {
         assertEquals(2.0,
@@ -151,6 +205,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the total number of created replies for all students.
+     */
     @Test
     void numberOfCreatedReply_allStudents() {
         assertEquals(5.0,
@@ -158,6 +215,9 @@ class TestingReviewingDiscussionDashboard {
                 0.0001);
     }
 
+    /**
+     * Tests the total number of created replies for Alice.
+     */
     @Test
     void numberOfCreatedReply_alice() {
         assertEquals(2.0,
