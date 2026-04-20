@@ -56,6 +56,7 @@ public class ViewStudentHome {
 	// would contain the widgets needed for the user to play the assigned role.
 	
 	protected static Button button_Forum = new Button("Forum");
+	protected static Button button_Message = new Button("Direct Message");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
 	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
@@ -169,6 +170,9 @@ public class ViewStudentHome {
 		setupButtonUI(button_Forum, "Dialog",18, 250, Pos.CENTER, 20, 140 );
 		button_Forum.setOnAction((_)-> {ControllerStudentHome.performForum(); });
 		
+		setupButtonUI(button_Message, "Dialog",18, 250, Pos.CENTER, 20, 190 );
+		button_Message.setOnAction((_)-> {ControllerStudentHome.performMessageView(); });
+		
 		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
         button_Logout.setOnAction((_) -> {ControllerStudentHome.performLogout(); });
@@ -184,7 +188,7 @@ public class ViewStudentHome {
 		// Place all of the widget items into the Root Pane's list of children
          theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit, button_Forum);
+	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Message);
 }
 	
 	

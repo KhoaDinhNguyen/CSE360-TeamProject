@@ -59,6 +59,7 @@ public class ViewStaffHome {
 	
 	protected static Button button_Forum = new Button("Forum");
 	protected static Button button_Forum_Management = new Button("Forum Management");
+	protected static Button button_DM = new Button("Direct Message");
 	protected static Button button_Reviewing_Discussion_Dashboard = new Button("Review Discussion Dashboard");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
@@ -173,7 +174,9 @@ public class ViewStaffHome {
 		setupButtonUI(button_Forum_Management, "Dialog",18, 250, Pos.CENTER, 20, 190 );
 		button_Forum_Management.setOnAction((_) -> {ControllerStaffHome.performForumManagement(); });
 		
-		setupButtonUI(button_Reviewing_Discussion_Dashboard, "Dialog", 18, 250, Pos.CENTER, 20, 230);
+		setupButtonUI(button_DM, "Dialog",18, 250, Pos.CENTER, 20, 240 );
+		button_DM.setOnAction((_) -> {ControllerStaffHome.performDM(); });
+		setupButtonUI(button_Reviewing_Discussion_Dashboard, "Dialog", 18, 250, Pos.CENTER, 20, 290);
 		button_Reviewing_Discussion_Dashboard.setOnAction((_)-> {ControllerStaffHome.performReviewingDiscussionDashboard(); ;});
 		
 		
@@ -189,7 +192,7 @@ public class ViewStaffHome {
 		// Place all of the widget items into the Root Pane's list of children
         theRootPane.getChildren().addAll(
 			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management,
+	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management, button_DM,
 	        button_Reviewing_Discussion_Dashboard);
 	}
 	
