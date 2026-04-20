@@ -18,17 +18,39 @@ import org.junit.jupiter.api.Test;
 
 import entityClasses.ThreadStore;
 
-class ModelForumManagementTest {
-
+/**
+ * {@code ModelForumManagementTest} contains all test cases related to forum management
+ */
+public class ModelForumManagementTest {
+	
+	/**
+	 * A constructor of the class but it will not be used
+	 */
+	public ModelForumManagementTest() {}
+	
+	/**
+	 * Resets store management to the default state after each test case
+	 */
 	@AfterEach
 	public void tearDown() {
 		hardReset();
 		setUpDefaultForum();
 	}
 	
+	/**
+	 * {@code CreateThread} contains all test cases related to CREATE operation on thread, called by {@code createThread}
+	 */
 	@Nested
 	@DisplayName("Thread CREATE test cases")
-	class CreateThread {
+	public class CreateThread {
+		/**
+		 * A constructor of the class but it will not be used
+		 */
+		public CreateThread() {}
+		
+		/**
+		 * Verifies that new thread name cannot be empty
+		 */
 		@Test
 		void shouldReturnInvalidThread_whenThreadNameIsEmpty() {
 			// Given
@@ -42,6 +64,9 @@ class ModelForumManagementTest {
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * Verifies that new thread name cannot be duplicated
+		 */
 		@Test
 		void shouldReturnInvalidThread_whenThreadNameAlreadyExistsInDatabase() {
 			// Given
@@ -55,6 +80,9 @@ class ModelForumManagementTest {
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * Verifies that if thread name is valid, then new thread is created successfully
+		 */
 		@Test
 		void shouldReturnNoMessage_whenAllAreValid() {
 			// Given
@@ -69,9 +97,20 @@ class ModelForumManagementTest {
 		}
 	}
 	
+	/**
+	 * {@code ReadThread} contains all test cases related to READ operation on thread
+	 */
 	@Nested
 	@DisplayName("Thread READ test cases")
-	class ReadThread {
+	public class ReadThread {
+		/**
+		 * A constructor of the class but it will not be used
+		 */
+		public  ReadThread() {}
+		
+		/**
+		 * Verifies that all thread when called by {@readAllThread}
+		 */
 		@Test
 		void shouldReturnAllThread_whenAllThreadIsCalled() {
 			// Given
@@ -86,9 +125,21 @@ class ModelForumManagementTest {
 		}
 	}
 	
+	
+	/**
+	 * {@code UpdateThread} contains all test cases related to UPDATE operation on thread, called by {@code editThread}
+	 */
 	@Nested
 	@DisplayName("Thread UPDATE test cases")
-	class UpdateThread {
+	public class UpdateThread {
+		/**
+		 * A constructor of the class but it will not be used
+		 */
+		public UpdateThread() {}
+		
+		/**
+		 * Verifies that new thread name cannot be empty
+		 */
 		@Test
 		void shouldReturnInvalidThread_whenNewThreadNameIsEmpty() {
 			// Given
@@ -103,6 +154,9 @@ class ModelForumManagementTest {
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * Verifies that old thread name exists in the database
+		 */
 		@Test
 		void shouldReturnInvalidThread_whenOldThreadNameDoesNotExistInDatabase() {
 			// Given
@@ -117,6 +171,9 @@ class ModelForumManagementTest {
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * Verifies that new thread name could not be duplicated
+		 */
 		@Test
 		void shouldReturnInvalidThread_whenNewThreadNameAlreadyExistsInDatabase() {
 			// Given
@@ -131,6 +188,9 @@ class ModelForumManagementTest {
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * Verifies that General thread cannot be edited
+		 */
 		@Test
 		void shouldReturnInvalidThread_whenThreadNameIsGeneral() {
 			// Given
@@ -145,6 +205,9 @@ class ModelForumManagementTest {
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * Verifies that editing thread is successful when all threads are valid
+		 */
 		@Test
 		void shouldReturnNoErrorMessage_whenAllAreValid() {
 			// Given
@@ -160,9 +223,20 @@ class ModelForumManagementTest {
 		}
 	}
 	
+	/**
+	 * {@code DeleteThread} contains all test cases related to DELETE operation on thread, called by {@code deteleThread}
+	 */
 	@Nested
 	@DisplayName("Thread DELETE test cases")
-	class DeleteThread {
+	public class DeleteThread {
+		/**
+		 * A constructor of the class but it will not be used
+		 */
+		public DeleteThread() {}
+		
+		/**
+		 * Verifies that deleted thread cannot be empty
+		 */
 		@Test
 		void shouldReturnInvalidThread_whenThreadNameIsEmpty() {
 			// Given
@@ -176,6 +250,9 @@ class ModelForumManagementTest {
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * Verifies that deleted thread must be existed in the database
+		 */
 		@Test
 		void shouldReturnInvalidThread_whenThreadNameDoesNotExistInDatabase() {
 			// Given
@@ -189,6 +266,9 @@ class ModelForumManagementTest {
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * Verifies that General could not deleted
+		 */
 		@Test
 		void shouldReturnInvalidThread_whenThreadNameIsGeneral() {
 			// Given
@@ -202,6 +282,9 @@ class ModelForumManagementTest {
 			assertEquals(expected, actual);
 		}
 		
+		/**
+		 * Verifies that deleting thread is successful when all threads are valid
+		 */
 		@Test
 		void shouldReturnNoErrorMessage_whenAllAreValid() {
 			// Given

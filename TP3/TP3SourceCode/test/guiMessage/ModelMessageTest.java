@@ -4,8 +4,18 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-class ModelMessageTest {
+/**
+ * {@code ModelMessageTest} contains all test cases related to message conversation
+ */
+public class ModelMessageTest {
+	/**
+	 * The constructor of the class but it will not be used
+	 */
+	public ModelMessageTest() {}
 	
+	/**
+	 * Verifies that sender could not be null
+	 */
 	@Test
 	void shouldReturnUserDoesNotExist_whenSenderIsNull() {
 		// Given
@@ -21,6 +31,9 @@ class ModelMessageTest {
 		assertEquals(expected, actual);
 	}
 	
+	/**
+	 * Verifies that sender must be existed in the database
+	 */
 	@Test
 	void shouldReturnUserDoesNotExist_whenSenderDoesNotExist() {
 		// Given
@@ -36,6 +49,9 @@ class ModelMessageTest {
 		assertEquals(expected, actual);
 	}
 	
+	/**
+	 * Verifies that sender must be student of staff
+	 */
 	@Test
 	void shouldAccessDenied_whenSenderIsAdmin() {
 		// Given
@@ -51,6 +67,9 @@ class ModelMessageTest {
 		assertEquals(expected, actual);
 	}
 	
+	/**
+	 * Verifies that receiver cannot be null
+	 */
 	@Test
 	void shouldReturnUserDoesNotExist_whenReceiverIsNull() {
 		// Given
@@ -66,6 +85,9 @@ class ModelMessageTest {
 		assertEquals(expected, actual);
 	}
 	
+	/**
+	 * Verifies that receiver must be existed in the database
+	 */
 	@Test
 	void shouldReturnUserDoesNotExist_whenReceiverDoesNotExist() {
 		// Given
@@ -81,7 +103,10 @@ class ModelMessageTest {
 		assertEquals(expected, actual);
 	}
 
-	
+
+	/**
+	 * Verifies that receiver must be a student or staff
+	 */
 	@Test
 	void shouldReturnAccessDenied_whenReceiverIsAdmin() {
 		// Given
@@ -97,6 +122,9 @@ class ModelMessageTest {
 		assertEquals(expected, actual);
 	}
 	
+	/**
+	 * Verifies the content cannot be null
+	 */
 	@Test
 	void shouldReturnInvalidContent_whenContentIsNull() {
 		// Given
@@ -112,6 +140,9 @@ class ModelMessageTest {
 		assertEquals(expected, actual);
 	}
 	
+	/**
+	 * Verifies the content cannot be empty
+	 */
 	@Test
 	void shouldReturnInvalidContent_whenContentIsEmpty() {
 		// Given
@@ -127,6 +158,9 @@ class ModelMessageTest {
 		assertEquals(expected, actual);
 	}
 	
+	/**
+	 * Verifies that sending message is successful when all parameters are valid
+	 */
 	@Test
 	void shouldReturnNoError_whenAllAreValid() {
 		// Given

@@ -46,6 +46,9 @@ import guiStaffHome.ControllerStaffHome;
 import guiStudentHome.ControllerStudentHome;
 
 
+/**
+ * {@code ViwerMessage} displays message UI
+ */
 public class ViewerMessage {
 	
 	/*-*******************************************************************************************
@@ -64,31 +67,31 @@ public class ViewerMessage {
 	
 	// GUI Area 1: It informs the user about the purpose of this page, whose account is being used,
 	// and a button to allow this user to update the account settings
-	protected static Label label_PageTitle = new Label();
-	protected static Label label_UserDetails = new Label();
+	private static Label label_PageTitle = new Label();
+	private static Label label_UserDetails = new Label();
 		
 	// This is a separator and it is used to partition the GUI for various tasks
-	protected static Line line_Separator1 = new Line(20, 95, width-20, 95);
+	private static Line line_Separator1 = new Line(20, 95, width-20, 95);
 	
 	// GUI ARea 2: This is a stub, so there are no widgets here.  For an actual role page, this are
 	// would contain the widgets needed for the user to play the assigned role.
 	
-	protected static Button button_createMessage = new Button("Create Messsage");
+	private static Button button_createMessage = new Button("Create Messsage");
 	private static Button button_dm = new Button("DM");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
-	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
+	private static Line line_Separator4 = new Line(20, 525, width-20,525);
 	
-	protected static Label label_messageTitle = new Label();
-	protected static Label label_messageSender = new Label();
-	protected static Label label_messageContent = new Label();
-	protected static ChoiceBox<String> choicebox_user = new ChoiceBox<>();
+	private static Label label_messageTitle = new Label();
+	private static Label label_messageSender = new Label();
+	private static Label label_messageContent = new Label();
+	private static ChoiceBox<String> choicebox_user = new ChoiceBox<>();
 	
 	// GUI Area 3: This is last of the GUI areas.  It is used for quitting the application and for
 	// logging out.
-	protected static Button button_Return = new Button("Return");
-	protected static Button button_Logout = new Button("Logout");
-	protected static Button button_Quit = new Button("Quit");
+	private static Button button_Return = new Button("Return");
+	private static Button button_Logout = new Button("Logout");
+	private static Button button_Quit = new Button("Quit");
 	
 	// This is the end of the GUI objects for the page.
 	
@@ -105,19 +108,33 @@ public class ViewerMessage {
 	private static Message specifiedMessage = null;
 	private static String specificReceiver = "";
 	
-	protected static Stage theStage;			// The Stage that JavaFX has established for us	
-	protected static Pane theRootPane;			// The Pane that holds all the GUI widgets
-	protected static User theUser;				// The current logged in User
+	/**
+	 * The Stage that JavaFX has established for us	
+	 */
+	protected static Stage theStage;
+	/**
+	 * The Pane that holds all the GUI widgets
+	 */
+	protected static Pane theRootPane;
+	/**
+	 * The current logged in User
+	 */
+	protected static User theUser;
 	
 	private static Scene scene;		// The shared Scene each invocation populates
-	protected static final int theRole = 3;		// Admin: 1; Role1: 2; Role2: 3
+	private static final int theRole = 3;		// Admin: 1; Role1: 2; Role2: 3
 	
 	/*-*******************************************************************************************
 	
 	Constructors
 	
 	 */
-
+	
+	/**
+	 * Display the UI for messages
+	 * @param ps the stage used to display the forum scene
+	 * @param user the user currently viewing the forum
+	 */
 	public static void displayMessageView(Stage ps, User user) {
 		
 		// Establish the references to the GUI and the current user
@@ -272,13 +289,13 @@ public class ViewerMessage {
 
 		// GUI Area 3
 		setupButtonUI(button_Return, "Dialog", 18, 250, Pos.CENTER, 20, 540);
-		button_Return.setOnAction((_) -> { ControllerStaffHome.performReturn(); });
+		button_Return.setOnAction((_) -> { ControllerMessage.performReturn(); });
 		
 	    setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 300, 540);
-//	    button_Logout.setOnAction((_) -> {ControllerStaffHome.performLogout(); });
+	    button_Logout.setOnAction((_) -> { ControllerMessage.performLogout(); });
 	    
 	    setupButtonUI(button_Quit, "Dialog", 18, 250, Pos.CENTER, 580, 540);
-//	    button_Quit.setOnAction((_) -> {ControllerStaffHome.performQuit(); });
+	    button_Quit.setOnAction((_) -> { ControllerMessage.performQuit(); });
 	
 		// This is the end of the GUI initialization code
 		
@@ -293,6 +310,9 @@ public class ViewerMessage {
 	
 	Helper methods to reduce code length
 	
+	 */
+	/**
+	 * Displays direct message view
 	 */
 	protected static void displayDMView() {
 		Stage addStage = new Stage();
@@ -325,7 +345,7 @@ public class ViewerMessage {
 		button_send.setFont(Font.font("Dialog", 16));
 		
 		button_send.setOnAction(_ -> {
-			ModelMessage.addMessage(message_input.getText(), theUser.getUserName(), specificReceiver);
+			ControllerMessage.performSendMessage(message_input.getText(), theUser.getUserName(), specificReceiver);
 			message_input.setText("");
 			loadDMMessage(specificReceiver);
 			

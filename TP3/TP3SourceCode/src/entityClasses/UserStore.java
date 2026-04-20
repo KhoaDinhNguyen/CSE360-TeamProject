@@ -3,9 +3,15 @@ package entityClasses;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * {@code UserStore} is used to contain database operation related to User object
+ */
 public class UserStore {
 	private	ArrayList<User> UserList;
 	
+	/**
+	 * The constructor of the class
+	 */
 	public UserStore() {
 		UserList = new ArrayList<User>();
 		
@@ -26,6 +32,11 @@ public class UserStore {
 				));
 	}
 	
+	/**
+	 * Get the User object from the database given unique username
+	 * @param username is an unique String representing the user in the database
+	 * @return an User object, null if the user does not exist
+	 */
 	public User retrieve(String username) {
 		if (username == null) return null;
 		
@@ -39,6 +50,10 @@ public class UserStore {
 		return null;
 	}
 	
+	/**
+	 * Get all the User that are students and staff
+	 * @return a list of User object
+	 */
 	public ArrayList<User> getStudentAndStaff() {
 		ArrayList<User> result = new ArrayList<>();
 		
@@ -54,6 +69,11 @@ public class UserStore {
 	}
 	
 	
+	/**
+	 * Verifies that whether the user is a staff
+	 * @param username is a unique String representing user from the database
+	 * @return a String that display error message, empty if the user exists and is a staff
+	 */
 	public String isUserStaff(String username) {
 		User user = retrieve(username);
 		
@@ -64,6 +84,11 @@ public class UserStore {
 		return "";
 	}
 	
+	/**
+	 * Verifies that whether the user is a student
+	 * @param username is a unique String representing user from the database
+	 * @return a String that display error message, empty if the user exists and is a student
+	 */
 	public String isUserStudent(String username) {
 		User user = retrieve(username);
 		
@@ -74,6 +99,11 @@ public class UserStore {
 		return "";
 	}
 	
+	/**
+	 * Verifies that whether the user is a student or a staff
+	 * @param username is a unique String representing user from the database
+	 * @return a String that display error message, empty if the user exists and is a student or a staff
+	 */
 	public String isUserStaffAndStudent(String username) {
 		User user = retrieve(username);
 		
@@ -84,6 +114,10 @@ public class UserStore {
 		return "";
 	}
 	
+	/**
+	 * Add user to the database
+	 * @param user is User object that represents new user
+	 */
 	public void addUser(User user) {
 		UserList.add(user);
 	}
