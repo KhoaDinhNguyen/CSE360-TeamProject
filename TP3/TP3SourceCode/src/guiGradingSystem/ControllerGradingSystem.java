@@ -32,7 +32,7 @@ public class ControllerGradingSystem {
 	protected static void performReadSpecificPost(Post post) {
 		// post selected, mark the user as read
 		post.markAsRead( ViewGradingSystem.theUser.getUserName());
-	    ModelGradingSytem.markAsReadAllRepies(post.getId());
+	    ModelGradingSystem.markAsReadAllRepies(post.getId());
 
 	    //ViewGradingSystem.displayPostDetails(post);	
 	}
@@ -61,7 +61,7 @@ public class ControllerGradingSystem {
 	 * @param thread is post thread
 	 */
 	protected static void performSearchButton(String keyword, String thread) {
-		 List<Post> results = ModelGradingSytem.filterPosts(keyword, thread);
+		 List<Post> results = ModelGradingSystem.filterPosts(keyword, thread);
 		 //ViewGradingSystem.updatingList(results);
 	}
 	
@@ -69,7 +69,7 @@ public class ControllerGradingSystem {
 	 * <p>Updates post list to all posts in the database </p>
 	 */
 	protected static void performClearButton() {
-//		List<Post> results = ModelGradingSytem.getStudentList();
+//		List<Post> results = ModelGradingSystem.getStudentList();
 //		ViewGradingSystem.updatingList(results);
 	}
 	
@@ -81,7 +81,7 @@ public class ControllerGradingSystem {
 	 * @return a String represents error message, empty if there is no error
 	 */
 	protected static String performAddReply(int postId, String author, String content, boolean isPrivate) {
-		return ModelGradingSytem.addReply(content, author, postId, isPrivate);
+		return ModelGradingSystem.addReply(content, author, postId, isPrivate);
 	}
 	
 	/**
@@ -106,7 +106,7 @@ public class ControllerGradingSystem {
 	 * <p>Performs button to list all posts of the current user</p>
 	 */
 	protected static void performMyPostButton() {
-//		List<Post> results = ModelGradingSytem.getPostsByUser(ViewGradingSystem.theUser.getUserName());
+//		List<Post> results = ModelGradingSystem.getPostsByUser(ViewGradingSystem.theUser.getUserName());
 //		ViewGradingSystem.updatingList(results);
 	}
 	

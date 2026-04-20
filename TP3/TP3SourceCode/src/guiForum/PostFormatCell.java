@@ -47,7 +47,7 @@ public class PostFormatCell extends ListCell<Post>{
 			int unreadRepliesCount = ModelForum.getReplyStore()
 					.getUnreadReplies(ViewerForum.theUser.getUserName(), item.getId()).size();
 			
-//			ArrayList<Reply> test = ModelGradingSytem.getReplyStore().getReplyList();
+//			ArrayList<Reply> test = ModelGradingSystem.getReplyStore().getReplyList();
 //					//.getUnreadReplies(ViewGradingSystem.theUser.getUserName(), item.getId());
 //			
 //			System.out.println("-> " + item.getId());

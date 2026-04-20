@@ -20,6 +20,7 @@ import entityClasses.ThreadStore;
 import entityClasses.User;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -223,7 +224,7 @@ public class ViewGradingSystem {
 		studentListView.setLayoutY(105);
 		studentListView.setPrefWidth(300);
 		studentListView.setPrefHeight(410); // from y=105 to around y=525
-		List<String> PostItemList = ModelGradingSytem.getStudentList();
+		List<String> PostItemList = ModelGradingSystem.getStudentList();
 		updatingList(PostItemList);
 				
 		
@@ -248,7 +249,7 @@ public class ViewGradingSystem {
 		    displayStudentDetails(selectedStudent);
 		    
 		    // post selected, mark the user as read
-		    updatingList(ModelGradingSytem.getStudentList());
+		    updatingList(ModelGradingSystem.getStudentList());
 		    
 
 		   // ControllerGradingSystem.performReadSpecificPost(selectedStudent);	
@@ -347,7 +348,7 @@ public class ViewGradingSystem {
 	    
 	    VBox assignmentListVBox = new VBox();
 	    
-	    List<Assignment> assnList = ModelGradingSytem.getAssignmentList();
+	    List<Assignment> assnList = ModelGradingSystem.getAssignmentList();
 
 	    for (Assignment assn: assnList) {
 	    	//get the current feedback of the assignment
@@ -385,18 +386,67 @@ public class ViewGradingSystem {
 	    	assignmentListVBox.getChildren().addAll(assignmentHbox);
 	    }
 	    
+	    // add message area to annouce helpful error messages
+	    VBox errMsgVBox = new VBox();
+	    
 	    // add button to update grade
 	    Button button_Update = new Button("Update");
 	    assignmentListVBox.getChildren().add(button_Update);
 	    
-	    // add message area to annouce helpful error messages
-	    Label msgLabel = new Label("Msg Error Here");
-	    msgLabel.setTextFill(Color.RED);
-	    
+	    button_Update.setOnAction(e -> {
+	    	
+	    	errMsgVBox.getChildren().clear();
+	    	
+	    	for (int i = 0; i < ModelGradingSystem.getAssignmentList().size(); i++ ) {
+	    		HBox assignmentHbox = (HBox) assignmentListVBox.getChildren().get(i);
+	    			    	
+	    		TextField tfScore = (TextField)(assignmentHbox.getChildren().get(1));
+	    		TextField tfComment = (TextField)(assignmentHbox.getChildren().get(7));
+	    		
+	    		String errMsg = "";
+	    			    	
+	    		errMsg = ModelGradingSystem.setFeedback(i, studentUsername, Integer.parseInt(tfScore.getText()), tfComment.getText());
+	    	
+	    		// if there are err messages put that into the errMsgVBox
+	    		if (errMsg != "") {
+	    			errMsgVBox.getChildren().add(new Label(errMsg));
+	    		}
+	    		
+	    		TextField tfMaxScore = (TextField)(assignmentHbox.getChildren().get(3));
+	    		
+	    		errMsg = ModelGradingSystem.setMaxScore(i, Integer.parseInt(tfMaxScore.getText()));
 
-	    assignmentListVBox.getChildren().add(msgLabel);
+	    		// if there are err messages put that into the errMsgVBox
+	    		if (errMsg != "") {
+	    			errMsgVBox.getChildren().add(new Label(errMsg));
+	    		}
+	    		
+	    		TextField tfWeight = (TextField)(assignmentHbox.getChildren().get(5));
+	    		
+	    		errMsg = ModelGradingSystem.setWeight(i, Integer.parseInt(tfWeight.getText()));
+	    		
+	    		// if there are err messages put that into the errMsgVBox
+	    		if (errMsg != "") {
+	    			errMsgVBox.getChildren().add(new Label(errMsg));
+	    		}
+	    	}
+
+	    	// check total weight
+	    	Label msgWeightLabel = new Label("");
+	    	String errMsg = ModelGradingSystem.checkTotalWeight();
+	    	msgWeightLabel.setText(errMsg);
+	    	errMsgVBox.getChildren().add(msgWeightLabel);
+
+	    });
 	    
-	    
+	   
+	    // check total weight
+	    Label msgWeightLabel = new Label("");
+	    String errMsg = ModelGradingSystem.checkTotalWeight();
+	    msgWeightLabel.setText(errMsg);
+	    errMsgVBox.getChildren().add(msgWeightLabel);
+
+	    assignmentListVBox.getChildren().add(errMsgVBox);
 	   
 	    // Add the Vbox to the detail pane
 	    detailPane.getChildren().add(assignmentListVBox);
@@ -472,7 +522,7 @@ public class ViewGradingSystem {
 	        int maxScore = Integer.parseInt(tfMaxScore.getText());
 	        int weight = Integer.parseInt(tfWeight.getText());
 
-	        String errorMessage = ModelGradingSytem.newAssignment(title, content, maxScore, weight);
+	        String errorMessage = ModelGradingSystem.newAssignment(title, content, maxScore, weight);
 
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
@@ -536,7 +586,7 @@ public class ViewGradingSystem {
 	   // threadLabel.setFont(Font.font("Arial"));
 	   // 
 	   // ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
-	   // threadChoiceBox.getItems().addAll(ModelGradingSytem.getAllThreads());
+	   // threadChoiceBox.getItems().addAll(ModelGradingSystem.getAllThreads());
 	   // threadChoiceBox.setValue(post.getThread());
 	   // 
 	   // threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
@@ -574,8 +624,8 @@ public class ViewGradingSystem {
 	   //     String newTitle = tfTitle.getText();
 	   //     String newContent = taContent.getText();
 	   //     
-	   //     // You can rename this to match your actual ModelGradingSytem method
-	   //     String errorMessage = ModelGradingSytem.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
+	   //     // You can rename this to match your actual ModelGradingSystem method
+	   //     String errorMessage = ModelGradingSystem.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
 	   //     System.out.println(errorMessage);
 	   //     if (errorMessage != null && !errorMessage.isBlank()) {
 	   //         Alert alert = new Alert(AlertType.ERROR);
@@ -587,7 +637,7 @@ public class ViewGradingSystem {
 	    //    }
 
 	    //    // Refresh list + keep selection updated
-	    //    updatingList(ModelGradingSytem.getStudentList());
+	    //    updatingList(ModelGradingSystem.getStudentList());
 
 	    //    // Re-select the edited post if still present
 	    //    Post refreshed = studentListView.getItems().stream()
@@ -636,7 +686,7 @@ public class ViewGradingSystem {
 	        if (result.getButtonData().isDefaultButton()) {
 
 	            // rename to match your model
-	            String errorMessage = ModelGradingSytem.deletePost(post.getId(), theUser.getUserName());
+	            String errorMessage = ModelGradingSystem.deletePost(post.getId(), theUser.getUserName());
 
 	            if (errorMessage != null && !errorMessage.isBlank()) {
 	                Alert alert = new Alert(AlertType.ERROR);
@@ -648,7 +698,7 @@ public class ViewGradingSystem {
 	            }
 
 	            // Refresh list
-	            updatingList(ModelGradingSytem.getStudentList());
+	            updatingList(ModelGradingSystem.getStudentList());
 
 	            // Clear selection + detail UI
 	            /*
@@ -659,7 +709,7 @@ public class ViewGradingSystem {
 	            detailAuthor.setText("Author: ");
 	            detailContent.setText("Content: ");
 	            */
-	            //updatingList(ModelGradingSytem.getPostList());
+	            //updatingList(ModelGradingSystem.getPostList());
 
 	       //     Post refreshed = studentListView.getItems().stream()
 	       //             .filter(p -> p.getId() == post.getId())
@@ -747,8 +797,8 @@ public class ViewGradingSystem {
 	    btnSave.setOnAction(e -> {
 	        String newContent = ta.getText();
 
-	        // rename these to your actual ModelGradingSytem method name
-	        String errorMessage = ModelGradingSytem.editReply(reply.getId(), theUser.getUserName(), newContent);
+	        // rename these to your actual ModelGradingSystem method name
+	        String errorMessage = ModelGradingSystem.editReply(reply.getId(), theUser.getUserName(), newContent);
 
 	        if (errorMessage != null && !errorMessage.isBlank()) {
 	            Alert alert = new Alert(AlertType.ERROR);
@@ -786,8 +836,8 @@ public class ViewGradingSystem {
 	    confirm.showAndWait().ifPresent(result -> {
 	        if (result == ButtonType.OK) {
 
-	            // rename these to your actual ModelGradingSytem method name
-	            String errorMessage = ModelGradingSytem.deleteReply(reply.getId(), theUser.getUserName());
+	            // rename these to your actual ModelGradingSystem method name
+	            String errorMessage = ModelGradingSystem.deleteReply(reply.getId(), theUser.getUserName());
 
 	            if (errorMessage != null && !errorMessage.isBlank()) {
 	                Alert alert = new Alert(AlertType.ERROR);

@@ -393,7 +393,7 @@ public class ViewerForum {
 		    selectedPost = postListView.getSelectionModel().getSelectedItem();
 		    
 		    // post selected, mark the user as read
-//		    updatingList(ModelGradingSytem.getPostList());
+//		    updatingList(ModelGradingSystem.getPostList());
 		    
 		    unreadState = false;
 		    unreadReplies = ModelForum.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
@@ -581,7 +581,7 @@ public class ViewerForum {
 
 	    // Load replies
 	    List<Reply> replies = ModelForum.getRepliesByPostId(theUser, selectedPost.getId());
-	    //unreadReplies = ModelGradingSytem.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
+	    //unreadReplies = ModelGradingSystem.getUnreadReplies(theUser.getUserName(), selectedPost.getId());
 	    
 	    // enable unread replies button
 	    unreadReplyButton.setDisable(unreadReplies.size() == 0);
@@ -814,7 +814,7 @@ public class ViewerForum {
 	        String newTitle = tfTitle.getText();
 	        String newContent = taContent.getText();
 	        
-	        // You can rename this to match your actual ModelGradingSytem method
+	        // You can rename this to match your actual ModelGradingSystem method
 	        String errorMessage = ModelForum.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
 	        System.out.println(errorMessage);
 	        if (errorMessage != null && !errorMessage.isBlank()) {
@@ -899,7 +899,7 @@ public class ViewerForum {
 	            detailAuthor.setText("Author: ");
 	            detailContent.setText("Content: ");
 	            */
-	            //updatingList(ModelGradingSytem.getPostList());
+	            //updatingList(ModelGradingSystem.getPostList());
 
 	            Post refreshed = postListView.getItems().stream()
 	                    .filter(p -> p.getId() == post.getId())
@@ -987,7 +987,7 @@ public class ViewerForum {
 	    btnSave.setOnAction(e -> {
 	        String newContent = ta.getText();
 
-	        // rename these to your actual ModelGradingSytem method name
+	        // rename these to your actual ModelGradingSystem method name
 	        String errorMessage = ModelForum.editReply(reply.getId(), theUser.getUserName(), newContent);
 
 	        if (errorMessage != null && !errorMessage.isBlank()) {
@@ -1026,7 +1026,7 @@ public class ViewerForum {
 	    confirm.showAndWait().ifPresent(result -> {
 	        if (result == ButtonType.OK) {
 
-	            // rename these to your actual ModelGradingSytem method name
+	            // rename these to your actual ModelGradingSystem method name
 	            String errorMessage = ModelForum.deleteReply(reply.getId(), theUser.getUserName());
 
 	            if (errorMessage != null && !errorMessage.isBlank()) {

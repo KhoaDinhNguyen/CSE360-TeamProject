@@ -209,11 +209,11 @@ public class Assignment {
 	 * @param studentScore an integer of the student's score
 	 */
 	public void setScore(String studentName, int studentScore) {
-		if (feedbacks.containsKey(studentName))
-			feedbacks.replace(studentName, new Feedback(studentScore, ""));
+		if (!feedbacks.containsKey(studentName))
+			feedbacks.put(studentName, new Feedback(studentScore, ""));
 		else {
 			String currentComment = feedbacks.get(studentName).getComment();
-			feedbacks.put(studentName, new Feedback(studentScore, currentComment));
+			feedbacks.replace(studentName, new Feedback(studentScore, currentComment));
 		}
 	}
 	
@@ -223,11 +223,11 @@ public class Assignment {
 	 * @param comment a String contains the feedback's comment
 	 */
 	public void setComment(String studentName, String comment) {
-		if (feedbacks.containsKey(studentName))
-			feedbacks.replace(studentName, new Feedback(0, comment));
+		if (!feedbacks.containsKey(studentName))
+			feedbacks.put(studentName, new Feedback(0, comment));
 		else {
 			int currentScore = feedbacks.get(studentName).getScore();
-			feedbacks.put(studentName, new Feedback(currentScore, comment));
+			feedbacks.replace(studentName, new Feedback(currentScore, comment));
 		}
 	}
 	/**

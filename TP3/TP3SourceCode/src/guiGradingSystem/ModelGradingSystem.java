@@ -13,7 +13,7 @@ import entityClasses.*;
  * supports soft deletion of posts, and provides filtering and retrieval
  * operations for the forum user interface.</p>
  */
-public class ModelGradingSytem {
+public class ModelGradingSystem {
 
 	private static entityClasses.PostStore postStore = new entityClasses.PostStore();
 	private static entityClasses.ReplyStore replyStore = new entityClasses.ReplyStore();
@@ -27,7 +27,7 @@ public class ModelGradingSytem {
 	/**
 	 * The class constructor but it will not be used in this project
 	 */
-	public ModelGradingSytem() {
+	public ModelGradingSystem() {
 		
 	}
 	static {
@@ -470,7 +470,16 @@ public class ModelGradingSytem {
 	}
 	
 	/**
-	 * Check the total weight if it exceed 100% or not 
+	 * Get the total score for the given student
+	 * @param studentName a string contains the student's username
+	 * @return a float which is the student's total score
+	 */
+	public static float getTotalScore(String studentName) {
+		return gradeSystem.getTotalScore(studentName); 
+	}
+	
+	/**
+	 * Check the total weight if it is 100% or not 
 	 * @return return an empty string if it is exactly 100 else return helpful message
 	 */
 	public static String checkTotalWeight() {
@@ -481,5 +490,37 @@ public class ModelGradingSytem {
 			return "The total weight is greater than 100";
 		}
 		return "";
+	}
+	
+	/**
+	 * Set the feedback for the student's assignment
+	 * @param index an integer which is the index of the assignment
+	 * @param studentUsername a String contain the student's username
+	 * @param score an integer which is the current score
+	 * @param comment a String contains the feedback comment
+	 * @return A err messages if it occur
+	 */
+	public static String setFeedback(int index, String studentUsername, int score, String comment) {
+		return gradeSystem.setFeedback(index, studentUsername, score, comment);
+	}
+	
+	/**
+	 * Set the max score of the assignment. This will reset all the score to 0
+	 * @param index an integer which is the index of the assignment
+	 * @param newScore an integer which is the new max score
+	 * @return An error message if it occur
+	 */
+	public static String setMaxScore(int index, int newScore) {
+		return gradeSystem.setMaxScore(index, newScore);
+	}
+	
+	/**
+	 * Set new weight the to the assignment at the given index
+	 * @param index an integer which is the index 
+	 * @param newWeight an integer which is the weight
+	 * @return An error message if it occur
+	 */
+	public static String setWeight(int index, int newWeight) {
+		return gradeSystem.setWeight(index, newWeight);
 	}
 }

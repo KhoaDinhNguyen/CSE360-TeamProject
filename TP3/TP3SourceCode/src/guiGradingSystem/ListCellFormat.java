@@ -44,10 +44,10 @@ public class ListCellFormat extends ListCell<Post>{
 			row1Label.setText((item.hasRead(ViewGradingSystem.theUser.getUserName())?"":"[UNREAD] ") + item.toString());
 			
 			int repliesCount = item.getReplyPostId().size();
-			int unreadRepliesCount = ModelGradingSytem.getReplyStore()
+			int unreadRepliesCount = ModelGradingSystem.getReplyStore()
 					.getUnreadReplies(ViewGradingSystem.theUser.getUserName(), item.getId()).size();
 			
-//			ArrayList<Reply> test = ModelGradingSytem.getReplyStore().getReplyList();
+//			ArrayList<Reply> test = ModelGradingSystem.getReplyStore().getReplyList();
 //					//.getUnreadReplies(ViewGradingSystem.theUser.getUserName(), item.getId());
 //			
 //			System.out.println("-> " + item.getId());

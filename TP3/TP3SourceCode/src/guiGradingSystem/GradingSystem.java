@@ -134,10 +134,15 @@ public class GradingSystem {
 			return "Max grade should not exceed 100";
 		if (maxScore < 0)
 			return "Negative max grade are not allowed";
+		
+		// no changes
+		if (getAssignment(index).getMaxScore() == maxScore) {
+			return "";
+		}
 
 		getAssignment(index).setMaxScore(maxScore);
 
-		return null;
+		return "";
 	}
 	
 	/**
@@ -154,10 +159,11 @@ public class GradingSystem {
 		if (score > getMaxScore(index))
 			return "Assigned grade cannot be exceed the max grade";
 		
+		
 		getAssignment(index).setScore(studentName, score);
 		getAssignment(index).setComment(studentName, comment);
 		
-		return null;
+		return "";
 	}
 	
 

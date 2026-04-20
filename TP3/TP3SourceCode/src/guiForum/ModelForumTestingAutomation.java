@@ -8,7 +8,7 @@ import java.util.List;
  *
  * <p>This class runs a sequence of test cases that validate the behavior of
  * post and reply creation, editing, deletion, filtering, and retrieval in
- * {@link ModelGradingSytem}.</p>
+ * {@link ModelGradingSystem}.</p>
  */
 public class ModelForumTestingAutomation {
 
@@ -88,7 +88,7 @@ public class ModelForumTestingAutomation {
         try {
             resetModelForumStores();
         } catch (Exception e) {
-            System.out.println("Could not reset ModelGradingSytem stores: " + e);
+            System.out.println("Could not reset ModelGradingSystem stores: " + e);
             reportFailure(testNo, "reset succeeds", "reset failed: " + e);
             return;
         }
