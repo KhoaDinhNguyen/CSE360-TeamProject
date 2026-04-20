@@ -88,7 +88,7 @@ public class Database {
 			connection = DriverManager.getConnection(DB_URL, USER, PASS);
 			statement = connection.createStatement(); 
 			// You can use this command to clear the database and restart from fresh.
-//			 statement.execute("DROP ALL OBJECTS");
+			 //statement.execute("DROP ALL OBJECTS");
 
 			createTables();  // Create the necessary tables if they don't exist
 		} catch (ClassNotFoundException e) {
@@ -1046,6 +1046,43 @@ public class Database {
 		return false;
 	}
 	
+	
+	public int getNumberOfUserByRole(String role) {
+		if (role.compareTo("Admin") == 0) {
+			String query = "SELECT COUNT(*) AS count FROM userDB WHERE adminRole = TRUE";
+			try {
+				ResultSet resultSet = statement.executeQuery(query);
+				if (resultSet.next()) {
+					return resultSet.getInt("count");
+				}
+			} catch (SQLException e) {
+		        return 0;
+		    }			
+		}
+		if (role.compareTo("Staff") == 0) {
+			String query = "SELECT COUNT(*) AS count FROM userDB WHERE newStaff = TRUE";
+			try {
+				ResultSet resultSet = statement.executeQuery(query);
+				if (resultSet.next()) {
+					return resultSet.getInt("count");
+				}
+			} catch (SQLException e) {
+		        return 0;
+		    }			
+		}
+		if (role.compareTo("Student") == 0) {
+			String query = "SELECT COUNT(*) AS count FROM userDB WHERE newStudent = TRUE";
+			try {
+				ResultSet resultSet = statement.executeQuery(query);
+				if (resultSet.next()) {
+					return resultSet.getInt("count");
+				}
+			} catch (SQLException e) {
+		        return 0;
+		    }			
+		}
+		return 0;
+	}
 	
 	// Attribute getters for the current user
 	/*******
