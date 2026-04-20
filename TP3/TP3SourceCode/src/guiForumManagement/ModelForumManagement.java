@@ -40,15 +40,10 @@ public class ModelForumManagement {
 	}
 	
 	protected static String deteleThread(String threadName) {
-		if (threadName.isBlank()) {
-			return "Thread's name cannot be empty";
-		}
-		else if (threadName.compareTo("General") == 0) {
-			return "Cannot delete General thread";
-		}
-		else if (!theThreadStore.checkThreadExist(threadName)) {
-			return "Thread does not exist in the database";
-		}
+		System.out.println(theThreadStore.getAllThreads().size());
+		String errorMessage = validateDeleteThread(threadName);
+		
+		if (!errorMessage.isEmpty()) return errorMessage;
 		
 		theThreadStore.deleteThread(threadName);
 		
@@ -75,20 +70,17 @@ public class ModelForumManagement {
 		else if (!theThreadStore.checkThreadExist(oldName)) {
 			return "Thread does not exist in the database";
 		}
+		else if (theThreadStore.checkThreadExist(newName)) {
+			return "Thread already exists in the database";
+		}
 		
 		return "";
 	}
 	
 	protected static String editThread(String oldName, String newName) {
-		if (newName.isBlank()) {
-			return "Thread's name cannot be empty";
-		}
-		else if (oldName.compareTo("General") == 0) {
-			return "Cannot edit General thread";
-		}
-		else if (!theThreadStore.checkThreadExist(oldName)) {
-			return "Thread does not exist in the database";
-		}
+		String errorMessage = validateEditThread(oldName, newName);
+		
+		if (!errorMessage.isEmpty()) return errorMessage;
 		
 		theThreadStore.editThread(oldName, newName);
 		
@@ -103,6 +95,10 @@ public class ModelForumManagement {
 		}
 		
 		return "";
+	}
+	
+	protected static ArrayList<String> readAllThread() {
+		return theThreadStore.getAllThreads();
 	}
 	
 }

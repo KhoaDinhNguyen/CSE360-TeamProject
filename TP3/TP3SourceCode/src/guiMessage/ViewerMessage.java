@@ -39,6 +39,7 @@ import entityClasses.MessageStore;
 import entityClasses.ThreadStore;
 //import database.Database;
 import entityClasses.User;
+import entityClasses.UserStore;
 import guiForum.ControllerForum;
 import guiForum.ModelForum;
 import guiStaffHome.ControllerStaffHome;
@@ -97,6 +98,7 @@ public class ViewerMessage {
 	
 	// Reference for the in-memory database so this package has access
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
+	private static UserStore theUserStore = applicationMain.FoundationsMain.theUserStore;
 	private static MessageStore theMessageStore = ModelMessage.theMessageStore;
 	private static ListView<Message> receivedMessageView = new ListView<>();
 	private static ListView<Message> DMView = new ListView<>();
@@ -385,21 +387,18 @@ public class ViewerMessage {
 	}
 
 	private static void loadUsers() {
-		List<String> usernameList = theDatabase.getUserList();
-		ArrayList<String> studentAndStaffList = new ArrayList<String>();
+		ArrayList<User> studentAndStaffList = theUserStore.getStudentAndStaff();
 		
-		for (int i = 0; i < usernameList.size(); ++i) {
-			User user = theDatabase.getUserDetails(usernameList.get(i));
-			
+		ArrayList<String> studentAndStaffListName = new ArrayList<String>();
+		
+		for (int i = 0; i < studentAndStaffList.size(); ++i) {
+			User user = studentAndStaffList.get(i);
 			if (user == null) continue;
-			if (user.getUserName().equals(theUser.getUserName())) continue;
 			
-			if (user.getStaff() || user.getStudent()) {
-				studentAndStaffList.add(user.getUserName());
-			}
+			studentAndStaffListName.add(user.getUserName());
 		}
 		
-		choicebox_user.setItems(FXCollections.observableArrayList(studentAndStaffList));
+		choicebox_user.setItems(FXCollections.observableArrayList(studentAndStaffListName));
 	}
 	
 	
