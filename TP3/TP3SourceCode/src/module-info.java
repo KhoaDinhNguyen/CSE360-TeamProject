@@ -1,7 +1,7 @@
 /**
  * All modules that needed for the project
  */
-module HW2SourceCode {
+module TP3Test {
 	requires org.junit.jupiter.api;
 	requires javafx.controls;
 	requires java.sql;

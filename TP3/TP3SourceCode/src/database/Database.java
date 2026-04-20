@@ -8,9 +8,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.time.LocalDateTime;
 
 import entityClasses.InvitationCode;
 import entityClasses.User;
+import entityClasses.AdminRequest;
+import entityClasses.AdminRequestAction;
 
 /*******
  * <p> Title: Database Class. </p>
@@ -38,7 +41,7 @@ public class Database {
 
 	// JDBC driver name and database URL 
 	static final String JDBC_DRIVER = "org.h2.Driver";   
-	static final String DB_URL = "jdbc:h2:~/FoundationDatabase";  
+	static final String DEFAULT_DB_URL = "jdbc:h2:~/FoundationDatabase"; 
 
 	//  Database credentials 
 	static final String USER = "sa"; 
@@ -60,6 +63,8 @@ public class Database {
 	private boolean currentAdminRole;
 	private boolean currentNewStudent;
 	private boolean currentNewStaff;
+	
+	private final String dbUrl;
 
 	/*******
 	 * <p> Method: Database </p>
@@ -69,7 +74,11 @@ public class Database {
 	 */
 	
 	public Database () {
-		
+		this(DEFAULT_DB_URL);
+	}
+	
+	public Database(String dbUrl) {
+		this.dbUrl = dbUrl;
 	}
 	
 	
@@ -85,7 +94,7 @@ public class Database {
 	public void connectToDatabase() throws SQLException {
 		try {
 			Class.forName(JDBC_DRIVER); // Load the JDBC driver
-			connection = DriverManager.getConnection(DB_URL, USER, PASS);
+			connection = DriverManager.getConnection(dbUrl, USER, PASS);
 			statement = connection.createStatement(); 
 			// You can use this command to clear the database and restart from fresh.
 //			 statement.execute("DROP ALL OBJECTS");
@@ -125,6 +134,30 @@ public class Database {
 	    		+ "emailAddress VARCHAR(255), "
 	            + "role VARCHAR(10))";
 	    statement.execute(invitationCodesTable);
+	    
+	    String adminRequestsTable = "CREATE TABLE IF NOT EXISTS AdminRequests ("
+			    + "id INT AUTO_INCREMENT PRIMARY KEY, "
+			    + "requestType VARCHAR(50) NOT NULL, "
+			    + "description CLOB NOT NULL, "
+			    + "requestedBy VARCHAR(255) NOT NULL, "
+			    + "status VARCHAR(20) NOT NULL, "
+			    + "createdAt TIMESTAMP NOT NULL, "
+			    + "updatedAt TIMESTAMP NOT NULL, "
+			    + "closedBy VARCHAR(255), "
+			    + "closedAt TIMESTAMP, "
+			    + "reopenedFromId INT, "
+			    + "FOREIGN KEY (reopenedFromId) REFERENCES AdminRequests(id))";
+	    statement.execute(adminRequestsTable);
+	    
+	    String adminRequestActionsTable = "CREATE TABLE IF NOT EXISTS AdminRequestActions ("
+	    		+ "id INT AUTO_INCREMENT PRIMARY KEY, "
+	    		+ "requestId INT NOT NULL, "
+	    		+ "actorUsername VARCHAR(255) NOT NULL, "
+	    		+ "actionType VARCHAR(30) NOT NULL, "
+	    		+ "note CLOB, "
+	    		+ "createdAt TIMESTAMP NOT NULL, "
+	    		+ "FOREIGN KEY (requestId) REFERENCES AdminRequests(id))";
+	    statement.execute(adminRequestActionsTable);
 	}
 
 
@@ -1201,5 +1234,168 @@ public class Database {
 		} catch(SQLException se){ 
 			se.printStackTrace(); 
 		} 
+	}
+	
+	public int createAdminRequest(String requestType, String description, String requestedBy,
+	        Integer reopenedFromId) {
+	    String query = "INSERT INTO AdminRequests (requestType, description, requestedBy, status, createdAt, updatedAt, reopenedFromId) "
+	            + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+	    LocalDateTime now = LocalDateTime.now();
+
+	    try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+	        pstmt.setString(1, requestType);
+	        pstmt.setString(2, description);
+	        pstmt.setString(3, requestedBy);
+	        pstmt.setString(4, AdminRequest.STATUS_OPEN);
+	        pstmt.setTimestamp(5, Timestamp.valueOf(now));
+	        pstmt.setTimestamp(6, Timestamp.valueOf(now));
+	        if (reopenedFromId == null) pstmt.setNull(7, Types.INTEGER);
+	        else pstmt.setInt(7, reopenedFromId);
+	        pstmt.executeUpdate();
+
+	        try (ResultSet keys = pstmt.getGeneratedKeys()) {
+	            if (keys.next()) {
+	                return keys.getInt(1);
+	            }
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return -1;
+	}
+
+	public List<AdminRequest> getOpenAdminRequests() {
+	    return getAdminRequestsByStatus(AdminRequest.STATUS_OPEN);
+	}
+
+	public List<AdminRequest> getClosedAdminRequests() {
+	    return getAdminRequestsByStatus(AdminRequest.STATUS_CLOSED);
+	}
+
+	public List<AdminRequest> getAdminRequestsByStatus(String status) {
+	    List<AdminRequest> requests = new ArrayList<AdminRequest>();
+	    String query = "SELECT * FROM AdminRequests WHERE status = ? ORDER BY id DESC";
+
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, status);
+	        ResultSet rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	            requests.add(mapAdminRequest(rs));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return requests;
+	}
+
+	public AdminRequest getAdminRequestById(int requestId) {
+	    String query = "SELECT * FROM AdminRequests WHERE id = ?";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, requestId);
+	        ResultSet rs = pstmt.executeQuery();
+	        if (rs.next()) return mapAdminRequest(rs);
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return null;
+	}
+
+	public List<AdminRequestAction> getAdminRequestActions(int requestId) {
+	    List<AdminRequestAction> actions = new ArrayList<AdminRequestAction>();
+	    String query = "SELECT * FROM AdminRequestActions WHERE requestId = ? ORDER BY id ASC";
+
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, requestId);
+	        ResultSet rs = pstmt.executeQuery();
+	        while (rs.next()) {
+	            actions.add(mapAdminRequestAction(rs));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return actions;
+	}
+
+	public void addAdminRequestAction(int requestId, String actorUsername, String actionType, String note) {
+	    String query = "INSERT INTO AdminRequestActions (requestId, actorUsername, actionType, note, createdAt) "
+	            + "VALUES (?, ?, ?, ?, ?)";
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setInt(1, requestId);
+	        pstmt.setString(2, actorUsername);
+	        pstmt.setString(3, actionType);
+	        pstmt.setString(4, note);
+	        pstmt.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+
+	public void closeAdminRequest(int requestId, String adminUsername, String closingNote) {
+	    String query = "UPDATE AdminRequests SET status = ?, closedBy = ?, closedAt = ?, updatedAt = ? WHERE id = ?";
+	    LocalDateTime now = LocalDateTime.now();
+
+	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	        pstmt.setString(1, AdminRequest.STATUS_CLOSED);
+	        pstmt.setString(2, adminUsername);
+	        pstmt.setTimestamp(3, Timestamp.valueOf(now));
+	        pstmt.setTimestamp(4, Timestamp.valueOf(now));
+	        pstmt.setInt(5, requestId);
+	        pstmt.executeUpdate();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    addAdminRequestAction(requestId, adminUsername, "CLOSED", closingNote);
+	}
+
+	public int reopenAdminRequest(int closedRequestId, String staffUsername, String newDescription) {
+	    AdminRequest oldRequest = getAdminRequestById(closedRequestId);
+	    if (oldRequest == null) return -1;
+
+	    int newRequestId = createAdminRequest(oldRequest.getRequestType(), newDescription, staffUsername,
+	            closedRequestId);
+
+	    if (newRequestId > 0) {
+	        addAdminRequestAction(newRequestId, staffUsername, "REOPENED",
+	                "Reopened from closed request #" + closedRequestId);
+	        addAdminRequestAction(closedRequestId, staffUsername, "REOPENED",
+	                "Request reopened as request #" + newRequestId);
+	    }
+
+	    return newRequestId;
+	}
+
+	private AdminRequest mapAdminRequest(ResultSet rs) throws SQLException {
+	    Timestamp closedAt = rs.getTimestamp("closedAt");
+	    int reopenedFromId = rs.getInt("reopenedFromId");
+	    boolean reopenedWasNull = rs.wasNull();
+
+	    return new AdminRequest(
+	            rs.getInt("id"),
+	            rs.getString("requestType"),
+	            rs.getString("description"),
+	            rs.getString("requestedBy"),
+	            rs.getString("status"),
+	            rs.getTimestamp("createdAt").toLocalDateTime(),
+	            rs.getTimestamp("updatedAt").toLocalDateTime(),
+	            rs.getString("closedBy"),
+	            closedAt == null ? null : closedAt.toLocalDateTime(),
+	            reopenedWasNull ? null : reopenedFromId
+	    );
+	}
+
+	private AdminRequestAction mapAdminRequestAction(ResultSet rs) throws SQLException {
+	    return new AdminRequestAction(
+	            rs.getInt("id"),
+	            rs.getInt("requestId"),
+	            rs.getString("actorUsername"),
+	            rs.getString("actionType"),
+	            rs.getString("note"),
+	            rs.getTimestamp("createdAt").toLocalDateTime()
+	    );
 	}
 }
