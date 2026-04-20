@@ -174,7 +174,7 @@ public class ViewStaffHome {
 		button_Forum_Management.setOnAction((_) -> {ControllerStaffHome.performForumManagement(); });
 
 		setupButtonUI(button_Grader, "Dialog",18, 250, Pos.CENTER, 20, 240 );
-		button_Forum_Management.setOnAction((_) -> {ControllerStaffHome.performGrader(); });
+		button_Grader.setOnAction((_) -> {ControllerStaffHome.performGrader(); });
 		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
         button_Logout.setOnAction((_) -> {ControllerStaffHome.performLogout(); });
