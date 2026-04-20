@@ -58,6 +58,7 @@ public class ViewStaffHome {
     
     protected static Button button_Forum = new Button("Forum");
     protected static Button button_Forum_Management = new Button("Forum Management");
+	protected static Button button_Grader = new Button("Grader");
     protected static Button button_AdminRequests = new Button("Admin Requests");
     
     // This is a separator and it is used to partition the GUI for various tasks
@@ -173,7 +174,7 @@ public class ViewStaffHome {
         // GUI Area 2
         
         
-        setupButtonUI(button_AdminRequests, "Dialog", 18, 250, Pos.CENTER, 20, 240);
+        setupButtonUI(button_AdminRequests, "Dialog", 18, 250, Pos.CENTER, 20, 290);
         button_AdminRequests.setOnAction((_) -> { ControllerStaffHome.performAdminRequests(); });
 				
 		setupButtonUI(button_Forum, "Dialog",18, 250, Pos.CENTER, 20, 140 );
@@ -181,11 +182,14 @@ public class ViewStaffHome {
 		
 		setupButtonUI(button_Forum_Management, "Dialog",18, 250, Pos.CENTER, 20, 190 );
 		button_Forum_Management.setOnAction((_) -> {ControllerStaffHome.performForumManagement(); });
+
+		setupButtonUI(button_Grader, "Dialog",18, 250, Pos.CENTER, 20, 240 );
+		button_Grader.setOnAction((_) -> {ControllerStaffHome.performGrader(); });
 		
-		setupButtonUI(button_DM, "Dialog",18, 250, Pos.CENTER, 20, 340 );
+		setupButtonUI(button_DM, "Dialog",18, 250, Pos.CENTER, 20, 390 );
 		
 		button_DM.setOnAction((_) -> {ControllerStaffHome.performDM(); });
-		setupButtonUI(button_Reviewing_Discussion_Dashboard, "Dialog", 18, 250, Pos.CENTER, 20, 290);
+		setupButtonUI(button_Reviewing_Discussion_Dashboard, "Dialog", 18, 250, Pos.CENTER, 20, 340);
 		button_Reviewing_Discussion_Dashboard.setOnAction((_)-> {ControllerStaffHome.performReviewingDiscussionDashboard(); ;});
 		
 		
@@ -201,26 +205,11 @@ public class ViewStaffHome {
         // Place all of the widget items into the Root Pane's list of children
         theRootPane.getChildren().addAll(
         		label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-    	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management, button_DM,
+    	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management, button_DM, button_Grader,
     	        button_Reviewing_Discussion_Dashboard, button_AdminRequests
         );
     }
     
-    
-    /*-********************************************************************************************
-=======
-			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
-	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management, button_DM,
-	        button_Reviewing_Discussion_Dashboard);
-	}
-	
-	
-	/*-********************************************************************************************
->>>>>>> main
-
-    Helper methods to reduce code length
-
-     */
     
     /**********
      * Private local method to initialize the standard fields for a label

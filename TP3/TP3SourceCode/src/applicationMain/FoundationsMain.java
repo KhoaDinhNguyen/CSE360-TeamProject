@@ -5,6 +5,7 @@ import java.util.List;
 
 import database.Database;
 import entityClasses.User;
+import guiNewAccount.ControllerNewAccount;
 import entityClasses.UserStore;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -122,6 +123,10 @@ public class FoundationsMain extends Application {
 		}
 		 
 		// With the JavaFX pages set up, this thread of the execution comes to an end.
+
+//		User dummyUser = new User();
+//		dummyUser.setStaffUser(true);
+//		guiGradingSystem.ViewGradingSystem.displayGradingSystem(theStage, dummyUser);
 	}
 
 	/*******

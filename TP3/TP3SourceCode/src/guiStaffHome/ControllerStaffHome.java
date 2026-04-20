@@ -45,6 +45,12 @@ public class ControllerStaffHome {
 		guiForumManagement.ViewerForumManagement.displayForumManagement(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
 	
+	/**
+	 * Set up view for the grader
+	 */
+	protected static void performGrader() {
+		guiGradingSystem.ViewGradingSystem.displayGradingSystem(ViewStaffHome.theStage, ViewStaffHome.theUser);
+	}
 	public static void performReturn() {
 		guiStaffHome.ViewStaffHome.displayStaffHome(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}

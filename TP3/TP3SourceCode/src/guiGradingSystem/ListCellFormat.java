@@ -1,4 +1,4 @@
-package guiForum;
+package guiGradingSystem;
 
 import java.util.ArrayList;
 
@@ -12,7 +12,7 @@ import javafx.scene.text.TextAlignment;
 /**
  * This class extend the format of list cell
  */
-public class PostFormatCell extends ListCell<Post>{
+public class ListCellFormat extends ListCell<Post>{
 	
 	// vertical box with 2 label 
 	private VBox vbox;
@@ -22,7 +22,7 @@ public class PostFormatCell extends ListCell<Post>{
 	/**
 	 * Default constructor
 	 */
-	public PostFormatCell() {
+	public ListCellFormat() {
 		this.vbox = new VBox(8);
 		this.row1Label = new Label();
 		this.row2Label = new Label();
@@ -41,11 +41,11 @@ public class PostFormatCell extends ListCell<Post>{
 		setText(null);
 
 		if (item != null) {
-			row1Label.setText((item.hasRead(ViewerForum.theUser.getUserName())?"":"[UNREAD] ") + item.toString());
+			row1Label.setText((item.hasRead(ViewGradingSystem.theUser.getUserName())?"":"[UNREAD] ") + item.toString());
 			
 			int repliesCount = item.getReplyPostId().size();
-			int unreadRepliesCount = ModelForum.getReplyStore()
-					.getUnreadReplies(ViewerForum.theUser.getUserName(), item.getId()).size();
+			int unreadRepliesCount = ModelGradingSystem.getReplyStore()
+					.getUnreadReplies(ViewGradingSystem.theUser.getUserName(), item.getId()).size();
 			
 //			ArrayList<Reply> test = ModelGradingSystem.getReplyStore().getReplyList();
 //					//.getUnreadReplies(ViewGradingSystem.theUser.getUserName(), item.getId());
