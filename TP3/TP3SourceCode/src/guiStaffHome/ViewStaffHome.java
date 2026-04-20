@@ -182,7 +182,7 @@ public class ViewStaffHome {
 		setupButtonUI(button_Forum_Management, "Dialog",18, 250, Pos.CENTER, 20, 190 );
 		button_Forum_Management.setOnAction((_) -> {ControllerStaffHome.performForumManagement(); });
 		
-		setupButtonUI(button_DM, "Dialog",18, 250, Pos.CENTER, 20, 240 );
+		setupButtonUI(button_DM, "Dialog",18, 250, Pos.CENTER, 20, 340 );
 		
 		button_DM.setOnAction((_) -> {ControllerStaffHome.performDM(); });
 		setupButtonUI(button_Reviewing_Discussion_Dashboard, "Dialog", 18, 250, Pos.CENTER, 20, 290);
