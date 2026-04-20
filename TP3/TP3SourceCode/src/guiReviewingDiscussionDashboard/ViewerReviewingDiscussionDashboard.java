@@ -153,7 +153,7 @@ public class ViewerReviewingDiscussionDashboard {
             cards[i] = new VBox(8);
             cards[i].setPadding(new Insets(10));
             cards[i].setPrefSize(380, 140);
-            cards[i].setStyle("-fx-border-color:black;");
+            cards[i].setStyle("-fx-border-color:black;");	
             updateCard(i, "Empty", "");
             grid.add(cards[i], i % 2, i / 2);
         }
@@ -259,31 +259,31 @@ public class ViewerReviewingDiscussionDashboard {
 
         switch (type) {
             case "Read Posts per Student":
-                result = ModelReviewingDiscussionDashboard.averageReadPost(student);
+                result = ModelReviewingDiscussionDashboard.averageReadPost(student, USERS);
                 break;
 
             case "Created Posts per Student":
-                result = ModelReviewingDiscussionDashboard.numberOfCreatedPost(student);
+                result = ModelReviewingDiscussionDashboard.numberOfCreatedPost(student, USERS);
                 break;
 
             case "Created Unique Posts per Student":
-                result = ModelReviewingDiscussionDashboard.averageReadPost("");
+                result = ModelReviewingDiscussionDashboard.averageReadPost("", USERS);
                 break;
 
             case "Created Replies per Student":
-                result = ModelReviewingDiscussionDashboard.numberOfCreatedReply(student);
+                result = ModelReviewingDiscussionDashboard.numberOfCreatedReply(student, USERS);
                 break;
 
             case "Created Replies on Unique Posts per Student":
-                result = ModelReviewingDiscussionDashboard.averageReadPost("");
+                result = ModelReviewingDiscussionDashboard.averageReadPost("", USERS);
                 break;
 
             case "Post Length per Student":
-                result = ModelReviewingDiscussionDashboard.averagePostLength(student);
+                result = ModelReviewingDiscussionDashboard.averagePostLength(student, USERS);
                 break;
 
             case "Reply Length per Student":
-                result = ModelReviewingDiscussionDashboard.averageReplyLength(student);
+                result = ModelReviewingDiscussionDashboard.averageReplyLength(student, USERS);
                 break;
         }
 
