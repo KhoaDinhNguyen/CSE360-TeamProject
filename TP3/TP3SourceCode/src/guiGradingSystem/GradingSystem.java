@@ -206,4 +206,27 @@ public class GradingSystem {
 		
 		return totalScore;
 	}
+	
+	/**
+	 * Delete an assignment
+	 * @param index an integer which is the index of the assignment
+	 * @return an error message string if any error occur
+	 */
+	public String delete(int index) {
+		if (index < 0 || index >= AssnList.size())
+			return "Delete out of bounds";
+		AssnList.remove(index);
+		return "";
+	}
+	
+	/**
+	 * Alternative delete using assn object
+	 * @param assn an Assignment object to delete
+	 * @return an error message string if any error occur
+	 */
+	public String delete(Assignment assn) {
+		if (!AssnList.remove(assn))
+			return "Delete out of bounds/ the assignment not in the list";
+		return "";
+	}
 }

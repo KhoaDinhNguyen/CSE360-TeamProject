@@ -523,4 +523,22 @@ public class ModelGradingSystem {
 	public static String setWeight(int index, int newWeight) {
 		return gradeSystem.setWeight(index, newWeight);
 	}
+	
+	/**
+	 * Delete Assignment at index
+	 * @param index an integer which is the index of the post
+	 * @return an error message if any occur
+	 */
+	public static String deleteAssignment(int index) {
+		return gradeSystem.delete(index);
+	}
+	
+	/**
+	 * Delete an Assignmnet given the object
+	 * @param assn an assignment object 
+	 * @return an error message if any occur
+	 */
+	public static String deleteAssignment(Assignment assn) {
+		return gradeSystem.delete(assn);
+	}
 }

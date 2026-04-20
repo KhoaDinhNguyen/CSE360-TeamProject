@@ -181,7 +181,7 @@ public class ViewGradingSystem {
 		label_UserDetails.setText("User: " + theUser.getUserName());
 		
 		// Set the title for the window, display the page, and wait for the Admin to do something
-		theStage.setTitle("CSE 360 Foundations: Role1 Home Page");
+		theStage.setTitle("CSE 360 Foundations: Grader");
 		theStage.setScene(theForumScene);
 		theStage.show();
 	}
@@ -208,11 +208,18 @@ public class ViewGradingSystem {
 		
 		// Create Assignment button
 		button_New_Assignment = new Button("Create Assignment");
-		setupButtonUI(button_New_Assignment, "Dialog", 13, 75, Pos.CENTER, 225, 55);
+		setupButtonUI(button_New_Assignment, "Dialog", 13, 75, Pos.CENTER, 375, 55);
 		button_New_Assignment.setOnAction((_) -> { 
 			ControllerGradingSystem.performNewAssignment(); 
 		});
 		
+		// Create Assignment button
+		button_Delete = new Button("Delete Assignment");
+		setupButtonUI(button_Delete, "Dialog", 13, 75, Pos.CENTER, 515, 55);
+		button_Delete.setOnAction((_) -> { 
+			ControllerGradingSystem.performDelete(); 
+		});
+
 		studentListView.setFixedCellSize(50);
 		
 		studentListView.setLayoutX(20);
@@ -271,7 +278,7 @@ public class ViewGradingSystem {
         	    label_PageTitle, label_UserDetails, line_Separator1,
 
         	    line_Separator4, button_Logout, button_Quit, button_Return,
-        	    button_New_Assignment, studentListView, detailPane,
+        	    button_New_Assignment, button_Delete, studentListView, detailPane,
 
         	    detailScrollPane 
         	);
@@ -560,118 +567,66 @@ public class ViewGradingSystem {
 	    addStage.show();
 	}
 	
-	/**
-	 * Opens a window that allows the current user to edit an existing post.
-	 *
-	 * @param post the post to edit
-	 */
-	protected static void showEditPostWindow(Post post) {
-	   // Stage editStage = new Stage();
-	   // editStage.setTitle("Edit Post");
+	protected static void showDeleteWindow() {
+	    Stage addStage = new Stage();
+	    addStage.setTitle("Delete Assignment");
 
-	   // Pane editRoot = new Pane();
-	   // Scene editScene = new Scene(editRoot, 520, 420);
+	    VBox addRoot = new VBox(12);
+	    addRoot.setPrefSize(560, 640);
 
-	   // Label titleLabel = new Label("Edit Post");
-	   // titleLabel.setFont(Font.font("Arial", 20));
-	   // titleLabel.setLayoutX(20);
-	   // titleLabel.setLayoutY(15);
+	    Scene addScene = new Scene(addRoot, 560, 640);
 
-	   // Label authorLabel = new Label("Editing as: " + (theUser == null ? "" : theUser.getUserName()));
-	   // authorLabel.setFont(Font.font("Arial", 14));
-	   // authorLabel.setLayoutX(20);
-	   // authorLabel.setLayoutY(55);
+	    Label titleLabel = new Label("Delete Assignment");
+	    titleLabel.setFont(Font.font("Arial", 20));
+	    addRoot.getChildren().add(titleLabel);
+	    
+	    // add the assignments
+	    for (Assignment assn: ModelGradingSystem.getAssignmentList()) {
+	    	// for the details and delete button
+	    	HBox assnHBox = new HBox();
+	    	assnHBox.setPadding(new Insets(0, 15, 15, 15));
+	    	assnHBox.setSpacing(20);
+	    	
+	    	Label assnLabel = new Label(assn.getTitle());
+	    	
+	    	Button deleteButton = new Button("Delete");
+	    	deleteButton.setOnAction(e -> {
+	    		ModelGradingSystem.deleteAssignment(assn);
+	    		
+	    		// refresh and close
+	    		showDeleteWindow();
+	    		displayStudentDetails(selectedStudent);
+	    		addStage.close();
+	    	});
+	    	
+	    	assnHBox.getChildren().addAll(assnLabel, deleteButton);
+	    	
+	    	addRoot.getChildren().add(assnHBox);
+	    }
+	    
 
-	   // HBox threadContainer = new HBox();
-	   // threadContainer.setLayoutX(20);
-	   // threadContainer.setLayoutY(80);
-	   // threadContainer.setAlignment(Pos.CENTER);
-	   // threadContainer.setSpacing(10);
-	   // 
-	   // Label threadLabel = new Label("Thread:");
-	   // threadLabel.setFont(Font.font("Arial"));
-	   // 
-	   // ChoiceBox<String> threadChoiceBox = new ChoiceBox<String>();
-	   // threadChoiceBox.getItems().addAll(ModelGradingSystem.getAllThreads());
-	   // threadChoiceBox.setValue(post.getThread());
-	   // 
-	   // threadContainer.getChildren().addAll(threadLabel, threadChoiceBox);
-	   // 
-	   // Label labelTitle = new Label("Title:");
-	   // labelTitle.setLayoutX(20);
-	   // labelTitle.setLayoutY(110);
+	    Button btnCancel = new Button("Cancel");
 
-	   // TextField tfTitle = new TextField(post.getTitle());
-	   // tfTitle.setLayoutX(20);
-	   // tfTitle.setLayoutY(135);
-	   // tfTitle.setPrefWidth(480);
+	    setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 0, 0);
 
-	   // Label labelContent = new Label("Content:");
-	   // labelContent.setLayoutX(20);
-	   // labelContent.setLayoutY(175);
+	    HBox buttonBar = new HBox(10, btnCancel);
+	    buttonBar.setAlignment(Pos.CENTER_RIGHT);
 
-	   // TextArea taContent = new TextArea(post.getContent());
-	   // taContent.setLayoutX(20);
-	   // taContent.setLayoutY(200);
-	   // taContent.setPrefWidth(480);
-	   // taContent.setPrefHeight(160);
-	   // taContent.setWrapText(true);
+	    btnCancel.setOnAction(e -> {
+	    	// refresh and close
+    		displayStudentDetails(selectedStudent);
+	    	addStage.close();
+	    });
 
-	   // Button btnSave = new Button("Save");
-	   // Button btnCancel = new Button("Cancel");
+	    addRoot.getChildren().addAll(
+	        buttonBar
+	    );
 
-	   // setupButtonUI(btnSave, "Dialog", 16, 160, Pos.CENTER, 340, 375);
-	   // setupButtonUI(btnCancel, "Dialog", 16, 160, Pos.CENTER, 160, 375);
-
-	   // btnCancel.setOnAction(e -> editStage.close());
-
-	   // btnSave.setOnAction(e -> {
-	   // 	String newThread = threadChoiceBox.getValue();
-	   //     String newTitle = tfTitle.getText();
-	   //     String newContent = taContent.getText();
-	   //     
-	   //     // You can rename this to match your actual ModelGradingSystem method
-	   //     String errorMessage = ModelGradingSystem.editPost(post.getId(), newThread, theUser.getUserName(), newTitle, newContent);
-	   //     System.out.println(errorMessage);
-	   //     if (errorMessage != null && !errorMessage.isBlank()) {
-	   //         Alert alert = new Alert(AlertType.ERROR);
-	   //         alert.setTitle("Cannot Update Post");
-	   //         alert.setHeaderText(null);
-	    //        alert.setContentText(errorMessage);
-	    //        alert.showAndWait();
-	    //        return;
-	    //    }
-
-	    //    // Refresh list + keep selection updated
-	    //    updatingList(ModelGradingSystem.getStudentList());
-
-	    //    // Re-select the edited post if still present
-	    //    Post refreshed = studentListView.getItems().stream()
-	    //            .filter(p -> p.getId() == post.getId())
-	    //            .findFirst()
-	    //            .orElse(null);
-
-	    //    selectedStudent = refreshed;
-	    //    if (refreshed != null) studentListView.getSelectionModel().select(refreshed);
-
-	    //    // Update detail display
-	    //    if (theView != null) ControllerGradingSystem.performReadSpecificPost(post);
-
-	    //    editStage.close();
-	    //});
-
-	    //editRoot.getChildren().addAll(
-	    //        titleLabel, authorLabel,
-	    //        labelTitle, tfTitle,
-	    //        labelContent, taContent,
-	    //        btnCancel, btnSave,
-	    //        threadContainer
-	    //);
-
-	    //editStage.setScene(editScene);
-	    //editStage.initOwner(theStage);
-	    //editStage.show();
+	    addStage.setScene(addScene);
+	    addStage.initOwner(theStage);
+	    addStage.show();
 	}
+
 	
 	/**
 	 * Shows a confirmation dialog and, if confirmed, deletes the specified post.

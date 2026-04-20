@@ -26,6 +26,12 @@ public class ControllerGradingSystem {
 	}
 	
 	/**
+	 * Delete Assignment 
+	 */
+	protected static void performDelete() {
+		ViewGradingSystem.showDeleteWindow();
+	}
+	/**
 	 * <p>Opens detail of specific post</p>
 	 * @param post that user want to read
 	 */
@@ -37,14 +43,6 @@ public class ControllerGradingSystem {
 	    //ViewGradingSystem.displayPostDetails(post);	
 	}
 
-	/**
-	 * <p>Directs user to edit post window</p>
-	 * @param post is being edited
-	 */
-	protected static void performEditPost(Post post) {
-		ViewGradingSystem.showEditPostWindow(post);
-	}
-	
 	/**
 	 * <p>Verifies users on post deletion</p>
 	 * 
