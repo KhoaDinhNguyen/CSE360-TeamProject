@@ -12,138 +12,153 @@ public class ModelReviewingDiscussionDashboard {
     private static PostStore postStore = guiForum.ModelForum.getPostStore();
     private static ReplyStore repliesStore = guiForum.ModelForum.getReplyStore();
 
-    public ModelReviewingDiscussionDashboard() {
-    }
+    public ModelReviewingDiscussionDashboard() {}
+
+    // ---------------- HELPERS ----------------
 
     private static boolean isAllStudents(String student) {
         return student == null || student.isBlank();
     }
 
-    private static int getNumberOfStudents(String student) {
+    private static int getNumberOfStudents(String student, ArrayList<String> users) {
         if (isAllStudents(student)) {
-            int totalUsers = ViewerReviewingDiscussionDashboard.USERS.size() - 1; // remove "All Students"
+            int totalUsers = users.size() - 1; // remove "All Students"
             return Math.max(totalUsers, 0);
         }
         return 1;
     }
 
-    protected static double averageReadPost(String student) {
+    // ---------------- AVERAGE READ POST ----------------
+
+    protected static double averageReadPost(String student, ArrayList<String> users) {
         ArrayList<Post> postList = postStore.getPostList();
-        int numberOfStudents = getNumberOfStudents(student);
+        int numberOfStudents = getNumberOfStudents(student, users);
 
-        if (numberOfStudents == 0) {
-            return 0;
-        }
+        if (numberOfStudents == 0) return 0;
 
-        double totalPostReads = 0;
+        double total = 0;
 
         for (Post post : postList) {
             if (isAllStudents(student)) {
-                totalPostReads += post.getReadUsers().size();
+                total += post.getReadUsers().size();
             } else if (post.getReadUsers().contains(student)) {
-                totalPostReads += 1;
+                total += 1;
             }
         }
 
-        return totalPostReads / numberOfStudents;
+        return total / numberOfStudents;
     }
 
-    protected static double averageReadReplies(String student) {
+
+
+    // ---------------- AVERAGE READ REPLIES ----------------
+
+    protected static double averageReadReplies(String student, ArrayList<String> users) {
         ArrayList<Reply> replyList = repliesStore.getReplyList();
-        int numberOfStudents = getNumberOfStudents(student);
+        int numberOfStudents = getNumberOfStudents(student, users);
 
-        if (numberOfStudents == 0) {
-            return 0;
-        }
+        if (numberOfStudents == 0) return 0;
 
-        double totalReplyReads = 0;
+        double total = 0;
 
         for (Reply reply : replyList) {
             if (isAllStudents(student)) {
-                totalReplyReads += reply.getReadUsers().size();
+                total += reply.getReadUsers().size();
             } else if (reply.getReadUsers().contains(student)) {
-                totalReplyReads += 1;
+                total += 1;
             }
         }
 
-        return totalReplyReads / numberOfStudents;
+        return total / numberOfStudents;
     }
 
-    protected static double averagePostLength(String student) {
+
+
+    // ---------------- AVERAGE POST LENGTH ----------------
+
+    protected static double averagePostLength(String student, ArrayList<String> users) {
         ArrayList<Post> postList = postStore.getPostList();
-        int numberOfStudents = getNumberOfStudents(student);
+        int numberOfStudents = getNumberOfStudents(student, users);
 
-        if (numberOfStudents == 0) {
-            return 0;
-        }
+        if (numberOfStudents == 0) return 0;
 
-        double totalPostLength = 0;
+        double total = 0;
 
         for (Post post : postList) {
             if (isAllStudents(student)) {
-                totalPostLength += post.getContent().length();
+                total += post.getContent().length();
             } else if (student.equals(post.getAuthor())) {
-                totalPostLength += post.getContent().length();
+                total += post.getContent().length();
             }
         }
 
-        return totalPostLength / numberOfStudents;
+        return total / numberOfStudents;
     }
 
-    protected static double averageReplyLength(String student) {
+  
+
+    // ---------------- AVERAGE REPLY LENGTH ----------------
+
+    protected static double averageReplyLength(String student, ArrayList<String> users) {
         ArrayList<Reply> replyList = repliesStore.getReplyList();
-        int numberOfStudents = getNumberOfStudents(student);
+        int numberOfStudents = getNumberOfStudents(student, users);
 
-        if (numberOfStudents == 0) {
-            return 0;
-        }
+        if (numberOfStudents == 0) return 0;
 
-        double totalReplyLength = 0;
+        double total = 0;
 
         for (Reply reply : replyList) {
             if (isAllStudents(student)) {
-                totalReplyLength += reply.getContent().length();
+                total += reply.getContent().length();
             } else if (student.equals(reply.getAuthor())) {
-                totalReplyLength += reply.getContent().length();
+                total += reply.getContent().length();
             }
         }
 
-        return totalReplyLength / numberOfStudents;
+        return total / numberOfStudents;
     }
 
-    protected static double numberOfCreatedPost(String student) {
+    
+
+    // ---------------- COUNT POSTS ----------------
+
+    protected static double numberOfCreatedPost(String student, ArrayList<String> users) {
         ArrayList<Post> postList = postStore.getPostList();
 
         if (isAllStudents(student)) {
             return postList.size();
         }
 
-        double totalPost = 0;
+        double total = 0;
 
         for (Post post : postList) {
             if (student.equals(post.getAuthor())) {
-                totalPost += 1;
+                total++;
             }
         }
 
-        return totalPost;
+        return total;
     }
 
-    protected static double numberOfCreatedReply(String student) {
+    
+    // ---------------- COUNT REPLIES ----------------
+
+    protected static double numberOfCreatedReply(String student, ArrayList<String> users) {
         ArrayList<Reply> replyList = repliesStore.getReplyList();
 
         if (isAllStudents(student)) {
             return replyList.size();
         }
 
-        double totalReply = 0;
+        double total = 0;
 
         for (Reply reply : replyList) {
             if (student.equals(reply.getAuthor())) {
-                totalReply += 1;
+                total++;
             }
         }
 
-        return totalReply;
+        return total;
     }
+
 }
