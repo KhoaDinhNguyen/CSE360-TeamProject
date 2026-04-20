@@ -257,6 +257,10 @@ public class ControllerAdminHome {
 		return false;
 	}
 	
+	protected static void viewRequestCenter() {
+	    guiAdminRequests.ViewAdminRequests.displayAdminRequests(ViewAdminHome.theStage, ViewAdminHome.theUser);
+	}
+	
 	/**********
 	 * <p> 
 	 * 

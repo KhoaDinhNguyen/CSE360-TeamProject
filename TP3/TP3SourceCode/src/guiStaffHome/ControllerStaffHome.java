@@ -91,4 +91,8 @@ public class ControllerStaffHome {
 	protected static void performQuit() {
 		System.exit(0);
 	}
+	
+	protected static void performAdminRequests() {
+	    guiAdminRequests.ViewAdminRequests.displayAdminRequests(ViewStaffHome.theStage, ViewStaffHome.theUser);
+	}
 }
