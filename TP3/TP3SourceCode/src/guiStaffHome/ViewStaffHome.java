@@ -61,12 +61,17 @@ public class ViewStaffHome {
     protected static Button button_AdminRequests = new Button("Admin Requests");
     
     // This is a separator and it is used to partition the GUI for various tasks
-    protected static Line line_Separator4 = new Line(20, 525, width - 20, 525);
-    
-    // GUI Area 3: This is last of the GUI areas.  It is used for quitting the application and for
-    // logging out.
-    protected static Button button_Logout = new Button("Logout");
-    protected static Button button_Quit = new Button("Quit");
+	protected static Button button_DM = new Button("Direct Message");
+	protected static Button button_Reviewing_Discussion_Dashboard = new Button("Review Discussion Dashboard");
+	
+	// This is a separator and it is used to partition the GUI for various tasks
+	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
+	
+	// GUI Area 3: This is last of the GUI areas.  It is used for quitting the application and for
+	// logging out.
+	protected static Button button_Logout = new Button("Logout");
+	protected static Button button_Quit = new Button("Quit");
+
 
     // This is the end of the GUI objects for the page.
     
@@ -167,16 +172,24 @@ public class ViewStaffHome {
         
         // GUI Area 2
         
-        setupButtonUI(button_Forum, "Dialog", 18, 250, Pos.CENTER, 20, 140);
-        button_Forum.setOnAction((_) -> { ControllerStaffHome.performForum(); });
         
-        setupButtonUI(button_Forum_Management, "Dialog", 18, 250, Pos.CENTER, 20, 190);
-        button_Forum_Management.setOnAction((_) -> { ControllerStaffHome.performForumManagement(); });
-
         setupButtonUI(button_AdminRequests, "Dialog", 18, 250, Pos.CENTER, 20, 240);
         button_AdminRequests.setOnAction((_) -> { ControllerStaffHome.performAdminRequests(); });
-
-        // GUI Area 3
+				
+		setupButtonUI(button_Forum, "Dialog",18, 250, Pos.CENTER, 20, 140 );
+		button_Forum.setOnAction((_)-> {ControllerStaffHome.performForum(); });
+		
+		setupButtonUI(button_Forum_Management, "Dialog",18, 250, Pos.CENTER, 20, 190 );
+		button_Forum_Management.setOnAction((_) -> {ControllerStaffHome.performForumManagement(); });
+		
+		setupButtonUI(button_DM, "Dialog",18, 250, Pos.CENTER, 20, 240 );
+		
+		button_DM.setOnAction((_) -> {ControllerStaffHome.performDM(); });
+		setupButtonUI(button_Reviewing_Discussion_Dashboard, "Dialog", 18, 250, Pos.CENTER, 20, 290);
+		button_Reviewing_Discussion_Dashboard.setOnAction((_)-> {ControllerStaffHome.performReviewingDiscussionDashboard(); ;});
+		
+		
+		// GUI Area 3
         setupButtonUI(button_Logout, "Dialog", 18, 250, Pos.CENTER, 20, 540);
         button_Logout.setOnAction((_) -> { ControllerStaffHome.performLogout(); });
         
@@ -187,21 +200,23 @@ public class ViewStaffHome {
         
         // Place all of the widget items into the Root Pane's list of children
         theRootPane.getChildren().addAll(
-            label_PageTitle,
-            label_UserDetails,
-            button_UpdateThisUser,
-            line_Separator1,
-            line_Separator4,
-            button_Logout,
-            button_Quit,
-            button_Forum,
-            button_Forum_Management,
-            button_AdminRequests
+        		label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
+    	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management, button_DM,
+    	        button_Reviewing_Discussion_Dashboard, button_AdminRequests
         );
     }
     
     
     /*-********************************************************************************************
+=======
+			label_PageTitle, label_UserDetails, button_UpdateThisUser, line_Separator1,
+	        line_Separator4, button_Logout, button_Quit, button_Forum, button_Forum_Management, button_DM,
+	        button_Reviewing_Discussion_Dashboard);
+	}
+	
+	
+	/*-********************************************************************************************
+>>>>>>> main
 
     Helper methods to reduce code length
 
