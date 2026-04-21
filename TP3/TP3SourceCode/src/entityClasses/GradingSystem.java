@@ -1,4 +1,4 @@
-package guiGradingSystem;
+package entityClasses;
 
 import java.util.ArrayList;
 

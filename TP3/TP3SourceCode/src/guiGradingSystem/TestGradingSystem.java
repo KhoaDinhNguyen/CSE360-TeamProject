@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import org.junit.jupiter.api.*;
 
+import entityClasses.GradingSystem;
+
 /**
  * This class is used to test the grading system
  */

@@ -1,4 +1,4 @@
-package guiGradingSystem;
+package entityClasses;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class Assignment {
 	/** 
 	 * A class used for feedback including numeric grade and and comment 
 	 */
-	class Feedback {
+	public class Feedback {
 		/** 
 		 * The numeric score of the feedback
 		 */
