@@ -13,6 +13,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import database.Database;
+import entityClasses.Assignment;
 import entityClasses.Post;
 import entityClasses.PostStore;
 import entityClasses.Reply;

@@ -15,9 +15,14 @@ import entityClasses.*;
  */
 public class ModelGradingSystem {
 
+	/**
+	 * This is the gradeSystem use for the Grader
+	 */
 	private static GradingSystem gradeSystem = new GradingSystem();
-
-	// Reference for the in-memory database so this package has access
+	
+	/**
+	 * Reference for the in-memory database so this package has access
+	 */
 	private static Database theDatabase = applicationMain.FoundationsMain.database;
 	
 	/**
