@@ -81,11 +81,11 @@ public class ViewGradingSystem {
 	private static ScrollPane detailScrollPane;
 	
 	/**
-	 * Create Post button
+	 * Create Assignment button
 	 */
 	protected static Button button_New_Assignment;
 	
-	// Track which post is selected
+	// Track which student is selected
 	private static String selectedStudent;
 	
 	/**
@@ -173,7 +173,7 @@ public class ViewGradingSystem {
 	}
 	
 	/**
-	 * Creates the forum view object.
+	 * Creates the grader view object.
 	 *
 	 * <p>This constructor is private because the class uses shared static UI state
 	 * and is not intended to be instantiated freely from outside the class.</p>
@@ -236,11 +236,7 @@ public class ViewGradingSystem {
 		    
 		    displayStudentDetails(selectedStudent);
 		    
-		    // post selected, mark the user as read
 		    updatingList(ModelGradingSystem.getStudentList());
-		    
-
-		   // ControllerGradingSystem.performReadSpecificPost(selectedStudent);	
 		});
 		
 		// GUI Area 3
