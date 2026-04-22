@@ -15,7 +15,10 @@ import java.time.LocalDateTime;
  * @author Daniel Prada
  */
 public class AdminRequest {
+    /** Constant representing an open request status. */
     public static final String STATUS_OPEN = "OPEN";
+
+    /** Constant representing a closed request status. */
     public static final String STATUS_CLOSED = "CLOSED";
 
     private final int id;
