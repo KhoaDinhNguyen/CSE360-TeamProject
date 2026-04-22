@@ -550,6 +550,9 @@ public class ViewGradingSystem {
 	    addStage.show();
 	}
 	
+	/**
+	 * Display delete window for deleting assignment
+	 */
 	protected static void showDeleteWindow() {
 	    Stage addStage = new Stage();
 	    addStage.setTitle("Delete Assignment");
