@@ -151,6 +151,13 @@ public class ViewGradingSystem {
 		theStage = ps;
 		theUser = user;
 		
+		if (user.getStaff()) {
+			theRole = 3;
+		}
+		else if (user.getStudent()) {
+			theRole = 2;
+		}
+		
 		// If not yet established, populate the static aspects of the GUI
 		
 		if (studentListView == null) {
