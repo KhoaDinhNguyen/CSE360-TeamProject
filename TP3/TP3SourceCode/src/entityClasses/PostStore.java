@@ -98,6 +98,7 @@ public class PostStore {
 	 * content, or author of each post.
 	 *
 	 * @param keyword the keyword used for filtering
+	 * @param threadTag the thread used for filtering
 	 * @return the filtered list of matching posts
 	 */
 	public ArrayList<Post> filterPosts(String keyword, String threadTag) {
