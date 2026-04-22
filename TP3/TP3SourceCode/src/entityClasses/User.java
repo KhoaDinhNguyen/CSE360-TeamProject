@@ -47,13 +47,9 @@ public class User {
      * <p> Description: This constructor is used to establish user entity objects. </p>
      * 
      * @param userName specifies the account userName for this user
-     * 
      * @param password specifies the account password for this user
-     * 
      * @param r1 specifies the the Admin attribute (TRUE or FALSE) for this user
-     * 
      * @param r2 specifies the the Student attribute (TRUE or FALSE) for this user
-     * 
      * @param r3 specifies the the Reviewer attribute (TRUE or FALSE) for this user
      * 
      */

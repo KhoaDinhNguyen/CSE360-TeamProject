@@ -1,7 +1,5 @@
 package guiStaffHome;
 
-public class ModelStaffHome {
-
 /*******
  * <p> Title: ModelStaffHome Class. </p>
  * 
@@ -17,5 +15,11 @@ public class ModelStaffHome {
  * @version 1.01		2025-09-13 Updated JavaDoc description
  *  
  */
-
+public class ModelStaffHome {
+	/**
+	 * The constructor of the class but it will not be used
+	 */
+	public ModelStaffHome() {
+		
+	}
 }

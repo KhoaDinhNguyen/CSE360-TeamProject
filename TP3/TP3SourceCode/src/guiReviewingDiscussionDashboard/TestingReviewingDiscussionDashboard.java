@@ -20,8 +20,11 @@ import guiForum.ModelForum;
  * {@link ModelReviewingDiscussionDashboard}, including averages and totals
  * for posts and replies.</p>
  */
-class TestingReviewingDiscussionDashboard {
-
+public class TestingReviewingDiscussionDashboard {
+	/**
+	 * The constructor of the class but it will not be used
+	 */
+	public TestingReviewingDiscussionDashboard() {}
     /**
      * The post store used for test setup.
      */
@@ -44,7 +47,7 @@ class TestingReviewingDiscussionDashboard {
      * a fixed set of posts and replies for use in the assertions below.</p>
      */
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         postStore = ModelForum.getPostStore();
         replyStore = ModelForum.getReplyStore();
 
@@ -109,7 +112,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the average read-post calculation for all students.
      */
     @Test
-    void averageReadPost_allStudents() {
+    public void averageReadPost_allStudents() {
         assertEquals(3.0,
                 ModelReviewingDiscussionDashboard.averageReadPost(null, users),
                 0.0001);
@@ -119,7 +122,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the average read-post calculation for a single student.
      */
     @Test
-    void averageReadPost_singleStudent() {
+    public void averageReadPost_singleStudent() {
         assertEquals(4.0,
                 ModelReviewingDiscussionDashboard.averageReadPost("Alice", users),
                 0.0001);
@@ -129,7 +132,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the average read-replies calculation for all students.
      */
     @Test
-    void averageReadReplies_allStudents() {
+    public void averageReadReplies_allStudents() {
         assertEquals(3.5,
                 ModelReviewingDiscussionDashboard.averageReadReplies(null, users),
                 0.0001);
@@ -139,7 +142,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the average read-replies calculation for a single student.
      */
     @Test
-    void averageReadReplies_singleStudent() {
+    public void averageReadReplies_singleStudent() {
         assertEquals(5.0,
                 ModelReviewingDiscussionDashboard.averageReadReplies("Alice", users),
                 0.0001);
@@ -149,7 +152,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the average post-length calculation for all students.
      */
     @Test
-    void averagePostLength_allStudents() {
+    public void averagePostLength_allStudents() {
         assertEquals(18.5,
                 ModelReviewingDiscussionDashboard.averagePostLength("", users),
                 0.0001);
@@ -159,7 +162,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the average post-length calculation for a single student.
      */
     @Test
-    void averagePostLength_singleStudent() {
+    public void averagePostLength_singleStudent() {
         assertEquals(35.0,
                 ModelReviewingDiscussionDashboard.averagePostLength("Alice", users),
                 0.0001);
@@ -169,7 +172,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the average reply-length calculation for all students.
      */
     @Test
-    void averageReplyLength_allStudents() {
+    public void averageReplyLength_allStudents() {
         assertEquals(21.0,
                 ModelReviewingDiscussionDashboard.averageReplyLength(" ", users),
                 0.0001);
@@ -179,7 +182,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the average reply-length calculation for a single student.
      */
     @Test
-    void averageReplyLength_singleStudent() {
+    public void averageReplyLength_singleStudent() {
         assertEquals(32.0,
                 ModelReviewingDiscussionDashboard.averageReplyLength("Alice", users),
                 0.0001);
@@ -189,7 +192,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the total number of created posts for all students.
      */
     @Test
-    void numberOfCreatedPost_allStudents() {
+    public void numberOfCreatedPost_allStudents() {
         assertEquals(4.0,
                 ModelReviewingDiscussionDashboard.numberOfCreatedPost(null, users),
                 0.0001);
@@ -199,7 +202,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the total number of created posts for Alice.
      */
     @Test
-    void numberOfCreatedPost_alice() {
+    public void numberOfCreatedPost_alice() {
         assertEquals(2.0,
                 ModelReviewingDiscussionDashboard.numberOfCreatedPost("Alice", users),
                 0.0001);
@@ -209,7 +212,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the total number of created replies for all students.
      */
     @Test
-    void numberOfCreatedReply_allStudents() {
+    public void numberOfCreatedReply_allStudents() {
         assertEquals(5.0,
                 ModelReviewingDiscussionDashboard.numberOfCreatedReply(null, users),
                 0.0001);
@@ -219,7 +222,7 @@ class TestingReviewingDiscussionDashboard {
      * Tests the total number of created replies for Alice.
      */
     @Test
-    void numberOfCreatedReply_alice() {
+    public void numberOfCreatedReply_alice() {
         assertEquals(2.0,
                 ModelReviewingDiscussionDashboard.numberOfCreatedReply("Alice", users),
                 0.0001);

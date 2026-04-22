@@ -26,6 +26,11 @@ import entityClasses.User;
  * @author Daniel Prada
  */
 public class ModelAdminRequestsTest {
+	
+	/**
+	 * The constructor of the class but t will not be used in this project
+	 */
+	public ModelAdminRequestsTest() {}
     /** In-memory test database used for each test case. */
     private Database database;
 
@@ -79,7 +84,11 @@ public class ModelAdminRequestsTest {
      */
     @Nested
     @DisplayName("Create request tests")
-    class CreateRequestTests {
+    public class CreateRequestTests {
+    	/**
+    	 * The constructor of the class but it will not be used in this project
+    	 */
+    	public CreateRequestTests() {}
         /**
          * Verifies that a staff user cannot create a request with a blank description.
          *
@@ -132,7 +141,12 @@ public class ModelAdminRequestsTest {
      */
     @Nested
     @DisplayName("Admin workflow tests")
-    class AdminWorkflowTests {
+    public class AdminWorkflowTests {
+    	
+    	/**
+    	 * The constructor of the class but it will not be used in this project
+    	 */
+    	public AdminWorkflowTests() {}
         /**
          * Verifies that an admin can add an action note to an existing open request.
          *
@@ -187,7 +201,11 @@ public class ModelAdminRequestsTest {
      */
     @Nested
     @DisplayName("Reopen request tests")
-    class ReopenRequestTests {
+    public class ReopenRequestTests {
+    	/**
+    	 * The construct of the class but it will not be used in this project
+    	 */
+    	public ReopenRequestTests() {}
         /**
          * Verifies that reopening a closed request creates a new linked open request.
          *

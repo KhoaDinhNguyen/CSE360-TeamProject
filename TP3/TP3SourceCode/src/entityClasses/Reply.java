@@ -41,6 +41,15 @@ public class Reply {
     	this.readUsers.add(author); // the author is consider read when created 
     }
     
+    /**
+     * Creates a new reply with the given identifier, content, author, parent post ID, and private option.
+     *
+     * @param id the unique identifier for the reply
+     * @param content the content of the reply
+     * @param author the username of the reply author
+     * @param parentPostId the identifier of the post this reply belongs to
+     * @param isPrivate is the boolean that set private option
+     */
     public Reply(int id, String content, String author, int parentPostId, boolean isPrivate) {
     	this.id = id;
     	this.content = content;
@@ -90,7 +99,10 @@ public class Reply {
         return author;
     }
 
-    
+    /**
+     * Returns all users that have read the reply
+     * @return a list of user
+     */
     public ArrayList<String> getReadUsers(){
     	return readUsers;
     }
@@ -102,7 +114,11 @@ public class Reply {
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-    
+
+    /**
+     * Verifies the reply is private
+     * @return the boolean whether if the reply is private
+     */
     public boolean getIsPrivate() {
     	return isPrivate;
     }

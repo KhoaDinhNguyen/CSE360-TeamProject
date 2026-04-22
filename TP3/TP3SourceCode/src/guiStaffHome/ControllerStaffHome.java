@@ -41,6 +41,9 @@ public class ControllerStaffHome {
 		guiUserUpdate.ViewUserUpdate.displayUserUpdate(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}	
 
+	/**
+	 * Displays forum management
+	 */
 	protected static void performForumManagement() {
 		guiForumManagement.ViewerForumManagement.displayForumManagement(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
@@ -51,6 +54,10 @@ public class ControllerStaffHome {
 	protected static void performGrader() {
 		guiGradingSystem.ViewGradingSystem.displayGradingSystem(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
+	
+	/**
+	 * Returns to staff homepage
+	 */
 	public static void performReturn() {
 		guiStaffHome.ViewStaffHome.displayStaffHome(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
@@ -78,10 +85,16 @@ public class ControllerStaffHome {
 		guiForum.ViewerForum.displayViewerForum(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
 	
+	/**
+	 * Displays direct message feature
+	 */
 	protected static void performDM() {
 		guiMessage.ViewerMessage.displayMessageView(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
 	
+	/**
+	 * Reviews forum discussion for each student
+	 */
 	protected static void performReviewingDiscussionDashboard() {
 		guiReviewingDiscussionDashboard.ViewerReviewingDiscussionDashboard.displayReviewingDiscussionDashboard(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}
@@ -98,6 +111,9 @@ public class ControllerStaffHome {
 		System.exit(0);
 	}
 	
+	/**
+	 * Creates admin-request for staff
+	 */
 	protected static void performAdminRequests() {
 	    guiAdminRequests.ViewAdminRequests.displayAdminRequests(ViewStaffHome.theStage, ViewStaffHome.theUser);
 	}

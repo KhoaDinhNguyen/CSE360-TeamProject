@@ -78,6 +78,7 @@ public class ControllerForum {
 	 * @param postId is the id of the post to be replied
 	 * @param author is an author's reply
 	 * @param content is reply's content
+	 * @param isPrivate set private option for reply
 	 * @return a String represents error message, empty if there is no error
 	 */
 	protected static String performAddReply(int postId, String author, String content, boolean isPrivate) {

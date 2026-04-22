@@ -255,6 +255,17 @@ public class ModelForum {
 	    return addReply(content, author, parentId, false);
 	}
 	
+  /**
+	 * Adds a reply to an existing post after validating the reply content.
+	 *
+	 * <p>Replies cannot be added to deleted posts.</p>
+	 *
+	 * @param content the content of the reply
+	 * @param author the username of the reply author
+	 * @param parentId the ID of the parent post receiving the reply
+	 * @param isPrivate set private option for reply
+	 * @return an empty string if the reply is added successfully; otherwise, an error message
+	 */
 	public static String addReply(String content, String author, int parentId, boolean isPrivate) {
 
 	    // Validate content
@@ -355,7 +366,13 @@ public class ModelForum {
 
 	    return replies;
 	}
-	
+
+	/**
+	 * Returns list of reply given post id and current reader
+	 * @param reader is a User reading the reply
+	 * @param id is the postId
+	 * @return a list of visible replies from the post given the reader
+	 */
 	public static List<Reply> getRepliesByPostId(User reader, int id) {
 
 	    Post currentPost = postStore.retrieve(id);

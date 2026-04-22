@@ -46,31 +46,60 @@ public class ViewStaffHome {
     
     // GUI Area 1: It informs the user about the purpose of this page, whose account is being used,
     // and a button to allow this user to update the account settings
-    protected static Label label_PageTitle = new Label();
-    protected static Label label_UserDetails = new Label();
-    protected static Button button_UpdateThisUser = new Button("Account Update");
+    private static Label label_PageTitle = new Label();
+    private static Label label_UserDetails = new Label();
+    private static Button button_UpdateThisUser = new Button("Account Update");
         
     // This is a separator and it is used to partition the GUI for various tasks
-    protected static Line line_Separator1 = new Line(20, 95, width - 20, 95);
+    private static Line line_Separator1 = new Line(20, 95, width - 20, 95);
 
     // GUI ARea 2: This is a stub, so there are no widgets here.  For an actual role page, this are
     // would contain the widgets needed for the user to play the assigned role.
     
+    /**
+     * Go to forum button
+     */
     protected static Button button_Forum = new Button("Forum");
+    
+    /**
+     * Go to forum management button
+     */
     protected static Button button_Forum_Management = new Button("Forum Management");
+    
+    /**
+     * Go to grader management button
+     */
 	protected static Button button_Grader = new Button("Grader");
+	
+	/**
+	 * Go to admin requests button
+	 */
     protected static Button button_AdminRequests = new Button("Admin Requests");
     
-    // This is a separator and it is used to partition the GUI for various tasks
-	protected static Button button_DM = new Button("Direct Message");
+    /**
+     * Go to direct message button
+     */
+    protected static Button button_DM = new Button("Direct Message");
+    
+    /**
+     * Go to review discussion dashboard button
+     */
 	protected static Button button_Reviewing_Discussion_Dashboard = new Button("Review Discussion Dashboard");
 	
 	// This is a separator and it is used to partition the GUI for various tasks
-	protected static Line line_Separator4 = new Line(20, 525, width-20,525);
+	private static Line line_Separator4 = new Line(20, 525, width-20,525);
 	
 	// GUI Area 3: This is last of the GUI areas.  It is used for quitting the application and for
 	// logging out.
+	
+	/**
+	 * Log out buttons
+	 */
 	protected static Button button_Logout = new Button("Logout");
+	
+	/**
+	 * Quit buttons
+	 */
 	protected static Button button_Quit = new Button("Quit");
 
 
@@ -83,12 +112,21 @@ public class ViewStaffHome {
     // Reference for the in-memory database so this package has access
     private static Database theDatabase = applicationMain.FoundationsMain.database;
 
-    protected static Stage theStage;             // The Stage that JavaFX has established for us    
-    protected static Pane theRootPane;           // The Pane that holds all the GUI widgets
-    protected static User theUser;               // The current logged in User
+	/**
+	 * The Stage that JavaFX has established for us	
+	 */
+	protected static Stage theStage;
+	/**
+	 * The Pane that holds all the GUI widgets
+	 */
+	protected static Pane theRootPane;
+	/**
+	 * The current logged in User
+	 */
+	protected static User theUser;
     
     private static Scene theStaffHomeScene;      // The shared Scene each invocation populates
-    protected static final int theRole = 3;      // Admin: 1; Role1: 2; Staff: 3
+    private static final int theRole = 3;      // Admin: 1; Role1: 2; Staff: 3
 
     
     /*-*******************************************************************************************

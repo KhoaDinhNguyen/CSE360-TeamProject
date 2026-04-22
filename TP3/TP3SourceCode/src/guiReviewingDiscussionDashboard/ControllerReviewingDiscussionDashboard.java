@@ -10,6 +10,10 @@ import java.util.ArrayList;
  */
 public class ControllerReviewingDiscussionDashboard {
 
+	/**
+	 * The constructor of the class but it will not be used
+	 */
+	public ControllerReviewingDiscussionDashboard() {}
     /**
      * The currently selected student for filtering.
      *
