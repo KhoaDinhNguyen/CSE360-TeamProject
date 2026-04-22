@@ -48,55 +48,115 @@ public class ViewAdminRequests {
 
      */
 
-    // Application sizing
+    /** The shared application window width. */
     private static final double width = applicationMain.FoundationsMain.WINDOW_WIDTH;
+
+    /** The shared application window height. */
     private static final double height = applicationMain.FoundationsMain.WINDOW_HEIGHT;
 
-    // Singleton reference
+    /** The singleton instance of the Admin Request Center view. */
     private static ViewAdminRequests theView;
 
-    // Shared stage / user references
+    /**
+     * The JavaFX stage currently displaying the Admin Request Center.
+     * This reference is shared so the controller may switch scenes.
+     */
     protected static Stage theStage;
+
+    /**
+     * The currently logged-in user viewing the request center.
+     * This value determines which controls are visible and enabled.
+     */
     protected static User theUser;
 
-    // Scene graph
+    /** The JavaFX scene used by this view. */
     private static Scene theScene;
+
+    /** The root pane that contains all GUI elements for the request center. */
     private static BorderPane rootPane;
 
-    // Labels
+    /** The main page title displayed at the top of the request center. */
     protected static Label label_PageTitle = new Label("Admin Request Center");
+
+    /** Displays the username and role information for the current user. */
     protected static Label label_UserDetails = new Label();
+
+    /** Header label for the list of open requests. */
     protected static Label label_OpenRequests = new Label("Open Requests");
+
+    /** Header label for the list of closed requests. */
     protected static Label label_ClosedRequests = new Label("Closed Requests");
+
+    /** Header label for the selected request details section. */
     protected static Label label_RequestDetails = new Label("Selected Request Details");
+
+    /** Header label for the action history section. */
     protected static Label label_ActionHistory = new Label("Action History");
+
+    /** Label for the request type selection control. */
     protected static Label label_RequestType = new Label("Request Type");
+
+    /** Label for the new or updated request description input area. */
     protected static Label label_NewRequestDescription = new Label("New / Updated Description");
+
+    /** Label for the admin action or closing note input area. */
     protected static Label label_ActionNote = new Label("Admin Action / Closing Note");
 
-    // Request lists
+    /** Displays the list of currently open admin requests. */
     protected static ListView<AdminRequest> list_OpenRequests = new ListView<AdminRequest>();
+
+    /** Displays the list of closed admin requests. */
     protected static ListView<AdminRequest> list_ClosedRequests = new ListView<AdminRequest>();
+
+    /** Displays the action-history entries for the selected request. */
     protected static ListView<AdminRequestAction> list_ActionHistory = new ListView<AdminRequestAction>();
 
-    // Text areas
+    /**
+     * Displays the full details of the currently selected request.
+     * This area is read-only.
+     */
     protected static TextArea textarea_RequestDetails = new TextArea();
+
+    /**
+     * Accepts the description for a newly created request or the updated
+     * description for a reopened request.
+     */
     protected static TextArea textarea_NewRequestDescription = new TextArea();
+
+    /**
+     * Accepts an admin note to document actions taken or to provide
+     * a closing note when closing a request.
+     */
     protected static TextArea textarea_ActionNote = new TextArea();
 
-    // Input controls
+    /** Allows staff to choose the type of admin request being submitted. */
     protected static ComboBox<String> combobox_RequestType = new ComboBox<String>();
 
-    // Buttons
+    /** Button used by staff to create a new admin request. */
     protected static Button button_CreateRequest = new Button("Create Request");
+
+    /** Button used by staff to reopen a previously closed request. */
     protected static Button button_ReopenRequest = new Button("Reopen Selected Request");
+
+    /** Button used by admins to add an action note to an open request. */
     protected static Button button_AddAction = new Button("Add Action Note");
+
+    /** Button used by admins to close the currently selected request. */
     protected static Button button_CloseRequest = new Button("Close Selected Request");
+
+    /**
+     * Button used to jump from a reopened request back to the original
+     * closed request it references.
+     */
     protected static Button button_ViewOriginal = new Button("View Original Closed Request");
+
+    /** Button used to refresh all request-center data shown on screen. */
     protected static Button button_Refresh = new Button("Refresh");
+
+    /** Button used to return the user to the appropriate home page. */
     protected static Button button_Return = new Button("Return");
 
-    // Current selection
+    /** The request currently selected in either the open or closed request list. */
     private static AdminRequest selectedRequest;
 
     /*-*******************************************************************************************

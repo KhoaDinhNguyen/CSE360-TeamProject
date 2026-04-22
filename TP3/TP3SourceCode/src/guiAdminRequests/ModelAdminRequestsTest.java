@@ -26,11 +26,26 @@ import entityClasses.User;
  * @author Daniel Prada
  */
 public class ModelAdminRequestsTest {
+    /** In-memory test database used for each test case. */
     private Database database;
+
+    /** Admin user used to test admin-only request actions. */
     private User adminUser;
+
+    /** Staff user used to test request creation and reopening behavior. */
     private User staffUser;
+
+    /** Non-staff user used to verify role-based access restrictions. */
     private User studentUser;
 
+    /**
+     * Creates a fresh in-memory database and test users before each test.
+     *
+     * <p>This setup ensures each test runs in isolation and does not depend
+     * on data left behind by another test.</p>
+     *
+     * @throws SQLException if the test database cannot be initialized
+     */
     @BeforeEach
     public void setUp() throws SQLException {
         database = new Database("jdbc:h2:mem:adminRequests" + System.nanoTime());
@@ -49,26 +64,50 @@ public class ModelAdminRequestsTest {
         database.register(studentUser);
     }
 
+    /**
+     * Closes the in-memory database after each test completes.
+     *
+     * <p>This cleanup prevents resource leaks and keeps tests isolated.</p>
+     */
     @AfterEach
     public void tearDown() {
         database.closeConnection();
     }
 
+    /**
+     * Groups tests related to initial request creation.
+     */
     @Nested
     @DisplayName("Create request tests")
     class CreateRequestTests {
+        /**
+         * Verifies that a staff user cannot create a request with a blank description.
+         *
+         * <p>The model should reject the input and return the expected validation message.</p>
+         */
         @Test
         public void shouldRejectBlankDescription_whenStaffCreatesRequest() {
             String actual = ModelAdminRequests.submitStaffRequest(staffUser, "DELETE_USER", "   ");
             assertEquals("Request description could not be empty", actual);
         }
 
+        /**
+         * Verifies that a non-staff user cannot submit an admin request.
+         *
+         * <p>This confirms that request creation is restricted to staff users only.</p>
+         */
         @Test
         public void shouldRejectNonStaffUser_whenCreatingRequest() {
             String actual = ModelAdminRequests.submitStaffRequest(studentUser, "DELETE_USER", "Need admin help");
             assertEquals("Only staff members can submit admin requests", actual);
         }
 
+        /**
+         * Verifies that a valid staff request is stored as an open request.
+         *
+         * <p>This test also confirms that request creation writes an initial
+         * CREATED action entry to the request history.</p>
+         */
         @Test
         public void shouldCreateOpenRequest_whenStaffInputIsValid() {
             String actual = ModelAdminRequests.submitStaffRequest(staffUser, "DELETE_USER",
@@ -88,9 +127,18 @@ public class ModelAdminRequestsTest {
         }
     }
 
+    /**
+     * Groups tests related to admin-side workflow actions.
+     */
     @Nested
     @DisplayName("Admin workflow tests")
     class AdminWorkflowTests {
+        /**
+         * Verifies that an admin can add an action note to an existing open request.
+         *
+         * <p>This confirms that request history is updated when an admin
+         * documents work performed on a request.</p>
+         */
         @Test
         public void shouldAddActionNote_whenAdminDocumentsOpenRequest() {
             ModelAdminRequests.submitStaffRequest(staffUser, "ADD_REMOVE_ROLES",
@@ -108,6 +156,12 @@ public class ModelAdminRequestsTest {
             assertEquals("admin", actions.get(1).getActorUsername());
         }
 
+        /**
+         * Verifies that an admin can close an open request.
+         *
+         * <p>This test confirms that the request is removed from the open list,
+         * added to the closed list, and given a final CLOSED action entry.</p>
+         */
         @Test
         public void shouldMoveRequestToClosedList_whenAdminClosesRequest() {
             ModelAdminRequests.submitStaffRequest(staffUser, "SET_ONE_TIME_PASSWORD",
@@ -128,9 +182,19 @@ public class ModelAdminRequestsTest {
         }
     }
 
+    /**
+     * Groups tests related to reopening previously closed requests.
+     */
     @Nested
     @DisplayName("Reopen request tests")
     class ReopenRequestTests {
+        /**
+         * Verifies that reopening a closed request creates a new linked open request.
+         *
+         * <p>This test confirms that the original request remains closed, the new
+         * request is open, and the reopened request preserves a link back to the
+         * original closed request.</p>
+         */
         @Test
         public void shouldCreateLinkedOpenRequest_whenStaffReopensClosedRequest() {
             ModelAdminRequests.submitStaffRequest(staffUser, "OTHER",
