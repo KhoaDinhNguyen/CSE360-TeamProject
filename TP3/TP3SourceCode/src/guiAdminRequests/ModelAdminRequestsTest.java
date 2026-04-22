@@ -79,7 +79,7 @@ public class ModelAdminRequestsTest {
      */
     @Nested
     @DisplayName("Create request tests")
-    class CreateRequestTests {
+    public class CreateRequestTests {
         /**
          * Verifies that a staff user cannot create a request with a blank description.
          *
@@ -132,7 +132,7 @@ public class ModelAdminRequestsTest {
      */
     @Nested
     @DisplayName("Admin workflow tests")
-    class AdminWorkflowTests {
+    public class AdminWorkflowTests {
         /**
          * Verifies that an admin can add an action note to an existing open request.
          *
@@ -187,7 +187,7 @@ public class ModelAdminRequestsTest {
      */
     @Nested
     @DisplayName("Reopen request tests")
-    class ReopenRequestTests {
+    public class ReopenRequestTests {
         /**
          * Verifies that reopening a closed request creates a new linked open request.
          *
