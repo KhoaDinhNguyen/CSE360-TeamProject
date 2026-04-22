@@ -17,7 +17,7 @@ public class ModelMessageTest {
 	 * Verifies that sender could not be null
 	 */
 	@Test
-	void shouldReturnUserDoesNotExist_whenSenderIsNull() {
+	public void shouldReturnUserDoesNotExist_whenSenderIsNull() {
 		// Given
 		String content = "Hello";
 		String sender = null;
@@ -35,7 +35,7 @@ public class ModelMessageTest {
 	 * Verifies that sender must be existed in the database
 	 */
 	@Test
-	void shouldReturnUserDoesNotExist_whenSenderDoesNotExist() {
+	public void shouldReturnUserDoesNotExist_whenSenderDoesNotExist() {
 		// Given
 		String content = "Hello";
 		String sender = "fake user";
@@ -53,7 +53,7 @@ public class ModelMessageTest {
 	 * Verifies that sender must be student of staff
 	 */
 	@Test
-	void shouldAccessDenied_whenSenderIsAdmin() {
+	public void shouldAccessDenied_whenSenderIsAdmin() {
 		// Given
 		String content = "Hello";
 		String sender = "Admin";
@@ -71,7 +71,7 @@ public class ModelMessageTest {
 	 * Verifies that receiver cannot be null
 	 */
 	@Test
-	void shouldReturnUserDoesNotExist_whenReceiverIsNull() {
+	public void shouldReturnUserDoesNotExist_whenReceiverIsNull() {
 		// Given
 		String content = "Hello";
 		String sender = "Student";
@@ -89,7 +89,7 @@ public class ModelMessageTest {
 	 * Verifies that receiver must be existed in the database
 	 */
 	@Test
-	void shouldReturnUserDoesNotExist_whenReceiverDoesNotExist() {
+	public void shouldReturnUserDoesNotExist_whenReceiverDoesNotExist() {
 		// Given
 		String content = "Hello";
 		String sender = "Student";
@@ -108,7 +108,7 @@ public class ModelMessageTest {
 	 * Verifies that receiver must be a student or staff
 	 */
 	@Test
-	void shouldReturnAccessDenied_whenReceiverIsAdmin() {
+	public void shouldReturnAccessDenied_whenReceiverIsAdmin() {
 		// Given
 		String content = "Hello";
 		String sender = "Student";
@@ -126,7 +126,7 @@ public class ModelMessageTest {
 	 * Verifies the content cannot be null
 	 */
 	@Test
-	void shouldReturnInvalidContent_whenContentIsNull() {
+	public void shouldReturnInvalidContent_whenContentIsNull() {
 		// Given
 		String content = null;
 		String sender = "Student";
@@ -144,7 +144,7 @@ public class ModelMessageTest {
 	 * Verifies the content cannot be empty
 	 */
 	@Test
-	void shouldReturnInvalidContent_whenContentIsEmpty() {
+	public void shouldReturnInvalidContent_whenContentIsEmpty() {
 		// Given
 		String content = "";
 		String sender = "Student";
@@ -162,7 +162,7 @@ public class ModelMessageTest {
 	 * Verifies that sending message is successful when all parameters are valid
 	 */
 	@Test
-	void shouldReturnNoError_whenAllAreValid() {
+	public void shouldReturnNoError_whenAllAreValid() {
 		// Given
 		String content = "Hello class";
 		String sender = "Student";
