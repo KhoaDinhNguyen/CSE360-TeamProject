@@ -18,7 +18,12 @@ import entityClasses.AdminRequestAction;
 import entityClasses.User;
 
 /**
- * Unit tests for the admin request center business rules.
+ * Unit tests for the admin request workflow.
+ *
+ * <p>These tests verify request creation, admin action logging,
+ * request closure, and reopening behavior.</p>
+ *
+ * @author Daniel Prada
  */
 public class ModelAdminRequestsTest {
     private Database database;

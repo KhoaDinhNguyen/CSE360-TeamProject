@@ -9,7 +9,13 @@ import entityClasses.AdminRequestAction;
 import entityClasses.User;
 
 /**
- * Business logic for the staff/admin request center.
+ * Provides the business logic for the admin request center.
+ *
+ * <p>This model enforces role-based behavior for the request workflow:
+ * staff users may create and reopen requests, while admin users may
+ * document work and close requests.</p>
+ *
+ * @author Daniel Prada
  */
 public class ModelAdminRequests {
     private static final List<String> REQUEST_TYPES = List.of(
@@ -22,35 +28,78 @@ public class ModelAdminRequests {
             "OTHER"
     );
 
+    /**
+     * Creates a model object for the admin request workflow.
+     */
     public ModelAdminRequests() {
     }
 
+    /**
+     * Returns the shared database instance used by the application.
+     *
+     * @return the current database instance
+     */
     private static Database getDatabase() {
         return applicationMain.FoundationsMain.database;
     }
 
+    /**
+     * Returns the list of valid request types that a staff user may select.
+     *
+     * @return a copy of the supported request types
+     */
     public static List<String> getRequestTypes() {
         return new ArrayList<String>(REQUEST_TYPES);
     }
 
+    /**
+     * Returns all open admin requests.
+     *
+     * @return a list of open requests
+     */
     public static List<AdminRequest> getOpenRequests() {
         return getDatabase().getOpenAdminRequests();
     }
 
+    /**
+     * Returns all closed admin requests.
+     *
+     * @return a list of closed requests
+     */
     public static List<AdminRequest> getClosedRequests() {
         return getDatabase().getClosedAdminRequests();
     }
 
+    /**
+     * Returns the recorded action history for a request.
+     *
+     * @param request the selected request
+     * @return the list of actions for that request, or an empty list if the request is null
+     */
     public static List<AdminRequestAction> getActions(AdminRequest request) {
         if (request == null) return new ArrayList<AdminRequestAction>();
         return getDatabase().getAdminRequestActions(request.getId());
     }
 
+    /**
+     * Returns the original closed request linked to a reopened request.
+     *
+     * @param request the reopened request
+     * @return the original closed request, or {@code null} if none exists
+     */
     public static AdminRequest getOriginalClosedRequest(AdminRequest request) {
         if (request == null || request.getReopenedFromId() == null) return null;
         return getDatabase().getAdminRequestById(request.getReopenedFromId());
     }
 
+    /**
+     * Validates and submits a new admin request on behalf of a staff user.
+     *
+     * @param user the currently logged-in user
+     * @param requestType the selected request type
+     * @param description the request description
+     * @return an empty string if successful, otherwise an error message
+     */
     public static String submitStaffRequest(User user, String requestType, String description) {
         if (!isStaff(user)) return "Only staff members can submit admin requests";
 
@@ -65,6 +114,14 @@ public class ModelAdminRequests {
         return "";
     }
 
+    /**
+     * Adds an admin action note to an existing open request.
+     *
+     * @param user the current user
+     * @param request the selected request
+     * @param note the note entered by the admin
+     * @return an empty string if successful, otherwise an error message
+     */
     public static String addAdminAction(User user, AdminRequest request, String note) {
         if (!isAdmin(user)) return "Only admins can document request actions";
         if (request == null) return "Select a request first";
@@ -75,6 +132,14 @@ public class ModelAdminRequests {
         return "";
     }
 
+    /**
+     * Closes an open request and records a closing note.
+     *
+     * @param user the current user
+     * @param request the selected request
+     * @param closingNote the closing note entered by the admin
+     * @return an empty string if successful, otherwise an error message
+     */
     public static String closeRequest(User user, AdminRequest request, String closingNote) {
         if (!isAdmin(user)) return "Only admins can close requests";
         if (request == null) return "Select a request first";
@@ -85,6 +150,14 @@ public class ModelAdminRequests {
         return "";
     }
 
+    /**
+     * Reopens a closed request by creating a new linked open request with an updated description.
+     *
+     * @param user the current user
+     * @param request the closed request being reopened
+     * @param updatedDescription the new request description
+     * @return an empty string if successful, otherwise an error message
+     */
     public static String reopenRequest(User user, AdminRequest request, String updatedDescription) {
         if (!isStaff(user)) return "Only staff members can reopen requests";
         if (request == null) return "Select a request first";
@@ -99,6 +172,13 @@ public class ModelAdminRequests {
         return "";
     }
 
+    /**
+     * Validates request input before a request is submitted.
+     *
+     * @param requestType the selected request type
+     * @param description the request description
+     * @return an empty string if valid, otherwise a validation error message
+     */
     private static String validateRequest(String requestType, String description) {
         StringBuilder errorMessage = new StringBuilder();
 
@@ -114,10 +194,22 @@ public class ModelAdminRequests {
         return errorMessage.toString();
     }
 
+    /**
+     * Checks whether a user has the admin role.
+     *
+     * @param user the user to evaluate
+     * @return {@code true} if the user is an admin, otherwise {@code false}
+     */
     private static boolean isAdmin(User user) {
         return user != null && user.getAdminRole();
     }
 
+    /**
+     * Checks whether a user has the staff role.
+     *
+     * @param user the user to evaluate
+     * @return {@code true} if the user is staff, otherwise {@code false}
+     */
     private static boolean isStaff(User user) {
         return user != null && user.getNewStaff();
     }

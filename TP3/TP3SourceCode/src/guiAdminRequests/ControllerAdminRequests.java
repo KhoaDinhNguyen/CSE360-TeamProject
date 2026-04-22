@@ -7,12 +7,23 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 /**
- * Controller actions for the request center page.
+ * Handles user actions in the admin request center view.
+ *
+ * <p>This controller connects the request center buttons to the request model
+ * and updates the GUI based on success or validation errors.</p>
+ *
+ * @author Daniel Prada
  */
 public class ControllerAdminRequests {
+    /**
+     * Creates a controller object for the admin request center.
+     */
     public ControllerAdminRequests() {
     }
 
+    /**
+     * Creates a new request from the values currently entered in the request form.
+     */
     protected static void performCreateRequest() {
         String result = ModelAdminRequests.submitStaffRequest(
                 ViewAdminRequests.theUser,
@@ -30,6 +41,9 @@ public class ControllerAdminRequests {
                 "Your request has been added to the open request list.");
     }
 
+    /**
+     * Adds an admin action note to the currently selected request.
+     */
     protected static void performAddAction() {
         String result = ModelAdminRequests.addAdminAction(
                 ViewAdminRequests.theUser,
@@ -47,6 +61,9 @@ public class ControllerAdminRequests {
                 "The action note has been added to the request history.");
     }
 
+    /**
+     * Closes the currently selected open request.
+     */
     protected static void performCloseRequest() {
         String result = ModelAdminRequests.closeRequest(
                 ViewAdminRequests.theUser,
@@ -64,6 +81,9 @@ public class ControllerAdminRequests {
                 "The request was moved to the closed request list.");
     }
 
+    /**
+     * Reopens the currently selected closed request as a new linked open request.
+     */
     protected static void performReopenRequest() {
         String result = ModelAdminRequests.reopenRequest(
                 ViewAdminRequests.theUser,
@@ -81,6 +101,9 @@ public class ControllerAdminRequests {
                 "A new open request was created and linked back to the original closed request.");
     }
 
+    /**
+     * Moves the view focus to the original closed request linked to the currently selected request.
+     */
     protected static void performViewOriginalRequest() {
         AdminRequest selectedRequest = ViewAdminRequests.getSelectedRequest();
         AdminRequest originalRequest = ModelAdminRequests.getOriginalClosedRequest(selectedRequest);
@@ -94,10 +117,16 @@ public class ControllerAdminRequests {
         ViewAdminRequests.focusClosedRequest(originalRequest.getId());
     }
 
+    /**
+     * Refreshes the request center view.
+     */
     protected static void performRefresh() {
         ViewAdminRequests.refreshView();
     }
 
+    /**
+     * Returns the user to the correct home page based on the active role.
+     */
     protected static void performReturn() {
         if (applicationMain.FoundationsMain.activeHomePage == 1) {
             ViewAdminHome.displayAdminHome(ViewAdminRequests.theStage, ViewAdminRequests.theUser);
@@ -107,6 +136,14 @@ public class ControllerAdminRequests {
         }
     }
 
+    /**
+     * Displays a JavaFX alert dialog.
+     *
+     * @param type the alert type
+     * @param title the alert title
+     * @param header the alert header text
+     * @param message the alert body text
+     */
     private static void showAlert(AlertType type, String title, String header, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

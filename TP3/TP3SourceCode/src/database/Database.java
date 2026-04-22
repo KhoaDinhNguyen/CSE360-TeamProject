@@ -77,6 +77,16 @@ public class Database {
 		this(DEFAULT_DB_URL);
 	}
 	
+	/*******
+	 * <p> Method: Database(String dbUrl) </p>
+	 * 
+	 * <p> Description: Creates a database object using the specified database URL.
+	 * This constructor is primarily useful for testing with alternate database
+	 * instances such as in-memory H2 databases.</p>
+	 * 
+	 * @param dbUrl the JDBC database URL to use for this database instance
+	 * 
+	 */
 	public Database(String dbUrl) {
 		this.dbUrl = dbUrl;
 	}
@@ -1273,6 +1283,22 @@ public class Database {
 		} 
 	}
 	
+	/*******
+	 * <p> Method: int createAdminRequest(String requestType, String description,
+	 * String requestedBy, Integer reopenedFromId) </p>
+	 *
+	 * <p> Description: Creates a new admin request record in the database.
+	 * New requests are stored as open requests by default. Reopened requests
+	 * may include a link back to an earlier closed request.</p>
+	 *
+	 * @param requestType the type of admin action being requested
+	 * @param description the request description entered by staff
+	 * @param requestedBy the username of the staff user who submitted the request
+	 * @param reopenedFromId the original closed request ID if this request is a reopened case,
+	 *        otherwise {@code null}
+	 *
+	 * @return the generated request ID if successful, otherwise -1
+	 */
 	public int createAdminRequest(String requestType, String description, String requestedBy,
 	        Integer reopenedFromId) {
 	    String query = "INSERT INTO AdminRequests (requestType, description, requestedBy, status, createdAt, updatedAt, reopenedFromId) "
@@ -1302,14 +1328,37 @@ public class Database {
 	    return -1;
 	}
 
+	/*******
+	 * <p> Method: List<AdminRequest> getOpenAdminRequests() </p>
+	 *
+	 * <p> Description: Retrieves all currently open admin requests from the database.</p>
+	 *
+	 * @return a list of open admin requests
+	 */
 	public List<AdminRequest> getOpenAdminRequests() {
 	    return getAdminRequestsByStatus(AdminRequest.STATUS_OPEN);
 	}
 
+	/*******
+	 * <p> Method: List<AdminRequest> getClosedAdminRequests() </p>
+	 *
+	 * <p> Description: Retrieves all closed admin requests from the database.</p>
+	 *
+	 * @return a list of closed admin requests
+	 */
 	public List<AdminRequest> getClosedAdminRequests() {
 	    return getAdminRequestsByStatus(AdminRequest.STATUS_CLOSED);
 	}
 
+	/*******
+	 * <p> Method: List<AdminRequest> getAdminRequestsByStatus(String status) </p>
+	 *
+	 * <p> Description: Retrieves all admin requests matching the specified status.</p>
+	 *
+	 * @param status the request status to filter by
+	 *
+	 * @return a list of requests with the given status
+	 */
 	public List<AdminRequest> getAdminRequestsByStatus(String status) {
 	    List<AdminRequest> requests = new ArrayList<AdminRequest>();
 	    String query = "SELECT * FROM AdminRequests WHERE status = ? ORDER BY id DESC";
@@ -1327,6 +1376,15 @@ public class Database {
 	    return requests;
 	}
 
+	/*******
+	 * <p> Method: AdminRequest getAdminRequestById(int requestId) </p>
+	 *
+	 * <p> Description: Retrieves a single admin request by its unique ID.</p>
+	 *
+	 * @param requestId the ID of the request to retrieve
+	 *
+	 * @return the matching admin request, or {@code null} if no request exists
+	 */
 	public AdminRequest getAdminRequestById(int requestId) {
 	    String query = "SELECT * FROM AdminRequests WHERE id = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -1339,6 +1397,15 @@ public class Database {
 	    return null;
 	}
 
+	/*******
+	 * <p> Method: List<AdminRequestAction> getAdminRequestActions(int requestId) </p>
+	 *
+	 * <p> Description: Retrieves the action history associated with a specific admin request.</p>
+	 *
+	 * @param requestId the ID of the request whose actions should be returned
+	 *
+	 * @return a list of actions for the request
+	 */
 	public List<AdminRequestAction> getAdminRequestActions(int requestId) {
 	    List<AdminRequestAction> actions = new ArrayList<AdminRequestAction>();
 	    String query = "SELECT * FROM AdminRequestActions WHERE requestId = ? ORDER BY id ASC";
@@ -1356,6 +1423,17 @@ public class Database {
 	    return actions;
 	}
 
+	/*******
+	 * <p> Method: void addAdminRequestAction(int requestId, String actorUsername,
+	 * String actionType, String note) </p>
+	 *
+	 * <p> Description: Adds a new action history entry to an admin request.</p>
+	 *
+	 * @param requestId the ID of the request being updated
+	 * @param actorUsername the username of the user performing the action
+	 * @param actionType the type of action being recorded
+	 * @param note the note text associated with the action
+	 */
 	public void addAdminRequestAction(int requestId, String actorUsername, String actionType, String note) {
 	    String query = "INSERT INTO AdminRequestActions (requestId, actorUsername, actionType, note, createdAt) "
 	            + "VALUES (?, ?, ?, ?, ?)";
@@ -1371,6 +1449,16 @@ public class Database {
 	    }
 	}
 
+	/*******
+	 * <p> Method: void closeAdminRequest(int requestId, String adminUsername, String closingNote) </p>
+	 *
+	 * <p> Description: Marks an open request as closed, stores the admin who closed it,
+	 * and records a closing note in the request action history.</p>
+	 *
+	 * @param requestId the ID of the request being closed
+	 * @param adminUsername the username of the admin closing the request
+	 * @param closingNote the closing note entered by the admin
+	 */
 	public void closeAdminRequest(int requestId, String adminUsername, String closingNote) {
 	    String query = "UPDATE AdminRequests SET status = ?, closedBy = ?, closedAt = ?, updatedAt = ? WHERE id = ?";
 	    LocalDateTime now = LocalDateTime.now();
@@ -1389,6 +1477,20 @@ public class Database {
 	    addAdminRequestAction(requestId, adminUsername, "CLOSED", closingNote);
 	}
 
+	/*******
+	 * <p> Method: int reopenAdminRequest(int closedRequestId, String staffUsername,
+	 * String newDescription) </p>
+	 *
+	 * <p> Description: Reopens a closed request by creating a new open request linked
+	 * to the original closed request. The original request remains closed so that
+	 * prior work history is preserved.</p>
+	 *
+	 * @param closedRequestId the ID of the closed request being reopened
+	 * @param staffUsername the username of the staff member reopening the request
+	 * @param newDescription the updated description for the reopened request
+	 *
+	 * @return the ID of the new open request if successful, otherwise -1
+	 */
 	public int reopenAdminRequest(int closedRequestId, String staffUsername, String newDescription) {
 	    AdminRequest oldRequest = getAdminRequestById(closedRequestId);
 	    if (oldRequest == null) return -1;
@@ -1405,7 +1507,20 @@ public class Database {
 
 	    return newRequestId;
 	}
-
+	
+	/*******
+	 * <p> Method: AdminRequest mapAdminRequest(ResultSet rs) </p>
+	 *
+	 * <p> Description: Converts the current row of a SQL result set into an
+	 * {@code AdminRequest} object. This helper method is used when retrieving
+	 * request records from the AdminRequests table.</p>
+	 *
+	 * @param rs the result set positioned at the current request row
+	 *
+	 * @return an {@code AdminRequest} object containing the row data
+	 *
+	 * @throws SQLException if the result set data cannot be read
+	 */
 	private AdminRequest mapAdminRequest(ResultSet rs) throws SQLException {
 	    Timestamp closedAt = rs.getTimestamp("closedAt");
 	    int reopenedFromId = rs.getInt("reopenedFromId");
@@ -1425,6 +1540,19 @@ public class Database {
 	    );
 	}
 
+	/*******
+	 * <p> Method: AdminRequestAction mapAdminRequestAction(ResultSet rs) </p>
+	 *
+	 * <p> Description: Converts the current row of a SQL result set into an
+	 * {@code AdminRequestAction} object. This helper method is used when retrieving
+	 * action-history records from the AdminRequestActions table.</p>
+	 *
+	 * @param rs the result set positioned at the current action row
+	 *
+	 * @return an {@code AdminRequestAction} object containing the row data
+	 *
+	 * @throws SQLException if the result set data cannot be read
+	 */
 	private AdminRequestAction mapAdminRequestAction(ResultSet rs) throws SQLException {
 	    return new AdminRequestAction(
 	            rs.getInt("id"),
