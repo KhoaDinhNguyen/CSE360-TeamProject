@@ -52,7 +52,7 @@ public class ModelForumManagementTest {
 		 * Verifies that new thread name cannot be empty
 		 */
 		@Test
-		void shouldReturnInvalidThread_whenThreadNameIsEmpty() {
+		public void shouldReturnInvalidThread_whenThreadNameIsEmpty() {
 			// Given
 			String threadName = "";
 			String expected = "Thread's name cannot be empty";
@@ -68,7 +68,7 @@ public class ModelForumManagementTest {
 		 * Verifies that new thread name cannot be duplicated
 		 */
 		@Test
-		void shouldReturnInvalidThread_whenThreadNameAlreadyExistsInDatabase() {
+		public void shouldReturnInvalidThread_whenThreadNameAlreadyExistsInDatabase() {
 			// Given
 			String threadName = "Social";
 			String expected = "Thread already existed in the database";
@@ -84,7 +84,7 @@ public class ModelForumManagementTest {
 		 * Verifies that if thread name is valid, then new thread is created successfully
 		 */
 		@Test
-		void shouldReturnNoMessage_whenAllAreValid() {
+		public void shouldReturnNoMessage_whenAllAreValid() {
 			// Given
 			String threadName = "Projects";
 			String expected = "";
@@ -109,10 +109,10 @@ public class ModelForumManagementTest {
 		public  ReadThread() {}
 		
 		/**
-		 * Verifies that all thread when called by {@readAllThread}
+		 * Verifies that all thread when called by {@code readAllThread}
 		 */
 		@Test
-		void shouldReturnAllThread_whenAllThreadIsCalled() {
+		public void shouldReturnAllThread_whenAllThreadIsCalled() {
 			// Given
 			ArrayList<String> expected = new ArrayList<>(List.of(
 					"General", "Lectures", "Sections", "Problem Sets", "Assignments", "Social"));
@@ -141,7 +141,7 @@ public class ModelForumManagementTest {
 		 * Verifies that new thread name cannot be empty
 		 */
 		@Test
-		void shouldReturnInvalidThread_whenNewThreadNameIsEmpty() {
+		public void shouldReturnInvalidThread_whenNewThreadNameIsEmpty() {
 			// Given
 			String oldThreadName = "Social";
 			String newThreadName = "";
@@ -158,7 +158,7 @@ public class ModelForumManagementTest {
 		 * Verifies that old thread name exists in the database
 		 */
 		@Test
-		void shouldReturnInvalidThread_whenOldThreadNameDoesNotExistInDatabase() {
+		public void shouldReturnInvalidThread_whenOldThreadNameDoesNotExistInDatabase() {
 			// Given
 			String oldThreadName = "Homework";
 			String newThreadName = "Homeworks";
@@ -175,7 +175,7 @@ public class ModelForumManagementTest {
 		 * Verifies that new thread name could not be duplicated
 		 */
 		@Test
-		void shouldReturnInvalidThread_whenNewThreadNameAlreadyExistsInDatabase() {
+		public void shouldReturnInvalidThread_whenNewThreadNameAlreadyExistsInDatabase() {
 			// Given
 			String oldThreadName = "Social";
 			String newThreadName = "Assignments";
@@ -192,7 +192,7 @@ public class ModelForumManagementTest {
 		 * Verifies that General thread cannot be edited
 		 */
 		@Test
-		void shouldReturnInvalidThread_whenThreadNameIsGeneral() {
+		public void shouldReturnInvalidThread_whenThreadNameIsGeneral() {
 			// Given
 			String oldThreadName = "General";
 			String newThreadName = "Default";
@@ -209,7 +209,7 @@ public class ModelForumManagementTest {
 		 * Verifies that editing thread is successful when all threads are valid
 		 */
 		@Test
-		void shouldReturnNoErrorMessage_whenAllAreValid() {
+		public void shouldReturnNoErrorMessage_whenAllAreValid() {
 			// Given
 			String oldThreadName = "Social";
 			String newThreadName = "Discussion";
@@ -238,7 +238,7 @@ public class ModelForumManagementTest {
 		 * Verifies that deleted thread cannot be empty
 		 */
 		@Test
-		void shouldReturnInvalidThread_whenThreadNameIsEmpty() {
+		public void shouldReturnInvalidThread_whenThreadNameIsEmpty() {
 			// Given
 			String threadName = "";
 			String expected = "Thread's name cannot be empty";
@@ -254,7 +254,7 @@ public class ModelForumManagementTest {
 		 * Verifies that deleted thread must be existed in the database
 		 */
 		@Test
-		void shouldReturnInvalidThread_whenThreadNameDoesNotExistInDatabase() {
+		public void shouldReturnInvalidThread_whenThreadNameDoesNotExistInDatabase() {
 			// Given
 			String threadName = "Homework";
 			String expected = "Thread does not exist in the database";
@@ -270,7 +270,7 @@ public class ModelForumManagementTest {
 		 * Verifies that General could not deleted
 		 */
 		@Test
-		void shouldReturnInvalidThread_whenThreadNameIsGeneral() {
+		public void shouldReturnInvalidThread_whenThreadNameIsGeneral() {
 			// Given
 			String threadName = "General";
 			String expected = "Cannot delete General thread";
@@ -286,7 +286,7 @@ public class ModelForumManagementTest {
 		 * Verifies that deleting thread is successful when all threads are valid
 		 */
 		@Test
-		void shouldReturnNoErrorMessage_whenAllAreValid() {
+		public void shouldReturnNoErrorMessage_whenAllAreValid() {
 			// Given
 			String threadName = "Social";
 			String expected = "";
