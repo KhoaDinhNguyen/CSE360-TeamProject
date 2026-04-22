@@ -80,6 +80,13 @@ public class ModelAdminRequestsTest {
     @Nested
     @DisplayName("Create request tests")
     public class CreateRequestTests {
+    	/**
+    	 * Default constructor
+    	 */
+    	public CreateRequestTests() {
+    		
+    	}
+    	
         /**
          * Verifies that a staff user cannot create a request with a blank description.
          *
