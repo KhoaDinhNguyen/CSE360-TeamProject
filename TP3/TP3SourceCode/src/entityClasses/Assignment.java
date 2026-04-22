@@ -1,4 +1,4 @@
-package guiGradingSystem;
+package entityClasses;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class Assignment {
 	/** 
 	 * A class used for feedback including numeric grade and and comment 
 	 */
-	class Feedback {
+	public class Feedback {
 		/** 
 		 * The numeric score of the feedback
 		 */
@@ -111,6 +111,7 @@ public class Assignment {
 	/**
 	 * Constructor to create an assignment with tile, maxScore, score and weight
 	 * @param title A string contain the title of the assignment
+	 * @param content A string contain the content of the assignment
 	 * @param maxScore the maximum integer score of the assignment 
 	 * @param weight the percentage weight of the assignment
 	 */

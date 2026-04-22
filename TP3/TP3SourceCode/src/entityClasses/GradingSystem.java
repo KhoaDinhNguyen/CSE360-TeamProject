@@ -1,4 +1,4 @@
-package guiGradingSystem;
+package entityClasses;
 
 import java.util.ArrayList;
 
@@ -21,6 +21,7 @@ public class GradingSystem {
 	/**
 	 * A function to create new assignment with title, max score and weight
 	 * @param title a string which is the title
+	 * @param content a string that contain the content of the assignment
 	 * @param maxScore an integer which is the max score
 	 * @param weight an integer which is the percentage weight
 	 */
@@ -150,7 +151,7 @@ public class GradingSystem {
 	 * @param index an integer which is the assignment's index
 	 * @param studentName a string contains the student's name
 	 * @param score an integer which is the assigned score
-	 * @param a string contain the comment of the feedback
+	 * @param comment a string contain the comment of the feedback
 	 * @return an string contain error message, will be null if execute successfully
 	 */
 	public String setFeedback(int index, String studentName, int score, String comment) {
